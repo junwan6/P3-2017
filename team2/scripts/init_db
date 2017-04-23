@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#
+#  init_db
+#
+# This script runs each of the Python scripts to generate the batch-importable
+# files, and then imports them.
+#
+# Future work: redesign this data import process so that you don't have to tear
+# down the database and re-process the data from scratch.
+
+script_dir=`dirname $0`
+tmp="build"
+
+echo "Generating table Occupation..."
+"$script_dir/export_database.py" "$script_dir/../data/occupation.xlsx" "$script_dir/../data/all_data_M_2015.xlsx" "$tmp/occupation.dat"
+echo "Generating table StateOccupation..."
+"$script_dir/export_state_database.py" "$script_dir/../data/all_data_M_2015.xlsx" "$tmp/stateOccupation.dat"
+echo "Generating table Interests..."
+"$script_dir/export_interests_database.py" "$script_dir/../data/Interests.xlsx" "$tmp/interest.dat"
+echo "Generating table Skills..."
+"$script_dir/export_skills_database.py" "$script_dir/../data/skills.xlsx" "$tmp/skills.dat"
+
+(
+    cp "$script_dir/create.sql" "$tmp"
+    cp "$script_dir/load.sql" "$tmp"
+    cp "$script_dir/videos.csv" "$tmp"
+    cd "$tmp"
+    echo "Loading into p3_test database..."
+    cat create.sql load.sql | mysql -u p3_admin -p --local-infile=1 p3_test
+)

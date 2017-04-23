@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html>
+<head><title>Algorithm Test</title>
+
+<body>
+	<center>
+<h1> Recommendation Engine </h1>
+<p> Click to get a SOC </p> 
+
+<!-- Original Demo Stuff
+<table>
+<tr>
+<td><button type="button" onclick="addWeight(11)">+11</button> </td>
+<td><button type="button" onclick="addWeight(13)">+13</button> </td>
+<td><button type="button" onclick="addWeight(15)">+15</button> </td>
+<td><button type="button" onclick="addWeight(17)">+17</button> </td>
+<td><button type="button" onclick="addWeight(19)">+19</button> </td>
+<td><button type="button" onclick="addWeight(21)">+21</button> </td>
+<td>Total</td>
+</tr>
+
+<tr>
+<td id='w11'>0</td>
+<td id='w13'>0</td>
+<td id='w15'>0</td>
+<td id='w17'>0</td>
+<td id='w19'>0</td>
+<td id='w21'>0</td>
+<td id='wtotal'>0</td>
+</tr>
+
+</table>
+<button type="button" onclick="demoSOC()">Get SOC</button>
+<p id="SOC"></p>
+-->
+
+<p> 
+Sample Weight <br>
+11: Chance: 0.0018 <br>
+13: Chance: 0.0254 <br>
+15: Chance: 0.0036 <br>
+17: Chance: 0.0763 <br>
+19: Chance: 0.0036 <br>
+21: Chance: 0.0327 <br>
+23: Chance: 0.0327 <br>
+25: Chance: 0.0181 <br>
+27: Chance: 0.0400 <br>
+29: Chance: 0.0400 <br>
+31: Chance: 0.0690 <br>
+33: Chance: 0.0327 <br>
+35: Chance: 0.0400 <br>
+37: Chance: 0.0400 <br>
+39: Chance: 0.0618 <br>
+41: Chance: 0.0690 <br>
+43: Chance: 0.0327 <br>
+45: Chance: 0.0690 <br>
+47: Chance: 0.0545 <br>
+49: Chance: 0.0909 <br>
+51: Chance: 0.1636 <br>
+</p>
+
+<button type="button" onclick="getSOC()">Get Weighted SOC</button>
+<p id="SOC2"></p>
+
+
+<script src="SOC.js"></script>
+<script> 
+
+
+// Next Step for development
+// Algorithm side
+// 1. Play around with shiftAmt and scale to better choose weighted random. See "Considerations"
+// 2. Generate a queue of non-repating SOC's, and have some heuristic to sort the list
+
+// Server side
+// 1. Setup SQL server to track user like/dislike
+// 2. Be able to get SOC-weighted list from server
+// 3. Decide of filtering workflow. Possible setup in "Work Flow Section"
+// 4. Setup server save to update video view queue.
+
+
+// Setup Steps
+// ------------
+// Build soc Map Tree with: socMapTree = buildMapTree(testSOCWeighted)
+// This builds the socMapTree[Major][Minor]={soc, weight} with randomWeights
+// We have a sample random set of weights right now. Favoring Major Group 51
+// Ideally we should be passing a list of {soc: socString, weight: num} object to the buildMapTree function. Based on what user liked and disliked
+// Call ChooseSOC(socMapTree) to get a weighted random SOC based on user preference
+// The button on algorithm.html calls getSOC and updates webpage with random soc
+
+// Considerations
+//----------------
+// Right now shiftAmt and scale are not ideal. We want the negative to impact a litle less and the positive a bit more. Maybe we should sort the groups by weights and assign a predetermined weight proportion (shifted slightly). Like most liked group gets 25%, then 20%, 15%, 10%, etc. 
+// Maybe then periodic unchoke would shift it to equal proportions, but also removing recently played	
+// Also maybe the group weights shoud be base down onto individual SOC's. Top-down. weighted. If that's a better structure. Like calculate weights for each group first, then pass it to the SOC's, distributed proportionally. Not sure how this will help
+
+
+// Work flow
+// -----------
+// For the work flow, we could used weighted random to get the soc group, then run the filter, but then this may end up with 0 results. 
+//
+// So the process should be 
+// 1. construction socMapTreeAll with weights 
+// 2. get filtered SOC list 
+// 3. construct filtered socMapTreeFiltered, copying weights from socMapTreeAll
+// 4. Use socMapTreeFiltered to run weighted random
+// 5. Get multiple soc codes to put into a queue
+// 6. Sort the queue by some heuristics, maybe to group similar, but also make sure to change after a few. 
+// 7. Asynchronously save the queue for a user. Periodically update it after getting more user feedback (i.e. like/dislike)
+
+
+
+///////////////////
+// Function list //
+// --------------//
+// chooseSOC(mapTree): use weigted random to choose a SOC
+// getSOC(): calls chooseSOC and updates website
+// chooseMajorGroup(majorGroupArray): chooses major group given array with weights
+// chooseMinorGroup(majorGroupMap): chooses minor group given majorGroup
+// chooseOccupation(minorGroup): randomly chooses SOC in the minorGroup
+// computeMajorWeights: computes weights of major goup by SOC weights
+// getMinorGroupWeight: get sum of all weights in minor group
+// getMajorGroupWeight: get sum of all weights in major group
+
+
+/////////////////////////////////
+// Function to help build tree //
+// --------------------------- //
+// buildMapTree: builds main map tree
+// makeMinorGroupMap: creates a minor group map given a majorGroup array
+// filterMajor: filter SOCWeightedList by major groups
+// filterMinor: filter SOCWeightedList by minor groups
+// socToString: change soc from num to string in socObject
+
+// Sample data generation
+// generateWeights: generate an array of soc-object list with random weights. {soc,weight}
+
+
+// Generate 
+var socMapTree = buildMapTree(testSOCWeighted);
+var job_queue = new Array();
+var counter = 0;
+var seen_socs = {};
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+ //fill job_queue with socs to show next, shuffle  order of jobs to add randomness
+function fill_queue(){
+	for (var i = 0; i < 5; i++)
+	{
+		var soc = chooseSOC(socMapTree);
+		if (!seen_socs[soc])
+		{
+			job_queue.push(soc);
+			seen_socs[soc] = true;
+		}
+	}
+	shuffle(job_queue);
+}
+
+
+
+// Chooses a weighted random SOC code and updates the website
+//chooses based on front of job_queue, adds more to queue periodically (adds max 5 jobs to queue every 3 jobs shown to user)
+function getSOC(){
+	//var soc = chooseSOC(socMapTree)
+	if (seen_socs.length == 819) {
+		document.getElementById("SOC2").innerHTML += "Search Exhausted <br>";
+		return;
+	}
+
+	var soc;
+	if (counter == 3)
+	{
+		fill_queue();
+		counter = 0;
+	}
+	else
+	{
+		counter++;
+	}
+
+	if (job_queue.length > 0)
+	{
+		soc = job_queue[0];
+		job_queue.splice(0, 1);
+
+		// Updates the HTML text with an SOC number
+		document.getElementById("SOC2").innerHTML += soc + "<br>";
+
+	}
+	else
+	{
+		fill_queue();
+		counter--;
+		getSOC();
+	}
+	
+}
+
+function chooseSOC(mapTree)
+{
+	// Compute MajorGroup weights and add to tree. {11:..., 53..., weight:...}
+	// As an additional attribute of the object/map
+	mapTree = computeMajorWeights(mapTree);
+
+	var majorGroupArray = [] // Array to contain majorGroupNum and weights
+	var majorIndex;
+	var majorWeight;
+	var groupWeightObj = {};
+	for (var majorIndex in mapTree)
+	{
+		// check majorGroup is non-empty (i.e. has minor groups)
+		if (Object.keys(mapTree[majorIndex]).length > 1) 
+		{
+			majorWeight = mapTree[majorIndex]['weight']; // get weight
+
+			// Create new Group Object with Num & Weight
+			groupWeightObj = {};
+			groupWeightObj.majorGroupNum = majorIndex;
+			groupWeightObj.weight = majorWeight;
+			majorGroupArray = majorGroupArray.concat(groupWeightObj); // add to array
+		}
+	}
+
+	//console.log(majorGroupArray);
+	// Choose Major Group
+	var majorGroup = chooseMajorGroup(majorGroupArray);
+	//console.log("MajorGroup: " + majorGroup);
+
+	// Choose Minor Group
+	var minorGroup = chooseMinorGroup(mapTree[majorGroup])
+	//console.log("MinorGroup: " + minorGroup);
+
+	// Choose final SOC
+	var soc = chooseOccupation(mapTree[majorGroup][minorGroup])
+	return soc['soc'];
+}
+
+
+// Choose a major group based on a major group list with weights
+function chooseMajorGroup(majorGroupArray) // majorGroupArray with Weight
+{
+	// Get the magnitude of the weights. Use this as base shift amount
+	var max = 10;
+	for (var i in majorGroupArray)
+	{
+		if (Math.abs(majorGroupArray[i]['weight']) > max)
+			max = Math.abs(majorGroupArray[i]['weight']); 
+	}
+
+
+	// Use shiftAmt to make weight values positive for probabiity 
+	var shiftAmt = max+10; 
+	var scale = 4;	// multiple weight value to increase effect
+
+
+	var n; 
+	var total = 0;
+	// so I apply shfit amount based on max
+	// and multipler based on the weight
+	// maybe I need to consider doing more multipler for positive and less for negative
+	for (var i in majorGroupArray)
+	{
+		n = shiftAmt + majorGroupArray[i]['weight']*scale; // shift weight and scale
+		// if < 1, make it 1. To give some chance
+		if (n < 1) n = 1;
+		majorGroupArray[i]['scaledWeight'] = n;
+
+		total += n; // Keep track of total to calc % chance
+	}
+
+
+	var weightedArray = [];
+	var majorGroupNum
+	var percent; 
+	for (var i in majorGroupArray)
+	{
+		majorGroupNum = majorGroupArray[i]['majorGroupNum'];
+		n = majorGroupArray[i]['scaledWeight'];
+		percent = (n / total + "").slice(0,6); // Slice first 6 digit to display
+
+		//console.log(majorGroupNum + ": Chance:" + n + "/" + total + "="+ percent);
+
+		// Add the scale weight number of majorGroupNum to array
+		for (var j = 0; j < n; j++)
+			weightedArray = weightedArray.concat(majorGroupNum);
+	}
+	//console.log(weightedArray);
+
+	// randomly choose from the weighted array
+	var randIndex = Math.floor(Math.random() * weightedArray.length);
+
+	return weightedArray[randIndex];
+}
+
+
+// Choose a minor group based on a majorGroupMap
+function chooseMinorGroup(majorGroupMap) 
+{
+	var minorGroupArray = []
+	var groupWeightObj = {}
+	for (var minorIndex in majorGroupMap)
+	{
+		// for every minorGroup, compute their weight, and collect into a list with {minorGroupNum, weight}
+
+		if (minorIndex !== "weight")
+		{
+			groupWeightObj = {}
+			groupWeightObj['minorGroupNum'] = minorIndex;
+			groupWeightObj['weight'] = getMinorGroupWeight(majorGroupMap[minorIndex]);
+			minorGroupArray = minorGroupArray.concat(groupWeightObj)
+		}
+	}
+
+	// Get the magnitude of the weights. Use this as base shift amount
+	var max = 10;
+	for (var i in minorGroupArray)
+	{
+		if (Math.abs(minorGroupArray[i]['weight']) > max)
+			max = Math.abs(minorGroupArray[i]['weight']); 
+	}
+	//console.log(max)
+
+
+	var shiftAmt = max+10; 
+	var scale = 4;
+	var n; 
+	var total = 0;
+	for (var i in minorGroupArray)
+	{
+		n = shiftAmt + minorGroupArray[i]['weight']*scale; // shift weight and scale
+		// if < 1, make it 1. To give some chance
+		if (n < 1) n = 1;
+		minorGroupArray[i]['scaledWeight'] = n;
+
+		total += n; // Keep track of total to calc % chance
+	}
+
+
+	var weightedArray = [];
+	var minorGroupNum
+	var percent; 
+	for (var i in minorGroupArray)
+	{
+		minorGroupNum = minorGroupArray[i]['minorGroupNum'];
+		n = minorGroupArray[i]['scaledWeight'];
+		percent = (n / total + "").slice(0,6); // slice first 6 digits to display
+
+		//console.log(minorGroupNum + ": Chance:" + n + "/" + total + "="+ percent)
+
+		// Add the scale weight number of majorGroupNum to array
+		for (var j = 0; j < n; j++)
+			weightedArray = weightedArray.concat(minorGroupNum);
+	}
+	//console.log(weightedArray);
+
+	// randomly choose from the weighted array
+	var randIndex = Math.floor(Math.random() * weightedArray.length);
+
+	return weightedArray[randIndex];
+}
+
+
+// Randomly choose an SOC code from a list of SOC codes
+function chooseOccupation(minorGroupArray)
+{
+	var soc = {}
+	var randIndex = Math.floor(Math.random() * minorGroupArray.length);
+	soc = minorGroupArray[randIndex];
+	return soc;
+}
+
+// computes weights of major group by SOC weights
+function computeMajorWeights(mapTree)
+{
+	for (var i in mapTree)
+		mapTree[i]['weight'] = getMajorGroupWeight(mapTree[i]);
+
+	return mapTree;
+}
+
+
+
+// maps soc into major groups
+function buildMapTree(socWeightedList)
+{
+	soclist = socWeightedList;
+
+	// making minor group
+	var mapTree = {}
+	var majorGroupMap = {}
+	for (var majorIndex = 11; majorIndex < 56; majorIndex+=2)
+	{ // 11 to 55. 
+		majorGroupMap[majorIndex] = soclist.map(socToString).filter(filterMajor(majorIndex));
+	}
+
+	for (var majorIndex in majorGroupMap){
+		mapTree[majorIndex] = makeMinorGroupMap(majorGroupMap[majorIndex]);
+	}
+
+	return mapTree;
+}
+
+
+// Filtering functions
+// filterMajor: Returns true if soc code in specified majorGroup 
+function filterMajor(majorGroup)
+{
+	majorGroup += "";
+	return function (soc){
+		socMajor = soc['soc'].substring(0,2); // take first 2 digits
+		//if (socMajor === majorGroup)
+		//	console.log(socMajor + " " + soc);
+		return (socMajor === majorGroup)
+	}
+}
+
+// filterMinor: Returns true if soc code is in specified minorGroup
+function filterMinor(minorGroup)
+{
+	minorGroup += "";
+	return function (soc){
+		socMinor = soc['soc'].substring(2,3); // take 3rd digit
+
+		// if (socMinor === minorGroup)
+		// 	console.log(socMinor + " " + soc);
+		return (socMinor === minorGroup)
+	}
+}
+
+// takes a array in major groups and converts it into an map, grouped by minor groups
+function makeMinorGroupMap(majorArray)
+{
+	var minorGroupMap = {};
+	var tempMinorArray;
+	for (var i = 1; i < 10; i++)
+	{
+		tempMinorArray = majorArray.filter(filterMinor(i));
+		if (tempMinorArray.length > 0)
+			minorGroupMap[i] = tempMinorArray;
+	}
+	return minorGroupMap;
+}
+
+// Gets weight of the minorGroup
+function getMinorGroupWeight(minorGroupMap)
+{
+	var weight = 0;
+	for (var i in minorGroupMap)
+	{
+		weight += minorGroupMap[i].weight;
+	}
+	return weight;
+}
+
+// Gets weight of the major group, calling getMinorGroupWeight
+function getMajorGroupWeight(majorGroupMap)
+{
+	var weight = 0;
+	for (var i in majorGroupMap)
+		weight += getMinorGroupWeight(majorGroupMap[i]);
+	
+	return weight;
+}
+
+// Make sure soc is string, prep for filter functions
+function socToString(x){ 
+	x['soc'] += ''
+	return x;
+}
+
+// To generate weight. I saved the weight as JSON
+// Generates random weights to the SOC
+function generateWeights(socQueryList)
+{
+	// socQueryList is a list of SOC's, ideally we are given socList with weights of 1, 0 or -1
+	if (!socQueryList)
+		throw "No Input"
+
+	var socWeigthedList = [];
+	var temp = {}
+
+	for (var i in socQueryList)
+	{
+		temp = {}
+		temp['soc'] = socQueryList[i];
+		temp['weight'] = (Math.floor(Math.random()* 3) -1); // assigns -1,0, or 1
+		socWeigthedList[i] = temp;
+
+	}
+	return socWeigthedList;
+}
+
+
+
+
+
+////////////////////////////////
+//////// Original DEMO//////////
+////////////////////////////////
+/*
+// Hardcoding of Major and Minor group list
+var mainGroupList = [11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53];
+var demoWeightedArray = mainGroupList;
+var mainGroupLength = mainGroupList.length;
+var demoMap = {}
+
+function numToString(x){ return x+""; }
+
+for (var majorIndex = 11; majorIndex < 56; majorIndex+=2)
+{ // 11 to 55. 
+	demoMap[majorIndex] = testSOCWeighted.map(socToString).filter(filterMajor(majorIndex));
+}
+
+function addWeight(x){
+	demoWeightedArray = demoWeightedArray.concat(x);
+	var targetId = "w" + x;
+	var count = Number(document.getElementById(targetId).innerHTML);
+	document.getElementById(targetId).innerHTML = count + 1;
+
+	document.getElementById('wtotal').innerHTML = computeTotal();
+}
+
+function computeTotal(){
+	var count = 0
+	for (var i = 11; i < 22; i+=2)
+	{
+		var targetId = "w" + i;
+		count += Number(document.getElementById(targetId).innerHTML);
+	}
+	return count;
+}
+
+function demoSOC(){
+	// create weighted array based on the weight of the node
+	// weighted by putting the heavier nodes more times in the lottery
+
+	// select a random node in the index
+	var index = Math.floor(Math.random()* demoWeightedArray.length);
+	var majorGroupNum = demoWeightedArray[index];
+	//console.log(majorGroupNum)
+
+	// get array of the group
+	var socListInMajorGroup = demoMap[majorGroupNum]; 
+	var indexOccupation = Math.floor(Math.random()* socListInMajorGroup.length);
+	var soc = socListInMajorGroup[indexOccupation]['soc'];
+
+	// Updates the HTML text with an SOC number
+	document.getElementById("SOC").innerHTML += soc + "<br>";
+
+}
+*/
+////////////////////////////////
+/////////// END DEMO////////////
+////////////////////////////////
+
+
+
+
+
+/* 
+
+David: The handleThumbsUp code is probably not part of the algorithm
+I think it should be part of the video player handler. It takes the thumbs up and updates the database to save that the user liked the SOC/video. 
+The Algorithm interface should take userID, then updates the video queue. Probably done on server asynchronously 
+
+function handleThumbsUp(soc) {
+	socMajor = soc.substring(0,2);
+	socMinor = soc.substring(2,3);
+	socBroadOccup = soc.substring(3,5);
+	
+	root.child[socMajor].weight += 2;
+	root.child[socMajor].child[socMinor].weight += 2;
+	root.child[socMajor].child[socMinor].child[socBroadOccup].weight += 2;
+	
+	nextTree = buildNextTree();
+	findNextSOC(nextTree);
+}
+*/
+
+
+
+// David: These are the old I tried to build the tree using
+// Can probably delete
+/*
+function findNextSOC(tree) {
+	//choose major group
+	var nextMajor = getMainGroup(tree);
+	var nextMinor = getMinorGroup(nextMajor, tree);
+	var nextOccup = getOccupation(nextMajor,nextMinor,tree);
+	
+	var soc = ""+nextMajor+nextMinor+nextOccup;u
+}
+*/
+
+/*
+function buildNextTree() {
+	var newRoot = {name: "Root",	
+			type: "Root",
+			child: {}
+}
+	var limit = 15;
+	// add child to root
+	for (var i in mainGroupList)
+	{
+		var mainGroupNum = mainGroupList[i];
+		var newNode = createNode(mainGroupNum, "MainGroup", root.child[mainGroupNum].weight, {});
+		if (newNode.weight > limit)
+			newRoot.child[mainGroupNum] = newNode;
+	}
+
+	// add child to major groups
+	for (var key in newRoot.child)
+	{
+		var node = newRoot.child[key];
+		var majorGroupNum = Number(node.name)
+		//console.log(majorGroupNum);
+		for (var k in minorGroupList[majorGroupNum])
+		{
+			var minorNum = minorGroupList[majorGroupNum][k]
+			var minNumWeight = root.child[mainGroupNum].child[minorNum].weight;
+			if (minNumWeight > limit)
+				newRoot.child[majorGroupNum].child[minorNum] = createNode(minorNum , "MinorGroup", minNumWeight, {});
+		}
+	}
+
+	// add child to minor groups
+	for (var majorNum in newRoot.child)
+	{
+		majorNode = newRoot.child[majorNum];
+		//console.log(minorGroupList[majorNum]);
+		for (var minorNum in majorNode.child)
+		{
+			var minorNode = majorNode.child[minorNum];
+
+			var combine = Number(majorNum + "" + minorNum);
+			//console.log(combine);
+			var occuplist = majorMinor[combine]
+			//console.log(occuplist);
+
+			for (var occupNumIndex in occuplist)
+			{
+				occupNum = occuplist[occupNumIndex];
+				//console.log(majorNum + " " + minorNum + " " + occupNum);
+				var occupNumWeight = root.child[majorNum].child[minorNum].child[occupNum].weight;
+				if (occupNumWeight > limit)
+					minorNode.child[Number(occupNum)] = createNode(""+occupNum , "Occupation", occupNumWeight, {});
+			}	
+		}
+	}
+	return newRoot;
+}
+	*/
+	
+
+
+
+
+
+
+
+
+/*
+var minorGroupList = {};
+minorGroupList[11] = ['1', '2', '3', '9']
+minorGroupList[13] = [1, 2]
+minorGroupList[15] = [1, 2]
+minorGroupList[17] = [1, 2, 3]
+minorGroupList[19] = [1, 2, 3, 4]
+minorGroupList[21] = [1, 2]
+minorGroupList[23] = [1, 2]
+minorGroupList[25] = [1, 2, 3, 4, 9]
+minorGroupList[27] = [1, 2, 3, 4]
+minorGroupList[29] = [1, 2, 9]
+minorGroupList[31] = [1, 2, 9]
+minorGroupList[33] = [1, 2, 3, 9]
+minorGroupList[35] = [1, 2, 3, 9]
+minorGroupList[37] = [1, 2, 3]
+minorGroupList[39] = [1, 2, 3, 4, 5, 6, 7, 9]
+minorGroupList[41] = [1, 2, 3, 4, 9]
+minorGroupList[43] = [1, 2, 3, 4, 5, 6, 9]
+minorGroupList[45] = [1, 2, 3, 4]
+minorGroupList[47] = [1, 2, 3, 4, 5]
+minorGroupList[49] = [1, 2, 3, 9]
+minorGroupList[51] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+minorGroupList[53] = [1, 2, 3, 4, 5, 6, 7]
+minorGroupList[55] = [1, 2, 3]
+
+var majorMinor = {}
+
+majorMinor[111] = ["011", "021", "031"];
+majorMinor[112] = ['011', "021", "022", "031"];
+majorMinor[113] = ["011", "021", "031", "051", "061", "071", "111", "121", "131"];
+majorMinor[119] = ["013", "021", "031", "032", "033", "039", "041", "051", "061", "071", "081", "111", "121", "131", 
+
+
+majorMinor[131] = ["011", "021", "022", "023", "031", "032", "041", "051", "071", "074", "075", "081", "111", "121", 
+majorMinor[132] = ["011", "021", "031", "041", "051", "052", "053", "061", "071", "072", "081", "082", "099"];
+
+
+var root = {name: "Root",
+			type: "Root",
+			child: {}
+}
+*/
+// Creats node
+// each node has name, type, weight and child
+// child is a dictionary of nodes. Use for (var child in node.child) to loop
+/*
+function createNode(num, type, weight, child){
+	return 	{name: num, 
+				type: type,
+				weight: weight,
+				child: child}
+}
+
+
+// contruct tree
+function buildTree(){
+	
+	// add child to root
+	for (var i in mainGroupList)
+	{
+		var mainGroupNum = mainGroupList[i];
+		var newNode = createNode(mainGroupNum, "MainGroup", 1, {});
+
+		root.child[mainGroupNum] = newNode;
+	}
+
+	// add child to major groups
+	for (var key in root.child)
+	{
+		var node = root.child[key];
+		var majorGroupNum = Number(node.name)
+		//console.log(majorGroupNum);
+		for (var k in minorGroupList[majorGroupNum])
+		{
+			var minorNum = minorGroupList[majorGroupNum][k]
+			root.child[majorGroupNum].child[minorNum] = createNode(minorNum , "MinorGroup", 1, {});
+		}
+	}
+
+	// add child to minor groups
+	for (var majorNum in root.child)
+	{
+		majorNode = root.child[majorNum];
+		//console.log(minorGroupList[majorNum]);
+		for (var minorNum in majorNode.child)
+		{
+			var minorNode = majorNode.child[minorNum];
+
+			var combine = Number(majorNum + "" + minorNum);
+			//console.log(combine);
+			var occuplist = majorMinor[combine]
+			//console.log(occuplist);
+
+			for (var occupNumIndex in occuplist)
+			{
+				occupNum = occuplist[occupNumIndex];
+				//console.log(majorNum + " " + minorNum + " " + occupNum);
+
+				minorNode.child[Number(occupNum)] = createNode(""+occupNum , "Occupation", 1, {});
+			}	
+		}
+	}
+
+}
+
+
+// builds tree
+buildTree();
+
+
+
+function getMainGroup(socTree){
+	var mainGroupArray = []
+
+	// pushes all child of root into an array
+	for (var c in socTree.child)
+		mainGroupArray.push(socTree.child[c]);
+	
+	// create weighted array based on the weight of the node
+	// weighted by putting the heavier nodes more times in the lottery
+	var weightedArray = []
+	var scaleInt = 100
+	for (var i = 0; i < mainGroupArray.length; i++)
+	{
+		var node = mainGroupArray[i];
+		var weight = Math.floor(node.weight * scaleInt);
+		for (var j = 0; j < weight; j++)
+			weightedArray.push(node.name);
+	}
+
+	// select a random node in the index
+	var index = Math.floor(Math.random()* weightedArray.length);
+	var numSelected = weightedArray[index];
+	var mainGroupNum = socTree.child[numSelected].name;
+	return mainGroupNum;
+	// Haha, we only got 11 and 13 coded right now, need to implement build tree via database to get all the data.
+	/*mainGroupNum = 11 + Math.floor(Math.random()*2)*2;
+
+	var minorNum = getMinorGroup(mainGroupNum);
+	var occupationNum = getOccupation(mainGroupNum, minorNum);
+
+
+	// Updates the HTML text with an SOC number
+	document.getElementById("SOC").innerHTML += mainGroupNum + "-" + minorNum + " " + occupationNum + "<br>";
+
+}
+
+
+// same as major group
+function getMinorGroup(majorGroup, socTree){
+	var minorGroupArray = []
+	baseNode = socTree.child[majorGroup];
+	for (var c in baseNode.child)
+		minorGroupArray.push(baseNode.child[c]);
+	
+	var weightedArray = []
+	var scaleInt = 100
+	for (var i = 0; i < minorGroupArray.length; i++)
+	{
+		var node = minorGroupArray[i];
+		var weight = Math.floor(node.weight * scaleInt);
+		for (var j = 0; j < weight; j++)
+			weightedArray.push(node.name);
+	}
+
+	//console.log(weightedArray);
+	var index = Math.floor(Math.random()* weightedArray.length);
+	var numSelected = weightedArray[index];
+
+	var minorGroupNum = baseNode.child[numSelected].name;
+	
+	return minorGroupNum;
+}
+
+
+// same as major group
+function getOccupation(majorGroup, minorGroup, socTree){
+	var occupationArray = []
+	baseNode = socTree.child[majorGroup].child[minorGroup];
+	for (var c in baseNode.child)
+		occupationArray.push(baseNode.child[c]);
+	
+	var weightedArray = []
+	var scaleInt = 100
+	for (var i = 0; i < occupationArray.length; i++)
+	{
+		var node = occupationArray[i];
+		var weight = Math.floor(node.weight * scaleInt);
+		for (var j = 0; j < weight; j++)
+			weightedArray.push(node.name);
+	}
+
+	var index = Math.floor(Math.random()* weightedArray.length);
+	var numSelected = weightedArray[index];
+
+	//console.log(majorGroup + " " + minorGroup + " " + numSelected);
+	var occupationNum = baseNode.child[Number(numSelected)].name;
+	
+	return occupationNum;
+}
+*/
+
+</script>
+
+
+
+</body>
+
+
+</html>

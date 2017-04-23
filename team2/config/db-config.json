@@ -1,0 +1,9 @@
+{
+    "host" : "localhost",
+    "port" : 8889,
+    "user" : "p3_admin",
+    "password" : "",
+    "database" : "p3_test",
+    "socket" : "/Applications/MAMP/tmp/mysql/mysql.sock",
+    "connectionLimit" : 100
+}

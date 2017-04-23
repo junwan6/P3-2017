@@ -1,0 +1,162 @@
+2016-05-31 Tremaine Eto:
+	* Implemented World of Work plotting for any given job according to Dr. Scanlan's algorithm
+	* Fixed World of Work mapping by rotating 90 degrees
+
+2016-05-31 Roy Xia:
+	* Added a mostly empty donors page.
+	* Fixed a bug on password reset codes expiring too early
+	* Updated password reset UI
+	* Added a general 404 page
+	* Fixed bug in the browse page partial generation script that was still generating jobs with no education requirement
+	* Fixed ordering bug in the browse page partial, it now outputs in SOC code order
+	* Implemented dynamic view history retrieval for profile page and World of Work plotting.
+	* Cleaned up UI for profile page.
+	* Implemented random job by World of Work region.
+
+2016-05-30 Tremaine Eto:
+	* Set up canvas on top of World of Work to be able to have parameterized x and y values
+	* Plot arbitrarily a star on World of Work map for proof of concept
+	* Changed "PASSION:" in navibar to a more UCLA-centric (as per client request) gold color
+
+2016-05-30 Max Chern:
+	* Fixed Remember Me code to follow MVC
+
+2016-05-29 Roy Xia:
+	* Implemented password reset. Not fully robust yet.
+
+2016-05-29 Max Chern:
+	* Implemented Remember Me Functionality (Using Cookies/Tokens)
+
+2016-05-28 Max Chern:
+	* Reorganized/condensed state data code
+	* Implemented Skills Dialog Pie Chart
+
+2016-05-27 Tremaine Eto:
+	* Fixed dropdown centering UI bug
+
+2016-05-27 Roy Xia:
+	* Refined home page UI when logged in
+	* Fixed bug with logout button always being highlighted
+	* Reorganized global.css and index.css
+
+2016-05-27 Max Chern:
+	* Added definitions to Skills page
+
+2016-05-25 Roy Xia:
+	* Refined home page UI
+
+2016-05-25 Tremaine Eto:
+	* Implemented dynamic state data for salary page
+
+2016-05-24 Max Chern:
+	* Implemented dynamic education page (except state data)
+	* Implemented dynamic education page including state data
+
+2016-05-23 Roy Xia:
+	* Refactoring of the icons pane
+	* Refinement of general site UI
+	* Updated scripts to exclude occupations that require less than a Bachelor's degree
+
+2016-05-21 Max Chern:
+        * Implemented dynamic skills page
+
+2016-05-20 Roy Xia:
+	* Refactored client-side stylesheet and script imports into a partial
+	* Implemented responsive web design for the home page
+
+2016-05-20 Max Chern:
+        * Implemented LinkedIn Authentication
+
+2016-05-18 Roy Xia:
+	* Created script for importing skills data
+	* Refactored scripts and refined the script's output to the terminal
+
+2016-05-18 Tremaine Eto:
+	* Replaced HTML for ZIP Code with State dropdown for demo during meeting; will now implement with the StateOccupation data Roy imported
+
+2016-05-18 Max Chern:
+	* Implemented Facebook Authentication
+
+2016-05-17 Tremaine Eto:
+	* Fixed minor data import bug for high salary wage values.
+	* Added low average wages and high average wages to Salary Page.
+
+2016-05-17 Roy Xia:
+	* Created script for importing occupational interest data.
+
+2016-05-15 Max Chern:
+	* Added dynamic Education page information/charts.
+	* Fixed the authentication process so that it follows MVC convention.
+	* Fixed authentication bugs.
+	* Fixed the X button on the sign up pop-up box.
+
+2016-05-13 Tremaine Eto:
+	* Minor styling fix: nicely formatted CSS for ZIP code on Salary Page.
+	* Fixed grey text bug on Salary Page.
+
+2016-05-13 Roy Xia:
+	* Updated the search page so that more information about the job is revealed.
+	* Added partial implementation of getting a random career from a World of Work region. Need data on how to plot careers to the World of Work before full implementation.
+	* Refactored some utility functions related to formatting into a formatting utility class.
+	* Improved search algorithm to allow for keyword searching.
+	* Fixed potential SQL injection vulnerabilities.
+	* Updated the database schema, which now includes state data, hourly wage data, and low/high wages
+
+2016-05-11 Roy Xia:
+	* Implemented search functionality with naive algorithm.
+	* Added search bar to browse page and navigation bar.
+	* Fixed bug in init_db that was using the wrong account.
+	* Fixed styling bug related to fonts.
+	* Added UI mockup for browsing by World of Work.
+
+2016-05-11 Tremaine Eto:
+	* Added Highcharts JS graph with dynamic, occupation-specific median annual salary data to Salary Page.
+	* The reason why Highcharts was chosen was because it reads directly from an HTML table which is actually coded on the HTML page (yet has its display hidden); we have not yet quite figured out how to send the templated Handlebars data on the HTML side to the Javascript side, so this may be something to explore in the future.
+
+2016-05-06 Max Chern:
+	* Implemented error messages for bad login/signup attempts.
+	* Tweaked index.js; after a bad login/signup attempt, the same login/signup form is displayed.
+
+2016-05-05 Roy Xia:
+	* Implemented looking through careers by occupation groups.
+
+2016-05-05 Max Chern:
+	* Local Login/Logout Functionality.
+	* Navigation bar now presents a logout button if the user is logged in.
+	* User can toggle between Sign Up and Log In.
+	* Fixed a bug that broke the jQuery functionality on some pages.
+	* Moved code to a global css file for global styling.
+	* Renamed home page css and js files to index.css and index.js.
+
+2016-05-04 Roy Xia:
+	* Created browse page with basic proof of concept.
+	* Refactored navigation bar into a partial.
+	* Implemented random career functionality.
+	* Fixed a bug in the data import script that was producing the opposite value of medianAnnualSalaryOutOfRange.
+
+2016-05-03 Tremaine Eto:
+	* Created UI mockup for World of Work page.
+	* Added World of Work page to routing mechanism of main.js.
+	* Added Profile page to routing mechanism of main.js.
+
+2016-05-03 Roy Xia:
+	* Updated Occupation model to support a success and error callback model.
+	* Proof of concept for templating career outlook page.
+	* Updated routing so that the career video pages and related sub-pages are prefixed with "career" in the resource URL.
+
+2016-05-02 Roy Xia:
+	* Added RegionalOccupation table.
+	* Updated scripts to extract regional salary data.
+
+2016-04-29 Roy Xia:
+	* Initialize changelog.
+	* Set up web server framework with Node.js and Express.
+	* Created application directory structure.
+	* Set up web server routing to serve home page.
+	* Set up DB for reading from within the application server.
+	* Created basic scaffolding for serving the video page.
+
+2016-04-28 Tremaine Eto:
+	* Ported files from Team 2's P3 Github repository into Team 1's P3 Github repository.
+	* Set up Bootstrap files and got it working.
+	* Created UI mockup for User Profile Page with Bootstrap's responsive design.

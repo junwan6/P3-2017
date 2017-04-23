@@ -1,0 +1,385 @@
+body {
+	background-color: white;
+	color: white;
+	font-family: Avenir Light;
+	font-size: 20px;
+	text-align: center;
+}
+
+a {
+	text-decoration: none;
+	color: white;
+}
+
+a:link {
+	text-decoration: none;
+	color: white;
+}
+
+a:visited {
+	text-decoration: none;
+	color: white;
+}
+
+a:hover {
+	text-decoration: none;
+	color: white;
+}
+
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden;
+}
+
+#fader {
+	top: 0em;
+	bottom: 0em;
+	right: 0em;
+	left: 0em;
+	width: 100%;
+	position: fixed;
+	background-color: black;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	z-index: 2;
+}
+
+
+#signUpBox {
+	top: 6em;
+	left: 50%;
+	position: fixed;
+	color: black;
+
+	height: 20em;
+	width: 20em;
+	z-index: 3;
+}
+
+#signUpContent {
+	color: black;
+	background-color: white;
+	line-height: 2em;
+	height: 20em;
+	width: 20em;
+	margin-left: -10em;
+	position: fixed;
+	z-index: 3;
+}
+
+.signUpInfo {
+	width: 100%;
+	text-align: left;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.signUpTextField {
+	width: 50%;
+	margin-top: 1em;
+	right: 2em;
+	position: absolute;
+}
+
+#linkedinBox {
+	height: 41px;
+	width: 215px;
+	position: absolute;
+	left: 50%;
+	margin-top: 0.5em;
+}
+
+#linkedinButton {
+	background-image: url("/images/linkedindefault.png");
+	height: 41px;
+	width: 215px;
+	position: absolute;
+	margin-left: -107.5px;
+}
+
+#signUpButtonBox {
+	height: 2em;
+	width: 5em;
+	position: absolute;
+	left: 50%;
+	bottom: 1em;
+}
+
+#signUpButton {
+	height: 2em;
+	width: 5em;
+	position: absolute;
+	margin-left: -2.5em;
+
+	border-radius: 3px;
+
+	background-color: hsl(210, 60%, 50%);
+	color: white;
+}
+
+#signUpButton:hover {
+	background-color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+#signUpButton:active {
+	background-color: hsl(210, 60%, 60%);
+}
+
+#signUpCloseButton {
+	top: 0.1em;
+	right: 0.1em;
+	position: absolute;
+	color: hsl(210, 60%, 50%);
+}
+
+#signUpCloseButton:hover {
+	color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+#signUpCloseButton:active {
+	color: hsl(210, 60%, 60%);
+}
+
+#linkedinButton:hover {
+	background-image: url("/images/linkedinhover.png");
+	cursor: pointer;
+}
+
+#linkedinButton:active {
+	background-image: url("/images/linkedinactive.png");
+
+}
+
+#loginBox {
+	top: 2em;
+	right: 0.5em;
+	position: fixed;
+	color: black;
+
+	height: 15em;
+	width: 15em;
+	z-index: 3;
+}
+
+#loginContent {
+	color: black;
+	background-color: white;
+	line-height: 2em;
+	height: 15em;
+	width: 15em;
+	position: fixed;
+	z-index: 3;
+}
+
+.loginInfo {
+	width: 100%;
+	text-align: left;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.loginTextField {
+	width: 50%;
+	margin-top: 1em;
+	right: 2em;
+	position: absolute;
+}
+
+#loginButtonBox {
+	height: 2em;
+	width: 5em;
+	position: absolute;
+	left: 50%;
+}
+
+#loginButton {
+	height: 2em;
+	width: 5em;
+	position: absolute;
+	margin-left: -2.5em;
+
+	border-radius: 3px;
+
+	background-color: hsl(210, 60%, 50%);
+	color: white;
+}
+
+#loginButton:hover {
+	background-color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+#loginButton:active {
+	background-color: hsl(210, 60%, 60%);
+}
+
+#loginCloseButton {
+	top: 0.1em;
+	right: 0.1em;
+	position: absolute;
+	color: hsl(210, 60%, 50%);
+}
+
+#loginCloseButton:hover {
+	color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+#loginCloseButton:active {
+	color: hsl(210, 60%, 60%);
+}
+
+
+#navibar {
+	text-decoration: none;
+	background-color: hsl(210, 60%, 70%);
+	text-align: left;
+	position: absolute;
+	z-index: 1;
+	left: 0em;
+	right: 0em;
+	top: 0em;
+	height: 2em;
+	font-size: 18px;
+	line-height: 2em;
+	vertical-align: center;
+
+	line-height: 2em;
+	vertical-align: center;
+	
+
+}
+
+#PASSION {
+	top: 2em;
+	position: absolute;
+	left: 0em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	width: 15em;
+	background-color: hsl(210, 60%, 70%);
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+}
+
+#mainButtons {
+	height: 100%;
+	left: 28em;
+	position: absolute;
+}
+
+#signUpLogin {
+	position: absolute;
+	right: 0em;
+}
+
+.navibutton {
+	display: inline-block;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	
+}
+
+.navibutton:hover {
+	cursor: pointer;
+	background-color: hsl(210, 60%, 75%);
+}
+
+#imageContainer {
+	height: 40em;
+	position: absolute;
+	left: 0em;
+	right: 0em;
+}
+
+#mainImage {
+	width: 100%;
+	position: absolute;
+	left: 0em;
+	right: 0em;
+
+
+
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+}
+
+#welcomeBox {
+	top: 7em;
+	left: 50%;
+	position: inherit;
+	color: black;
+
+	height: 8em;
+	width: 20em;
+}
+
+#welcomeContent {
+	color: black;
+	background-color: white;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	height: 8em;
+	width: 20em;
+	margin-left: -10em;
+	line-height: 1.25em;
+	vertical-align: center;
+}
+
+
+#freeAccount {
+	top: 17em;
+	left: 50%;
+	position: inherit;
+	color: black;
+
+	height: 2em;
+	width: 16em;
+}
+
+#freeAccountContent {
+	color: black;
+	background-color: white;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	height: 2em;
+	width: 16em;
+	margin-left: -8em;
+	line-height: 2em;
+	vertical-align: center;
+}
+
+#freeAccountContent:hover {
+	cursor: pointer;
+	color: hsl(210, 60%, 50%);
+
+}
+
+#browseCareers {
+	top: 21em;
+	left: 50%;
+	position: inherit;
+	color: black;
+
+	height: 2em;
+	width: 14em;
+}
+
+#browseCareersContent {
+	color: black;
+	background-color: white;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	height: 2em;
+	width: 14em;
+	margin-left: -7em;
+	line-height: 2em;
+	vertical-align: center;
+}
+
+#browseCareersContent:hover {
+	cursor: pointer;
+	color: hsl(210, 60%, 50%);
+}

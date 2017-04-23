@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+		<head>
+			{{> global_header }}
+			<script type="text/javascript" language="javascript" src="/static/icons.js"></script>
+                        <link type="text/css" rel="stylesheet" href="/static/icons.css">
+			<script type="text/javascript" language="javascript" src="/static/careerOutlook.js"></script>
+			<link type="text/css" rel="stylesheet" href="/static/careerOutlook.css">
+
+			<title>
+				PPP
+			</title>
+		</head>
+		<body>
+			{{#if loggedIn}}
+        {{> navbarlogout }}
+      {{else}}
+        {{> navbar}}
+      {{/if}}
+
+                        <div class="container-fluid">
+                          <div class="row">
+                            <div class="col-md-9 col-md-offset-1">
+                              <div class="box">
+                                <div id="pageTitle">
+			          Career Outlook
+			        </div>
+			        <div id="careerTitle">
+			          {{occupationTitle}}
+			        </div>
+                                <div id="growthPercent">
+                                  <i id="growthPercentIcon" class="fa fa-sun-o fa-5x" aria-hidden="true"></i>
+                                  <p id="growthPercentText">{{careerGrowth}}</p>
+                                </div>
+
+                                <div id="outlookTable">
+                                  National Trends
+                                  <table class="table">
+                                    <tr>
+                                      <th rowspan="2">United States</th>
+                                      <th colspan="2">Employment</th>
+                                      <th rowspan="2">Percent Change</th>
+                                      <th rowspan="2">Projected Annual Job Openings</th>
+                                    </tr>
+                                    <tr>
+                                      <th>2014</th>
+                                      <th>2024</th>
+                                    </tr>
+                                    <tr>
+                                      <td>{{occupationTitle}}</td>
+                                      <td>{{currentEmployment}}</td>
+                                      <td>{{futureEmployment}}</td>
+                                      <td>{{careerGrowth}}</td>
+                                      <td>{{jobOpenings}}</td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                              {{> icons }}
+                            </div>
+                          </div>
+                        </div>
+
+		</body>
+</html>

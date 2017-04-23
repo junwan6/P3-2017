@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head><title>Algorithm Test</title>
+
+<body>
+	<center>
+<h1> Recommendation Engine </h1>
+<p> Click to get a SOC </p> 
+
+<p id = "groupPercent"></p>
+
+<button type="button" onclick="getSOC()">Get Weighted SOC</button>
+<p id="SOC2"></p>
+
+
+<script src="SOC.js"></script>
+<script> 
+
+
+// Next Step for development
+// Algorithm side
+// 1. Play around with shiftAmt and scale to better choose weighted random. See "Considerations"
+// 2. Generate a queue of non-repating SOC's, and have some heuristic to sort the list
+
+// Server side
+// 1. Setup SQL server to track user like/dislike
+// 2. Be able to get SOC-weighted list from server
+// 3. Decide of filtering workflow. Possible setup in "Work Flow Section"
+// 4. Setup server save to update video view queue.
+
+
+// Setup Steps
+// ------------
+// Build soc Map Tree with: socMapTree = buildMapTree(testSOCWeighted)
+// This builds the socMapTree[Major][Minor]={soc, weight} with randomWeights
+// We have a sample random set of weights right now. Favoring Major Group 51
+// Ideally we should be passing a list of {soc: socString, weight: num} object to the buildMapTree function. Based on what user liked and disliked
+// Call ChooseSOC(socMapTree) to get a weighted random SOC based on user preference
+// The button on algorithm.html calls getSOC and updates webpage with random soc
+
+// Considerations
+//----------------
+// Right now shiftAmt and scale are not ideal. We want the negative to impact a litle less and the positive a bit more. Maybe we should sort the groups by weights and assign a predetermined weight proportion (shifted slightly). Like most liked group gets 25%, then 20%, 15%, 10%, etc. 
+// Maybe then periodic unchoke would shift it to equal proportions, but also removing recently played	
+// Also maybe the group weights shoud be base down onto individual SOC's. Top-down. weighted. If that's a better structure. Like calculate weights for each group first, then pass it to the SOC's, distributed proportionally. Not sure how this will help
+
+
+// Work flow
+// -----------
+// For the work flow, we could used weighted random to get the soc group, then run the filter, but then this may end up with 0 results. 
+//
+// So the process should be 
+// 1. construction socMapTreeAll with weights 
+// 2. get filtered SOC list 
+// 3. construct filtered socMapTreeFiltered, copying weights from socMapTreeAll
+// 4. Use socMapTreeFiltered to run weighted random
+// 5. Get multiple soc codes to put into a queue
+// 6. Sort the queue by some heuristics, maybe to group similar, but also make sure to change after a few. 
+// 7. Asynchronously save the queue for a user. Periodically update it after getting more user feedback (i.e. like/dislike)
+
+
+
+///////////////////
+// Function list //
+// --------------//
+// chooseSOC(mapTree): use weigted random to choose a SOC
+// getSOC(): calls chooseSOC and updates website
+// chooseMajorGroup(majorGroupArray): chooses major group given array with weights
+// chooseMinorGroup(majorGroupMap): chooses minor group given majorGroup
+// chooseOccupation(minorGroup): randomly chooses SOC in the minorGroup
+// computeMajorWeights: computes weights of major goup by SOC weights
+// getMinorGroupWeight: get sum of all weights in minor group
+// getMajorGroupWeight: get sum of all weights in major group
+
+
+/////////////////////////////////
+// Function to help build tree //
+// --------------------------- //
+// buildMapTree: builds main map tree
+// makeMinorGroupMap: creates a minor group map given a majorGroup array
+// filterMajor: filter SOCWeightedList by major groups
+// filterMinor: filter SOCWeightedList by minor groups
+// socToString: change soc from num to string in socObject
+
+// Sample data generation
+// generateWeights: generate an array of soc-object list with random weights. {soc,weight}
+
+var testSOCWeighted = generateRandomWeights(SOC);
+
+function getSOC(){
+	var soc = getNextSOC(SOC, testSOCWeighted);
+		// Updates the HTML text with an SOC number
+	document.getElementById("SOC2").innerHTML += soc + "<br>";
+}
+
+function getNextSOC(unviewedsocList, ratedsoclist)
+{
+	var unviewedTree = buildUnviewedMapTree(unviewedsocList);
+	var ratingOnlyTree = generateWeightOnlyTree(buildMapTree(ratedsoclist));
+
+	if (!mapTreeHasMinorGroup(unviewedTree))
+		throw "No Videos left"
+
+	var unviewedTreeWithGroupWeights = transferWeights(unviewedTree, ratingOnlyTree);
+
+	return chooseSOC(unviewedTreeWithGroupWeights)
+}
+
+
+function generateWeightOnlyTree(mapTree)
+{
+	var weightOnlyTree = {};
+
+	for (var majorIndex in mapTree)
+	{
+		weightOnlyTree[majorIndex] = {};
+		weightOnlyTree[majorIndex].weight = getMajorGroupWeight(mapTree[majorIndex])
+
+		for (var minorIndex in mapTree[majorIndex])
+			weightOnlyTree[majorIndex][minorIndex] = {weight:getMinorGroupWeight(mapTree[majorIndex][minorIndex])}
+	}
+	return weightOnlyTree;
+}
+
+function transferWeights(unviewedTree, ratedTree)
+{
+	var unviewedTreeWithGroupWeights = Object.assign({}, unviewedTree);
+
+	for (var majorIndex in unviewedTree)
+	{
+		if (ratedTree[majorIndex])
+		{
+			unviewedTreeWithGroupWeights[majorIndex]['weight'] = ratedTree[majorIndex]['weight']
+			for (var minorIndex in unviewedTree[majorIndex])
+			{
+				if (minorIndex != 'weight')
+					if (ratedTree[majorIndex][minorIndex])
+						unviewedTreeWithGroupWeights[majorIndex][minorIndex]['weight'] = ratedTree[majorIndex][minorIndex]['weight'];
+					else
+						unviewedTreeWithGroupWeights[majorIndex][minorIndex]['weight'] = 0;
+			}
+		}
+		else 
+			unviewedTreeWithGroupWeights[majorIndex]['weight'] = 0;
+	}
+
+	return unviewedTreeWithGroupWeights;
+}
+
+function chooseSOC(mapTreeWithGroupWeights)
+{
+	var majorIndex;
+	var majorWeight;
+
+	if (!mapTreeHasMinorGroup(mapTreeWithGroupWeights))
+		throw "No Videos left"
+
+	// Choose Major Group
+	var majorGroupArray = weightMaptoArray(mapTreeWithGroupWeights); // Array with just {groupNum and weight}
+	var majorGroup = chooseMajorGroup(majorGroupArray);
+	majorGroup = 55;
+
+
+	while (!hasMinorGroup(mapTreeWithGroupWeights[majorGroup]))
+		majorGroup = chooseMajorGroup(majorGroupArray);
+
+	// Choose Minor Group
+	var minorGroupArray = weightMaptoArray(mapTreeWithGroupWeights[majorGroup])
+	var minorGroup = chooseMinorGroup(minorGroupArray)
+
+	// Choose final SOC
+	var soc = chooseOccupation(mapTreeWithGroupWeights[majorGroup][minorGroup])
+	return soc;
+}
+
+// Checks if a majorGroup still has minor groups
+function hasMinorGroup(map)
+{
+	for (var index in map)
+	{
+		if (index != 'weight')
+			return true;
+	}
+	return false;
+}
+
+// Checks if the mapTree contains any minor groups
+function mapTreeHasMinorGroup(mapTree)
+{
+	for (var i in mapTree)
+	{
+		for (var j in mapTree[i])
+			if (mapTree[i][j] != 'weight')
+				return true;
+	}
+	return false;
+}
+
+
+// Converts a object of objects into an array of objects. 
+function weightMaptoArray(map)
+{
+	var groupWeightArray = [];
+	for (var index in map)//
+	{
+		// for every minorGroup, compute their weight, and collect into a list with {groupNum, weight}
+		if (index !== "weight")
+		{
+			groupWeightObj = {}
+			groupWeightObj['groupNum'] = index;
+			groupWeightObj['weight'] = map[index]['weight']
+			groupWeightArray = groupWeightArray.concat(groupWeightObj)
+		}
+	}
+	return groupWeightArray;
+}
+
+// Choose a major group based on a major group list with weights
+function chooseMajorGroup(majorGroupArray) // majorGroupArray with Weight
+{
+	// Get the magnitude of the weights. Use this as base shift amount
+	var weightedArray = generateWeightedArray(majorGroupArray, false);	
+	//console.log(weightedArray);
+
+	// randomly choose from the weighted array
+	var randIndex = Math.floor(Math.random() * weightedArray.length);
+
+	return weightedArray[randIndex];
+}
+
+
+// Choose a minor group based on a majorGroupMap
+function chooseMinorGroup(minorGroupArray) 
+{
+	var weightedArray = generateWeightedArray(minorGroupArray, true);
+
+	//console.log(weightedArray);
+	// randomly choose from the weighted array
+	var randIndex = Math.floor(Math.random() * weightedArray.length);
+
+	return weightedArray[randIndex];
+}
+
+
+// Randomly choose an SOC code from a list of SOC codes
+function chooseOccupation(minorGroupArray)
+{
+	var soc = {}
+	var randIndex = Math.floor(Math.random() * minorGroupArray.length);
+	soc = minorGroupArray[randIndex];
+	return soc;
+}
+
+
+// Given a list of groupNum and weights, generates a weighted array that you can randomly select and have the right probability
+// weightsArray: [{'num':11, 'weight':3}, ....]
+// Array with groupNum and weights
+
+// Formula 
+// If weight >= 0.   3*(weight+2)^1.7 + 2*absMaxFromZero
+// If weight < 0. 	2*(weight) + 2*absMaxFromZero
+// This gives a reasonly balanced growth and lessens the impact of negative on branches. 
+function generateWeightedArray(weightsArray, isMinor)
+{
+	//console.log(weightsArray)
+	var absMax = 0;
+	for (var i in weightsArray)
+	{
+		if (Math.abs(weightsArray[i]['weight']) > absMax)
+			absMax = Math.abs(weightsArray[i]['weight']); 
+	}
+
+	// Use shiftAmt to make weight values positive for probabiity 
+	var shiftAmt = absMax*2; 
+	var power = 1.7;	// multiply weight value to increase effect
+	var posScale = 3;
+	var posShiftAmt = 2;
+
+	var negScale = 2;
+
+	// remove power effect for minorGroups, which has less choices
+	if (isMinor)
+	{
+		power = 1;
+		shiftAmt += 20
+		posShiftAmt = 1;
+	}
+
+	var n; 
+	var curWeight
+	var total = 0;
+	// so I apply shift amount based on max
+	// and increase the power by 1.7
+	// I increase power by 1.7 for positive, and x2 for negative
+	for (var i in weightsArray)
+	{
+		curWeight = weightsArray[i]['weight'];
+		if (curWeight > -1) // >= 0
+			n = posScale * (Math.pow(curWeight,power) + posShiftAmt) + shiftAmt; 
+		else  // n < 0
+			n = negScale * curWeight + shiftAmt; 
+		
+		// if < 1, make it 1. To give some chance
+		if (n < 1) n = 1;
+		n = Math.floor(n);
+
+		weightsArray[i]['scaledWeight'] = n
+
+		total += n; // Keep track of total to calc % chance
+	}
+
+
+	var weightedArray = [];
+	var groupNum;
+	var percent; 
+	var percentArray = [];
+	for (var i in weightsArray)
+	{
+		groupNum = weightsArray[i]['groupNum'];
+		n = weightsArray[i]['scaledWeight'];
+		percent = (n / total + "").slice(0,6); // Slice first 6 digit to display
+
+		percentArray = percentArray.concat({'groupNum':groupNum, 'percent':percent});
+
+		//console.log(groupNum + ": Chance: " + n + "/" + total + "="+ percent);
+
+		// Add the scale weight number of groupNum to array
+		for (var j = 0; j < n; j++)
+			weightedArray = weightedArray.concat(groupNum);
+	}
+
+	//console.log(percentArray)
+	// Display percentage on main page. for main groups
+	if (!isMinor)
+	{
+		var str = "<table><tbody>";
+		for (var i in percentArray)
+			str += "<tr><td>" + percentArray[i]['groupNum'] + ": &nbspChance: " + percentArray[i]['percent'] + "</td></tr>";
+
+		str += "</tbody></table>";
+		document.getElementById("groupPercent").innerHTML = str; 
+	}
+
+	return weightedArray;
+}
+
+
+
+
+function buildUnviewedMapTree(socList)
+{
+	// making minor group
+	var mapTree = {}
+	var majorGroupMap = {}
+	for (var majorIndex = 11; majorIndex < 56; majorIndex+=2)
+	{ // 11 to 55. 
+		majorGroupMap[majorIndex] = socList.map(socSanitize).filter(filterMajor(majorIndex));
+	}
+
+	for (var majorIndex in majorGroupMap){
+		mapTree[majorIndex] = makeMinorGroupMap(majorGroupMap[majorIndex]);
+	}
+
+	return mapTree;
+}
+
+// Cleans up SOC codes from 12-3456 to 123456
+function socSanitize(x){ 
+	if (typeof x != 'string')
+		x += "";
+	return x.replace('-','');
+}
+
+
+// maps soc into major groups
+function buildMapTree(socWeightedList)
+{
+	soclist = socWeightedList;
+
+	// making minor group
+	var mapTree = {}
+	var majorGroupMap = {}
+	for (var majorIndex = 11; majorIndex < 56; majorIndex+=2)
+	{ // 11 to 55. 
+		majorGroupMap[majorIndex] = soclist.map(socToString).filter(filterMajor(majorIndex));
+	}
+
+	for (var majorIndex in majorGroupMap){
+		mapTree[majorIndex] = makeMinorGroupMap(majorGroupMap[majorIndex]);
+	}
+
+	return mapTree;
+}
+
+
+// Filtering functions
+// filterMajor: Returns true if soc code in specified majorGroup 
+function filterMajor(majorGroup)
+{
+	majorGroup += "";
+	return function (soc){
+		if (typeof soc == 'object')
+			socMajor = soc['soc'].substring(0,2); // take first 2 digits
+		else
+			socMajor = soc.substring(0,2);
+		//if (socMajor === majorGroup)
+		//	console.log(socMajor + " " + soc);
+		return (socMajor === majorGroup)
+	}
+}
+
+// filterMinor: Returns true if soc code is in specified minorGroup
+function filterMinor(minorGroup)
+{
+	minorGroup += "";
+	return function (soc){
+		if (typeof soc == 'object')
+			socMinor = soc['soc'].substring(2,3); // take 3rd digit
+		else 
+			socMinor = soc.substring(2,3); // take 3rd digit
+
+		// if (socMinor === minorGroup)
+		// 	console.log(socMinor + " " + soc);
+		return (socMinor === minorGroup)
+	}
+}
+
+// takes a array in major groups and converts it into an map, grouped by minor groups
+function makeMinorGroupMap(majorArray)
+{
+	var minorGroupMap = {};
+	var tempMinorArray;
+	for (var i = 1; i < 10; i++)
+	{
+		tempMinorArray = majorArray.filter(filterMinor(i));
+		if (tempMinorArray.length > 0)
+			minorGroupMap[i] = tempMinorArray;
+	}
+	return minorGroupMap;
+}
+
+// Gets weight of the minorGroup
+function getMinorGroupWeight(minorGroupMap)
+{
+	var weight = 0;
+	for (var i in minorGroupMap)
+	{
+		weight += minorGroupMap[i].weight;
+	}
+	return weight;
+}
+
+// Gets weight of the major group, calling getMinorGroupWeight
+function getMajorGroupWeight(majorGroupMap)
+{
+	var weight = 0;
+	for (var i in majorGroupMap)
+		weight += getMinorGroupWeight(majorGroupMap[i]);
+	
+	return weight;
+}
+
+// Make sure soc is string, prep for filter functions
+function socToString(x){ 
+	x['soc'] += ''
+	return x;
+}
+
+// To generate weight. I saved the weight as JSON
+// Generates random weights to the SOC
+function generateRandomWeights(socQueryList)
+{
+	// socQueryList is a list of SOC's, ideally we are given socList with weights of 1, 0 or -1
+	if (!socQueryList)
+		throw "No Input"
+
+	socQueryList = socQueryList.map(socSanitize);
+
+	var socWeigthedList = [];
+	var temp = {}
+
+	for (var i in socQueryList)
+	{
+		temp = {}
+		temp['soc'] = socQueryList[i];
+		temp['weight'] = (Math.floor(Math.random()* 3) -1); // assigns -1,0, or 1
+		socWeigthedList[i] = temp;
+
+	}
+	return socWeigthedList;
+}
+
+</script>
+</body>
+
+
+</html>
