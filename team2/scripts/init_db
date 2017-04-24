@@ -13,13 +13,17 @@ script_dir=`dirname $0`
 tmp="build"
 
 echo "Generating table Occupation..."
-"$script_dir/export_database.py" "$script_dir/../data/occupation.xlsx" "$script_dir/../data/all_data_M_2015.xlsx" "$tmp/occupation.dat"
+#"$script_dir/export_database.py" "$script_dir/../data/occupation.xlsx" "$script_dir/../data/all_data_M_2015.xlsx" "$tmp/occupation.dat"
+cp "$script_dir/../data/occupation.dat" "$tmp/occupation.dat"
 echo "Generating table StateOccupation..."
-"$script_dir/export_state_database.py" "$script_dir/../data/all_data_M_2015.xlsx" "$tmp/stateOccupation.dat"
+#"$script_dir/export_state_database.py" "$script_dir/../data/all_data_M_2015.xlsx" "$tmp/stateOccupation.dat"
+cp "$script_dir/../data/stateOccupation.dat" "$tmp/stateOccupation.dat"
 echo "Generating table Interests..."
-"$script_dir/export_interests_database.py" "$script_dir/../data/Interests.xlsx" "$tmp/interest.dat"
+#"$script_dir/export_interests_database.py" "$script_dir/../data/Interests.xlsx" "$tmp/interest.dat"
+cp "$script_dir/../data/interest.dat" "$tmp/interest.dat"
 echo "Generating table Skills..."
-"$script_dir/export_skills_database.py" "$script_dir/../data/skills.xlsx" "$tmp/skills.dat"
+#"$script_dir/export_skills_database.py" "$script_dir/../data/skills.xlsx" "$tmp/skills.dat"
+cp "$script_dir/../data/skills.dat" "$tmp/skills.dat"
 
 (
     cp "$script_dir/create.sql" "$tmp"

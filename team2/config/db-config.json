@@ -1,6 +1,6 @@
 {
     "host" : "localhost",
-    "port" : 8889,
+    "port" : 3306,
     "user" : "p3_admin",
     "password" : "",
     "database" : "p3_test",
