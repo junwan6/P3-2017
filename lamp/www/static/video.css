@@ -1,0 +1,97 @@
+#careerTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 25px;
+	overflow: hidden;
+}
+
+#fullscreen-overlay{
+	color: white;
+	display: none;
+	width: 100%;
+	padding: 10px;
+	background-color: black;
+    opacity: .60; /* Standard: FF gt 1.5, Opera, Safari, CSS3 */
+    filter: alpha(opacity=50); /* IE lt 8 */
+    -ms-filter: "alpha(opacity=50)"; /* IE 8 */
+    -khtml-opacity: .50; /* Safari 1.x */
+    -moz-opacity: .50; /* FF lt 1.5, Netscape */
+}
+
+span.upthumb {
+	background-image: url('/images/upthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+span.upthumb:hover{
+	background-position: 0 -31px;
+}
+
+.upthumb-selected {
+	background-position: 0 -61px;
+	background-image: url('/images/upthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+.midthumb-selected {
+	background-position: 0 -61px;
+	background-image: url('/images/midthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+.downthumb-selected {
+	background-position: 0 -61px;
+	background-image: url('/images/downthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+span.midthumb {
+	background-image: url('/images/midthumbs.png');
+	background-size: cover;
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+}
+
+span.midthumb:hover{
+	background-position: 0 -31px;
+}
+span.downthumb {
+	background-image: url('/images/downthumbs.png');
+	background-size: cover;
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+}
+
+span.downthumb:hover{
+	background-position: 0 -31px;
+}
+
+#next-career {
+	display: none;
+
+}
+
+.next-career {
+	display:inline-block;
+	text-align: center;
+	width: 100px;
+	padding: 1px;
+	color: white;
+	background-color: green;
+	border: 2px green solid;
+	font-size: 10px;
+}
