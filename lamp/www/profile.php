@@ -3,7 +3,7 @@
 <head>
   <!-- {{> global_header }} -->
   <?php include "partials/global_header.php" ?>
-	<script type="text/javascript" language="javascript" src="/static/profile.js"></script>
+	<script type="text/javascript" language="javascript" src="static/profile.js"></script>
 	<link type="text/css" rel="stylesheet" href="static/profile.css">
 
 
@@ -20,7 +20,7 @@
     {{/if}}
     -->
       <?php
-        include 'partials/' . (($loggedIn)?'navbarlogout.html':'navbar.html');
+        include 'partials/navbarcombined.php');
       ?>      
 
         <div class="container-fluid">
@@ -46,7 +46,7 @@
                         -->
                         <?php
                           foreach ($likedCareers as $lcareer){
-                            echo '<a class="careerLink" href="/career/' .
+                            echo '<a class="careerLink" href="career/' .
                               $lcareer['soc'] . '/video">' . $lcareer['title'] . '</a><br>';
                           }
                           if is_null($likedCareers){
@@ -66,7 +66,7 @@
                         -->
                         <?php
                           foreach ($dislikedCareers as $dlcareer){
-                            echo '<a class="careerLink" href="/career/' .
+                            echo '<a class="careerLink" href="career/' .
                               $dlcareer['soc'] . '/video">' . $dlcareer['title'] . '</a><br>';
                           }
                           if is_null($dislikedCareers){
@@ -86,7 +86,7 @@
                         -->
                         <?php
                           foreach ($neutralCareers as $ncareer){
-                            echo '<a class="careerLink" href="/career/' .
+                            echo '<a class="careerLink" href="career/' .
                               $ncareer['soc'] . '/video">' . $ncareer['title'] . '</a><br>';
                           }
                           if is_null($neutralCareers){
@@ -100,7 +100,7 @@
 	              <p class="heading">My World of Work Map</p>
                       <div>
                         <canvas id="occupationPlotter"></canvas>
-	                <img id="wowImage" src="/images/wow.jpg" alt="World of Work" align="center" width="100%" height="auto">
+	                <img id="wowImage" src="images/wow.jpg" alt="World of Work" align="center" width="100%" height="auto">
                       </div>
 	            </div>
 

@@ -19,7 +19,7 @@
       {{/if}}
       -->
       <?php
-        include 'partials/' . (($loggedIn)?'navbarlogout.html':'navbar.html');
+        include 'partials/navbarcombined.php';
       ?>      
 
                         <div id="browseContainer" class="container-fluid">

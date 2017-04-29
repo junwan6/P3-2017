@@ -33,7 +33,7 @@
       {{/if}}
 -->
       <?php
-        include 'partials/' . (($loggedIn)?'navbarlogout.html':'navbar.html');
+        include 'partials/navbarcombined.html';
       ?>      
       <div id="imageContainer">
       </div>

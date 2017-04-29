@@ -14,7 +14,7 @@ $(window).load(function(){
         var career = getCareerUnderMouse(event);
 
         if (career) {
-            window.location.href = "/career/" + career.soc + "/video";
+            window.location.href = "career/" + career.soc + "/video";
         }
     });
     
