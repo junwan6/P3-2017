@@ -7,6 +7,12 @@
     <title>
       PPP
     </title>
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        // controllers/users-controller.js
+        // models/users.js
+        $email = "Not Implemented";
+      ?>
   </head>
   <body>
     <!-- {{> navbar}} -->

@@ -2,7 +2,15 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
-
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        // any script used by "careerOutlook.php", "skills.php", "salary.php", "education.php"
+        $skillsArray = null;
+        $wageTypeIsAnnual = true;
+        $averageWage = 0;
+        $educationRequired = "Not Implemented";
+        $careerGrowth = "Not Implemented";
+      ?>
 <!-- 
 {{#if skillsArray}}
 <div id="skillsArray">
@@ -11,10 +19,10 @@
 {{/if}}
 -->
 <?php
-  if (skillsArray){
+  if ($skillsArray){
     echo '<div id="skillsArray"';
-    echo skillsArray;
-    echo '</div>'
+    echo $skillsArray;
+    echo '</div>';
   }
 ?>
 
@@ -102,7 +110,7 @@
         Annual Employment Increase
         <br>
         <!-- {{careerGrowth}} -->
-        <?php echo careerGrowth; ?>
+        <?php echo $careerGrowth; ?>
       </div>
       <div id="careerOutlookSegment" class="iconSegment" data-dialog-trigger="#careerOutlookDialog">
         Career Outlook

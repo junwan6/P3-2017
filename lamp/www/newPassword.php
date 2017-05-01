@@ -7,6 +7,14 @@
     <title>
       PPP
     </title>
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        // controllers/users-controller.js
+        // models/users.js
+        $badCode = true;
+        $expiredCode = true;
+        $code = "Not Implemented";
+      ?>
   </head>
   <body>
     <!-- {{> navbar}} -->

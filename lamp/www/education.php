@@ -2,7 +2,7 @@
 <html>
 		<head>
       <!-- {{> global_header }} -->
-      <? include 'partials/global_header.php'; ?>
+      <?php include 'partials/global_header.php'; ?>
                         <script type="text/javascript" language="javascript" src="static/icons.js"></script>
                         <link type="text/css" rel="stylesheet" href="static/icons.css">
 			<script type="text/javascript" language="javascript" src="static/education.js"></script>
@@ -16,6 +16,28 @@
 			<title>
 				PPP
 			</title>
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        // controllers/occupation-controller.js
+        // models/occupation.js
+        $occupationTitle = "Not Implemented";
+        $typeOfSchool = "Not Implemented";
+        $typeOfDegree = "Not Implemented";
+        $yearsInSchool = "Not Implemented";
+        $yearsInUndergrad = "Not Implemented";
+        $yearsInGrad = "Not Implemented";
+        $gradSchool = false;
+
+        // every state + Avg, Lo, Med, Hi
+        $states = array('NAT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY');
+        foreach ($states as $st){
+          ${$st . 'Avg'} = '0';
+          ${$st . 'Lo'} = '0';
+          ${$st . 'Med'} = '0';
+          ${$st . 'Hi'} = '0';
+          ${$st} = null; 
+        }
+      ?>
 		</head>
     <body>
       <!--
@@ -82,8 +104,14 @@
                     </div>
 
                     <div id="careerInformation">
-                    <div id="yearsInUndergrad"><!-- {{yearsInUndergrad}} --><?php echo $yearsInUndergrad; ?></div>
-                    <div id="yearsInGrad"><!-- {{yearsInGrad}} --><<?php echo  $yearsInGrad; ?></div>
+                    <div id="yearsInUndergrad">
+                      <!-- {{yearsInUndergrad}} -->
+                      <?php echo $yearsInUndergrad; ?>
+                    </div>
+                    <div id="yearsInGrad">
+                      <!-- {{yearsInGrad}} -->
+                      <?php echo  $yearsInGrad; ?>
+                    </div>
 
                     	<table id="undergradTable">
                     		<tr> <!--public-->
@@ -163,7 +191,6 @@
                     		<tr><td>{{WYAvg}}</td><td>{{WYLo}}</td><td>{{WYMed}}</td><td>{{WYHi}}</td></tr> <!-- -->
                         -->
                         <?php
-                          $states = array('NAT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY');
                           foreach ($states as $st){
                             echo '<tr>';
                             echo '<td>' . ${$st . 'Avg'} . '</td>';

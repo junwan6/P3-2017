@@ -5,10 +5,17 @@
     <?php
       include 'partials/global_header.php';
     ?>
+    <link type="text/css" rel="stylesheet" href="static/index.css">
+
+    <title>
+      PPP
+    </title>
     <?php
+      // Serverside NodeJS scripts to convert:
+      //   controller/temp-controller.js
+      //   models/interfaceRatings.js    
       //TODO: Needed variables
-      $loggedIn = false; //TODO: get loggedIn cookie via PHP
-      $firstName = "TEMPORARY"; //TODO: query database for firstname
+      $firstName = "Not Implemented"; //TODO: query database for firstname
 
       //TODO: Login attempts
       $success = false;
@@ -16,11 +23,6 @@
       $loginAttempt = false;
       $signUpAttempt = false;
     ?>
-    <link type="text/css" rel="stylesheet" href="static/index.css">
-
-    <title>
-      PPP
-    </title>
   </head>
   <body>
 
@@ -33,7 +35,7 @@
       {{/if}}
 -->
       <?php
-        include 'partials/navbarcombined.html';
+        include 'partials/navbarcombined.php';
       ?>      
       <div id="imageContainer">
       </div>

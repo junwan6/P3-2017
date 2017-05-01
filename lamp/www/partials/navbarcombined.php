@@ -1,5 +1,11 @@
 			<div id="fader"></div>
-
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        //  controllers/browse-controller.js
+        //  controllers/temp-controller.js
+        $loggedIn = false;
+      ?>
+        
       <?php if (!$loggedIn) { ?>
 			<div id="signUpBox">
 				<div id="signUpContent">
@@ -133,5 +139,5 @@
                               </div>
                             </div>
                           </div>
-                         <div id="PASSION"> <a href="#"  id="passionWord">PASSION (n.) </a><span id="passionDef">: the energizing love you have for your work, in which you are thoroughly absorbed and find deeply meaningful</span> </div>
+                         <div id="PASSION"> <a href="javascript:"  id="passionWord">PASSION (n.) </a><span id="passionDef">: the energizing love you have for your work, in which you are thoroughly absorbed and find deeply meaningful</span> </div>
 			</div>

@@ -17,6 +17,22 @@
 	<title>
 		PPP
 	</title>
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        //  controllers/occupation-controller.js
+        //  models/occupation.js
+        $occupationTitle = "Not Implemented";
+
+        // every state + avg, lo, med, high
+        $states = array('NAT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY');
+        foreach ($states as $st){
+          ${$st . 'Avg'} = '0';
+          ${$st . 'Lo'} = '0';
+          ${$st . 'Med'} = '0';
+          ${$st . 'Hi'} = '0';
+          ${$st} = null; 
+        }
+      ?>
 </head>
 <body>
   <!--
@@ -105,7 +121,6 @@
               <tr><td>{{WYAvg}}</td><td>{{WYLo}}</td><td>{{WYMed}}</td><td>{{WYHi}}</td></tr> <!-- -->
               -->
               <?php
-                $states = array('NAT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY');
                 foreach ($states as $st){
                   echo '<tr>';
                   echo '<td>' . ${$st . 'Avg'} . '</td>';

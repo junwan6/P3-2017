@@ -10,6 +10,13 @@
       <title>
         PPP
       </title>
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        //  controllers/occupation-controller.js
+        //  models/occupation.js
+        $occupationTitle = "Not Implemented";
+        $skillsArray = null; //array, not implemented in original code
+      ?>
 		</head>
     <body>
         <!--

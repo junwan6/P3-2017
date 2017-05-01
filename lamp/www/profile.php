@@ -10,6 +10,16 @@
 	<title>
 		PPP
 	</title>
+  <?php
+    //TODO: Fill in following variables from the NodeJS serverside scripts:
+    //  controllers/temp-controller.js
+    //  models/interfaceRatings.js
+    
+    // each is array with 'title', 'soc', 'x', 'y'
+    $likedCareers = null;
+    $dislikedCareers = null;
+    $neutralCareers = null;
+  ?>
 </head>
 <body>
     <!--
@@ -20,7 +30,7 @@
     {{/if}}
     -->
       <?php
-        include 'partials/navbarcombined.php');
+        include 'partials/navbarcombined.php';
       ?>      
 
         <div class="container-fluid">
@@ -45,12 +55,13 @@
                         {{/each}}
                         -->
                         <?php
-                          foreach ($likedCareers as $lcareer){
-                            echo '<a class="careerLink" href="career/' .
-                              $lcareer['soc'] . '/video">' . $lcareer['title'] . '</a><br>';
-                          }
-                          if is_null($likedCareers){
+                          if ($likedCareers === NULL){
                             echo '<p class="noneText">None</p><br>';
+                          } else {
+                            foreach ($likedCareers as $lcareer){
+                              echo '<a class="careerLink" href="career/' .
+                                $lcareer['soc'] . '/video">' . $lcareer['title'] . '</a><br>';
+                            }
                           }
                         ?>
                       </div>
@@ -65,12 +76,13 @@
                         {{/each}}
                         -->
                         <?php
-                          foreach ($dislikedCareers as $dlcareer){
-                            echo '<a class="careerLink" href="career/' .
-                              $dlcareer['soc'] . '/video">' . $dlcareer['title'] . '</a><br>';
-                          }
-                          if is_null($dislikedCareers){
+                          if ($dislikedCareers === NULL){
                             echo '<p class="noneText">None</p><br>';
+                          } else {
+                            foreach ($dislikedCareers as $dlcareer){
+                              echo '<a class="careerLink" href="career/' .
+                                $dlcareer['soc'] . '/video">' . $dlcareer['title'] . '</a><br>';
+                            }
                           }
                         ?>
                       </div>
@@ -85,12 +97,13 @@
                         {{/each}}
                         -->
                         <?php
-                          foreach ($neutralCareers as $ncareer){
-                            echo '<a class="careerLink" href="career/' .
-                              $ncareer['soc'] . '/video">' . $ncareer['title'] . '</a><br>';
-                          }
-                          if is_null($neutralCareers){
+                          if ($neutralCareers === NULL){
                             echo '<p class="noneText">None</p><br>';
+                          } else {
+                            foreach ($neutralCareers as $ncareer){
+                              echo '<a class="careerLink" href="career/' .
+                                $ncareer['soc'] . '/video">' . $ncareer['title'] . '</a><br>';
+                            }
                           }
                         ?>
                       </div>
@@ -100,7 +113,7 @@
 	              <p class="heading">My World of Work Map</p>
                       <div>
                         <canvas id="occupationPlotter"></canvas>
-	                <img id="wowImage" src="images/wow.jpg" alt="World of Work" align="center" width="100%" height="auto">
+	                <img id="wowImage" src="static/images/wow.jpg" alt="World of Work" align="center" width="100%" height="auto">
                       </div>
 	            </div>
 
@@ -128,17 +141,28 @@
           {{/each}}
           -->
           <?php
-            foreach ($likedCareers as $lcareer){
-              echo '<career type="like" title="' . $lcareer['title'] . '" soc="' .
-                $lcareer['soc'] . '" x="' . $lcareer['x'] . '" y="' . $lcareer['y'] . '"></career>';
+            if ($likedCareers === NULL){
+            } else {
+              foreach ($likedCareers as $lcareer){
+                echo '<career type="like" title="' . $lcareer['title'] . '" soc="' .
+                  $lcareer['soc'] . '" x="' . $lcareer['x'] . '" y="' . $lcareer['y'] . '"></career>';
+              }
             }
-            foreach ($dislikedCareers as $dlcareer){
-              echo '<career type="like" title="' . $dlcareer['title'] . '" soc="' .
-                $dlcareer['soc'] . '" x="' . $dlcareer['x'] . '" y="' . $dlcareer['y'] . '"></career>';
+
+            if ($dislikedCareers === NULL){
+            } else {
+              foreach ($dislikedCareers as $dlcareer){
+                echo '<career type="like" title="' . $dlcareer['title'] . '" soc="' .
+                  $dlcareer['soc'] . '" x="' . $dlcareer['x'] . '" y="' . $dlcareer['y'] . '"></career>';
+              }
             }
-            foreach ($neutralCareers as $ncareer){
-              echo '<career type="like" title="' . $ncareer['title'] . '" soc="' .
-                $ncareer['soc'] . '" x="' . $ncareer['x'] . '" y="' . $ncareer['y'] . '"></career>';
+
+            if ($neutralCareers === NULL){
+            } else {
+              foreach ($neutralCareers as $ncareer){
+                echo '<career type="like" title="' . $ncareer['title'] . '" soc="' .
+                  $ncareer['soc'] . '" x="' . $ncareer['x'] . '" y="' . $ncareer['y'] . '"></career>';
+              }
             }
           ?>
         </div>

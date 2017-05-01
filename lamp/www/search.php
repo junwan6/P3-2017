@@ -8,6 +8,20 @@
 			<title>
 				PPP
 			</title>
+      <?php
+        //TODO: Fill in following variables from the NodeJS serverside scripts:
+        //  controllers/browse-controller.js
+        //  models/occupation.js
+        $resultsEmpty = true;
+        $query = 'Not Implemented';
+        $results = null; // array, not sure how below fit in
+        $soc = 'Not Implemented';
+        $title = 'Not Implemented';
+        $averageWage = 'Not Implemented';
+        $averageWage = 'Not Implemented';
+        $educationRequired = 'Not Implemented';
+        $careerGrowth = 'Not Implemented';
+      ?>
 		</head>
     <body>
       <!--
