@@ -22,9 +22,6 @@
       $reason = "Not Implemented";
       $loginAttempt = false;
       $signUpAttempt = false;
-
-      include 'scripts/login.php';
-      echo $resstring;
     ?>
   </head>
   <body>

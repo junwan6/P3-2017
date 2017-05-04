@@ -34,7 +34,7 @@
       <div id="videoSegment" class="iconSegment">
         Video
         <br>
-        <?php echo '<a href="career/' . $_GET['soc'] . '/video">'; ?>
+        <a href="video.php">
           <i id="video" class="fa fa-video-camera fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -61,7 +61,7 @@
       <div id="salarySegment" class="iconSegment" data-dialog-trigger="#salaryDialog">
         Salary
         <br>
-        <?php echo '<a href="career/' . $_GET['soc'] . '/salary">'; ?>
+        <a href="salary.php">
           <i id="salary" class="fa fa-usd fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -75,7 +75,7 @@
       <div id="educationSegment" class="iconSegment" data-dialog-trigger="#educationDialog">
         Education
         <br>
-        <?php echo '<a href="career/' . $_GET['soc'] . '/education">'; ?>
+        <a href="education.php">
           <i id="education" class="fa fa-graduation-cap fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -99,7 +99,7 @@
       <div id="skillsSegment" class="iconSegment" data-dialog-trigger="#skillsDialog">
         Skills
         <br>
-        <?php echo '<a href="career/' . $_GET['soc'] . '/skills">'; ?>
+        <a href="skills.php">
           <i id="skills" class="fa fa-clipboard fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -115,7 +115,7 @@
       <div id="careerOutlookSegment" class="iconSegment" data-dialog-trigger="#careerOutlookDialog">
         Career Outlook
         <br>
-        <?php echo '<a href="career/' . $_GET['soc'] . '/outlook">'; ?>
+        <a href="outlook.php">
           <i id="careerOutlook" class="fa fa-sun-o fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -128,7 +128,7 @@
       <div id="worldOfWorkSegment" class="iconSegment" data-dialog-trigger="#worldOfWorkDialog">
         World of Work
         <br>
-        <?php echo '<a href="career/' . $_GET['soc'] . '/world-of-work">'; ?>
+        <a href="world-of-work.php">
           <i id="worldOfWork" class="fa fa-globe fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
