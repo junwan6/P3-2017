@@ -1,0 +1,30 @@
+#pageTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 30px;
+}
+
+#careerTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 20px;
+}
+
+#outlookTable {
+	text-align: center;
+	color: black;
+}
+
+#growthPercent {
+	text-align: center;
+}
+
+#growthPercentIcon {
+	color: hsl(45, 60%, 50%);
+}
+
+#growthPercentText {
+	position: relative;
+        top: -65px;
+	color: black;
+}
