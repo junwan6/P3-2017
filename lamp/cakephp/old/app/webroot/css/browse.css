@@ -1,0 +1,52 @@
+#browseContainer {
+}
+
+a.accordionHeading {
+	color: black;
+}
+
+#pageTitle {
+    	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 30px;
+}
+
+.majorSection {
+	text-align: left;
+	font-size: 20px;
+	padding-left: 2em;
+	background-color: #FCFCFC;
+}
+
+.minorSection {
+	text-align: left;
+	font-size: 18px;
+	padding-left: 2em;
+	background-color: #F8F8F8;
+}
+
+.broadSection {
+	text-align: left;
+	font-size: 16px;
+	padding-left: 2em;
+	background-color: #F4F4F4;
+}
+
+.detailedSection {
+	text-align: left;
+	padding-left: 2em;
+	background-color: #F0F0F0;
+}
+
+a.detailedOccupationLink {
+	color: blue;
+	font-size: 14px;
+}
+
+a.detailedOccupationLink:visited {
+    color: purple;
+}
+
+.heading {
+	background-color: transparent;
+}

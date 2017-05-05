@@ -1,0 +1,875 @@
+2017-05-03 12:25:32 Error: [MissingViewException] View file "Pages/display.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Pages/display.ctp',
+)
+Request URL: /cake/
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Pages/display')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render(NULL, NULL)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(200): Controller->render()
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#4 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-05-03 17:06:05 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /cake/
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 17:06:07 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /cake/
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 17:06:08 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /cake/
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 18:35:23 Error: [MissingControllerException] Controller class StaticController could not be found.
+Exception Attributes: array (
+  'class' => 'StaticController',
+  'plugin' => NULL,
+)
+Request URL: /cake/static/donors.css
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 18:35:24 Error: [MissingControllerException] Controller class StaticController could not be found.
+Exception Attributes: array (
+  'class' => 'StaticController',
+  'plugin' => NULL,
+)
+Request URL: /cake/static/donors.css
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 18:35:26 Error: [MissingControllerException] Controller class StaticController could not be found.
+Exception Attributes: array (
+  'class' => 'StaticController',
+  'plugin' => NULL,
+)
+Request URL: /cake/static/donors.css
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 18:35:33 Error: [MissingControllerException] Controller class StaticController could not be found.
+Exception Attributes: array (
+  'class' => 'StaticController',
+  'plugin' => NULL,
+)
+Request URL: /cake/static/donors.css
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:07:07 Error: [MissingControllerException] Controller class ProfileController could not be found.
+Exception Attributes: array (
+  'class' => 'ProfileController',
+  'plugin' => NULL,
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:07:11 Error: [MissingControllerException] Controller class ProfileController could not be found.
+Exception Attributes: array (
+  'class' => 'ProfileController',
+  'plugin' => NULL,
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:15:08 Error: [MissingActionException] Action PagesController::display() could not be found.
+Exception Attributes: array (
+  'controller' => 'PagesController',
+  'action' => 'display',
+)
+Request URL: /cake/donors
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#2 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-05-03 20:34:44 Error: [MissingControllerException] Controller class WorldOfWorkController could not be found.
+Exception Attributes: array (
+  'class' => 'WorldOfWorkController',
+  'plugin' => NULL,
+)
+Request URL: /cake/worldOfWork
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:35:32 Error: [MissingViewException] View file "Pages/world_of_work.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Pages/world_of_work.ctp',
+)
+Request URL: /cake/worldOfWork
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Pages/world_of_...')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('worldOfWork', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/PagesController.php(72): Controller->render('worldOfWork')
+#3 [internal function]: PagesController->display('worldOfWork')
+#4 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2017-05-03 20:52:52 Error: [MissingControllerException] Controller class ErrorController could not be found.
+Exception Attributes: array (
+  'class' => 'ErrorController',
+  'plugin' => NULL,
+)
+Request URL: /cake/error
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:52:59 Error: [MissingControllerException] Controller class ErrorController could not be found.
+Exception Attributes: array (
+  'class' => 'ErrorController',
+  'plugin' => NULL,
+)
+Request URL: /cake/error
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:53:03 Error: [MissingControllerException] Controller class ErrController could not be found.
+Exception Attributes: array (
+  'class' => 'ErrController',
+  'plugin' => NULL,
+)
+Request URL: /cake/err
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:54:05 Error: [MissingControllerException] Controller class ErrController could not be found.
+Exception Attributes: array (
+  'class' => 'ErrController',
+  'plugin' => NULL,
+)
+Request URL: /cake/err
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:55:25 Error: [MissingControllerException] Controller class ErrController could not be found.
+Exception Attributes: array (
+  'class' => 'ErrController',
+  'plugin' => NULL,
+)
+Request URL: /cake/err
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:55:26 Error: [MissingControllerException] Controller class ErrController could not be found.
+Exception Attributes: array (
+  'class' => 'ErrController',
+  'plugin' => NULL,
+)
+Request URL: /cake/err
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:56:53 Error: [MissingControllerException] Controller class ErrController could not be found.
+Exception Attributes: array (
+  'class' => 'ErrController',
+  'plugin' => NULL,
+)
+Request URL: /cake/err
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:56:57 Error: [MissingControllerException] Controller class ProfileController could not be found.
+Exception Attributes: array (
+  'class' => 'ProfileController',
+  'plugin' => NULL,
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:56:58 Error: [MissingControllerException] Controller class BrowseController could not be found.
+Exception Attributes: array (
+  'class' => 'BrowseController',
+  'plugin' => NULL,
+)
+Request URL: /cake/browse
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:57:01 Error: [MissingControllerException] Controller class BrowseController could not be found.
+Exception Attributes: array (
+  'class' => 'BrowseController',
+  'plugin' => NULL,
+)
+Request URL: /cake/browse
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:57:01 Error: [MissingControllerException] Controller class ProfileController could not be found.
+Exception Attributes: array (
+  'class' => 'ProfileController',
+  'plugin' => NULL,
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 20:59:55 Error: [MissingControllerException] Controller class ProfileController could not be found.
+Exception Attributes: array (
+  'class' => 'ProfileController',
+  'plugin' => NULL,
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 21:00:31 Error: [NotFoundException] Not Found
+Request URL: /cake/profile
+Stack Trace:
+#0 [internal function]: PagesController->display('profile')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#4 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-05-03 21:00:32 Error: [NotFoundException] Not Found
+Request URL: /cake/profile
+Stack Trace:
+#0 [internal function]: PagesController->display('profile')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#4 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-05-03 21:00:49 Error: [MissingControllerException] Controller class StaticController could not be found.
+Exception Attributes: array (
+  'class' => 'StaticController',
+  'plugin' => NULL,
+)
+Request URL: /cake/static/images/wow.jpg
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-03 21:06:22 Error: [NotFoundException] Not Found
+Request URL: /cake/salary
+Stack Trace:
+#0 [internal function]: PagesController->display('salary')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#4 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-05-03 21:06:23 Error: [NotFoundException] Not Found
+Request URL: /cake/salary
+Stack Trace:
+#0 [internal function]: PagesController->display('salary')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#4 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-05-03 21:06:30 Error: [Error] Call to undefined method View::elements()
+Request URL: /cake/salary
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(971): include()
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(933): View->_evaluate('/home/user/CS13...', Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(473): View->_render('/home/user/CS13...')
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('salary', NULL)
+#4 /home/user/CS130/current/lamp/cakephp/app/Controller/PagesController.php(72): Controller->render('salary')
+#5 [internal function]: PagesController->display('salary')
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#9 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2017-05-03 21:07:12 Error: [Error] Call to undefined method View::elements()
+Request URL: /cake/salary
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(971): include()
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(933): View->_evaluate('/home/user/CS13...', Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(473): View->_render('/home/user/CS13...')
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('salary', NULL)
+#4 /home/user/CS130/current/lamp/cakephp/app/Controller/PagesController.php(72): Controller->render('salary')
+#5 [internal function]: PagesController->display('salary')
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#9 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2017-05-03 21:20:07 Error: [MissingControllerException] Controller class TestController could not be found.
+Exception Attributes: array (
+  'class' => 'TestController',
+  'plugin' => NULL,
+)
+Request URL: /cake/test
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-04 13:25:27 Error: [MissingControllerException] Controller class UserController could not be found.
+Exception Attributes: array (
+  'class' => 'UserController',
+  'plugin' => NULL,
+)
+Request URL: /cake/browse
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-04 13:25:54 Error: [MissingViewException] View file "Pages/browse.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Pages/browse.ctp',
+)
+Request URL: /cake/browse
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Pages/browse')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('browse', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('browse')
+#3 [internal function]: AppController->display('browse')
+#4 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2017-05-04 13:26:52 Error: [MissingActionException] Action CareerController::random() could not be found.
+Exception Attributes: array (
+  'controller' => 'CareerController',
+  'action' => 'random',
+)
+Request URL: /cake/career/random
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#2 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-05-04 13:27:05 Error: [MissingActionException] Action CareerController::random() could not be found.
+Exception Attributes: array (
+  'controller' => 'CareerController',
+  'action' => 'random',
+)
+Request URL: /cake/career/random?x=-0.17777777777777778&y=-0.5200698080279232
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#2 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-05-04 13:27:19 Error: [MissingViewException] View file "User/profile.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'User/profile.ctp',
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('User/profile')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('profile', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('profile')
+#3 [internal function]: AppController->display('profile')
+#4 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2017-05-04 13:28:04 Error: [MissingViewException] View file "User/profile.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'User/profile.ctp',
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('User/profile')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('profile', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('profile')
+#3 [internal function]: AppController->display('profile')
+#4 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2017-05-04 14:52:48 Error: [Error] Call to undefined function display()
+Request URL: /cake/career/11-2331/video
+Stack Trace:
+#0 [internal function]: CareerController->displayCareer('11-2331', 'video', 'salary')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#4 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-05-04 14:53:01 Error: [MissingViewException] View file "Career/display_career.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/display_career.ctp',
+)
+Request URL: /cake/career/11-2331/video
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/display_...')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render(NULL, NULL)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(200): Controller->render()
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#4 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-05-04 15:10:15 Error: [MissingViewException] View file "Career/focus.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/focus.ctp',
+)
+Request URL: /cake/career/11-2331/video
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/focus')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('focus', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('focus')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('focus')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'video')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:10:20 Error: [MissingViewException] View file "Career/focus.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/focus.ctp',
+)
+Request URL: /cake/career/11-2331/video
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/focus')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('focus', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('focus')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('focus')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'video')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:10:25 Error: [MissingViewException] View file "Career/focus.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/focus.ctp',
+)
+Request URL: /cake/career/11-2331/salary
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/focus')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('focus', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('focus')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('focus')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'salary')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:10:50 Error: [MissingViewException] View file "Career/video.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/video.ctp',
+)
+Request URL: /cake/career/11-2331/salary
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/video')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('video', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('video')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('video')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'salary')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:11:13 Error: [MissingViewException] View file "Career/video.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/video.ctp',
+)
+Request URL: /cake/career/11-2331/salary
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/video')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('video', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('video')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('video')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'salary')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:11:19 Error: [MissingViewException] View file "Career/video.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/video.ctp',
+)
+Request URL: /cake/career/11-2331/salary
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/video')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('video', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('video')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('video')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'salary')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:12:00 Error: [MissingViewException] View file "Career/world-of-work.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/world-of-work.ctp',
+)
+Request URL: /cake/career/11-2331/world-of-work
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/world-of...')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('world-of-work', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('world-of-work')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('world-of-work')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'world-of-work')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:12:39 Error: [MissingActionException] Action CareerController::11-2331() could not be found.
+Exception Attributes: array (
+  'controller' => 'CareerController',
+  'action' => '11-2331',
+)
+Request URL: /cake/career/11-2331/worldOfWork
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#2 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-05-04 15:14:00 Error: [MissingActionException] Action CareerController::11-2331() could not be found.
+Exception Attributes: array (
+  'controller' => 'CareerController',
+  'action' => '11-2331',
+)
+Request URL: /cake/career/11-2331/worldOfWork
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#2 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-05-04 15:15:13 Error: [MissingActionException] Action CareerController::11-2331() could not be found.
+Exception Attributes: array (
+  'controller' => 'CareerController',
+  'action' => '11-2331',
+)
+Request URL: /cake/career/11-2331/
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#2 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-05-04 15:15:22 Error: [MissingViewException] View file "Career/worl.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/worl.ctp',
+)
+Request URL: /cake/career/11-2331/worl
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/worl')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('worl', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('worl')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('worl')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'worl')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:18:42 Error: [MissingActionException] Action CareerController::11-2331() could not be found.
+Exception Attributes: array (
+  'controller' => 'CareerController',
+  'action' => '11-2331',
+)
+Request URL: /cake/career/11-2331/worl
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#2 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-05-04 15:18:45 Error: [MissingViewException] View file "Career/video.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/video.ctp',
+)
+Request URL: /cake/career/11-2331/
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/video')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('video', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('video')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(53): AppController->display('video')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'video')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:28:20 Error: [MissingViewException] View file "Career/video.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/video.ctp',
+)
+Request URL: /cake/career/11-2331/
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/video')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('video', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('video')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(56): AppController->display('video')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'video')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:28:24 Error: [MissingViewException] View file "Career/video.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/video.ctp',
+)
+Request URL: /cake/career/11-2331/test
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/video')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('video', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('video')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(56): AppController->display('video')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'test')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:28:31 Error: [MissingViewException] View file "Career/education.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/education.ctp',
+)
+Request URL: /cake/career/11-2331/education
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/educatio...')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('education', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('education')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(56): AppController->display('education')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'education')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:28:35 Error: [MissingViewException] View file "Career/video.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'Career/video.ctp',
+)
+Request URL: /cake/career/11-2331/educations
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('Career/video')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('video', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('video')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/CareerController.php(56): AppController->display('video')
+#4 [internal function]: CareerController->displayCareer('11-2331', 'educations')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CareerController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CareerController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-04 15:59:22 Error: [MissingControllerException] Controller class SalaryController could not be found.
+Exception Attributes: array (
+  'class' => 'SalaryController',
+  'plugin' => NULL,
+)
+Request URL: /cake/salary
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-05 11:22:44 Error: [MissingViewException] View file "User/salary.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'User/salary.ctp',
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('User/salary')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('salary', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('salary')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/UserController.php(35): AppController->display('salary')
+#4 [internal function]: UserController->display('profile')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-05 11:23:26 Error: [MissingViewException] View file "User/array.ctp" is missing.
+Exception Attributes: array (
+  'file' => 'User/array.ctp',
+)
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/View/View.php(470): View->_getViewFileName('User/array')
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(963): View->render('Array', NULL)
+#2 /home/user/CS130/current/lamp/cakephp/app/Controller/AppController.php(67): Controller->render('Array')
+#3 /home/user/CS130/current/lamp/cakephp/app/Controller/UserController.php(35): AppController->display(Array)
+#4 [internal function]: UserController->display('profile')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#8 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2017-05-05 11:26:42 Error: [ParseError] syntax error, unexpected '$hashConfig' (T_VARIABLE), expecting function (T_FUNCTION)
+Request URL: /cake/profile
+Stack Trace:
+#0 [internal function]: App::load('User')
+#1 [internal function]: spl_autoload_call('User')
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Utility/ClassRegistry.php(146): class_exists('User')
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(741): ClassRegistry::init('User')
+#4 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(368): Controller->loadModel('User')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(406): Controller->__isset('User')
+#6 /home/user/CS130/current/lamp/cakephp/app/Controller/UserController.php(36): Controller->__get('User')
+#7 [internal function]: UserController->display('profile')
+#8 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#9 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#10 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#11 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-05-05 11:30:02 Error: [ParseError] syntax error, unexpected '$hashConfig' (T_VARIABLE), expecting function (T_FUNCTION)
+Request URL: /cake/profile
+Stack Trace:
+#0 [internal function]: App::load('User')
+#1 [internal function]: spl_autoload_call('User')
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Utility/ClassRegistry.php(146): class_exists('User')
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(741): ClassRegistry::init('User')
+#4 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(368): Controller->loadModel('User')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(406): Controller->__isset('User')
+#6 /home/user/CS130/current/lamp/cakephp/app/Controller/UserController.php(36): Controller->__get('User')
+#7 [internal function]: UserController->display('profile')
+#8 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#9 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#10 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#11 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-05-05 11:30:29 Error: [ParseError] syntax error, unexpected '$connection' (T_VARIABLE), expecting function (T_FUNCTION)
+Request URL: /cake/profile
+Stack Trace:
+#0 [internal function]: App::load('AppModel')
+#1 /home/user/CS130/current/lamp/cakephp/app/Model/User.php(32): spl_autoload_call('AppModel')
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(567): include('/home/user/CS13...')
+#3 [internal function]: App::load('User')
+#4 [internal function]: spl_autoload_call('User')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Utility/ClassRegistry.php(146): class_exists('User')
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(741): ClassRegistry::init('User')
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(368): Controller->loadModel('User')
+#8 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(406): Controller->__isset('User')
+#9 /home/user/CS130/current/lamp/cakephp/app/Controller/UserController.php(36): Controller->__get('User')
+#10 [internal function]: UserController->display('profile')
+#11 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#12 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#13 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#14 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#15 {main}
+2017-05-05 11:31:14 Error: [ParseError] syntax error, unexpected 'public' (T_PUBLIC), expecting end of file
+Request URL: /cake/profile
+Stack Trace:
+#0 [internal function]: App::load('User')
+#1 [internal function]: spl_autoload_call('User')
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Utility/ClassRegistry.php(146): class_exists('User')
+#3 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(741): ClassRegistry::init('User')
+#4 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(368): Controller->loadModel('User')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(406): Controller->__isset('User')
+#6 /home/user/CS130/current/lamp/cakephp/app/Controller/UserController.php(36): Controller->__get('User')
+#7 [internal function]: UserController->display('profile')
+#8 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#9 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#10 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#11 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-05-05 11:31:21 Error: [ParseError] syntax error, unexpected '$connection' (T_VARIABLE), expecting function (T_FUNCTION)
+Request URL: /cake/profile
+Stack Trace:
+#0 [internal function]: App::load('AppModel')
+#1 /home/user/CS130/current/lamp/cakephp/app/Model/User.php(35): spl_autoload_call('AppModel')
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(547): include('/home/user/CS13...')
+#3 [internal function]: App::load('User')
+#4 [internal function]: spl_autoload_call('User')
+#5 /home/user/CS130/current/lamp/cakephp/lib/Cake/Utility/ClassRegistry.php(146): class_exists('User')
+#6 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(741): ClassRegistry::init('User')
+#7 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(368): Controller->loadModel('User')
+#8 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(406): Controller->__isset('User')
+#9 /home/user/CS130/current/lamp/cakephp/app/Controller/UserController.php(36): Controller->__get('User')
+#10 [internal function]: UserController->display('profile')
+#11 /home/user/CS130/current/lamp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#12 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#13 /home/user/CS130/current/lamp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#14 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(110): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#15 {main}
+2017-05-05 11:31:53 Error: Fatal Error (64): Constant expression contains invalid operations in [/home/user/CS130/current/lamp/cakephp/app/Model/AppModel.php, line 37]
+2017-05-05 11:31:53 Error: [FatalErrorException] Constant expression contains invalid operations
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(64, 'Constant expres...', '/home/user/CS13...', 37)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(64, 'Constant expres...', '/home/user/CS13...', 37, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:32:05 Error: Fatal Error (64): Constant expression contains invalid operations in [/home/user/CS130/current/lamp/cakephp/app/Model/AppModel.php, line 37]
+2017-05-05 11:32:05 Error: [FatalErrorException] Constant expression contains invalid operations
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(64, 'Constant expres...', '/home/user/CS13...', 37)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(64, 'Constant expres...', '/home/user/CS13...', 37, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:32:06 Error: Fatal Error (64): Constant expression contains invalid operations in [/home/user/CS130/current/lamp/cakephp/app/Model/AppModel.php, line 37]
+2017-05-05 11:32:06 Error: [FatalErrorException] Constant expression contains invalid operations
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(64, 'Constant expres...', '/home/user/CS13...', 37)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(64, 'Constant expres...', '/home/user/CS13...', 37, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:32:58 Error: Fatal Error (64): Constant expression contains invalid operations in [/home/user/CS130/current/lamp/cakephp/app/Model/AppModel.php, line 37]
+2017-05-05 11:32:58 Error: [FatalErrorException] Constant expression contains invalid operations
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(64, 'Constant expres...', '/home/user/CS13...', 37)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(64, 'Constant expres...', '/home/user/CS13...', 37, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:32:59 Error: Fatal Error (64): Constant expression contains invalid operations in [/home/user/CS130/current/lamp/cakephp/app/Model/AppModel.php, line 37]
+2017-05-05 11:32:59 Error: [FatalErrorException] Constant expression contains invalid operations
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(64, 'Constant expres...', '/home/user/CS13...', 37)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(64, 'Constant expres...', '/home/user/CS13...', 37, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:33:29 Error: Fatal Error (64): Constant expression contains invalid operations in [/home/user/CS130/current/lamp/cakephp/app/Model/User.php, line 36]
+2017-05-05 11:33:29 Error: [FatalErrorException] Constant expression contains invalid operations
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(64, 'Constant expres...', '/home/user/CS13...', 36)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(64, 'Constant expres...', '/home/user/CS13...', 36, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:33:39 Error: Fatal Error (1): Trait 'Cake\Datasource\ConnectionManager' not found in [/home/user/CS130/current/lamp/cakephp/app/Model/AppModel.php, line 36]
+2017-05-05 11:33:39 Error: [FatalErrorException] Trait 'Cake\Datasource\ConnectionManager' not found
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(1, 'Trait 'Cake\\Dat...', '/home/user/CS13...', 36)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(1, 'Trait 'Cake\\Dat...', '/home/user/CS13...', 36, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:34:26 Error: Fatal Error (1): Trait 'Cake\Datasource\ConnectionManager' not found in [/home/user/CS130/current/lamp/cakephp/app/Model/User.php, line 36]
+2017-05-05 11:34:26 Error: [FatalErrorException] Trait 'Cake\Datasource\ConnectionManager' not found
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(1, 'Trait 'Cake\\Dat...', '/home/user/CS13...', 36)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(1, 'Trait 'Cake\\Dat...', '/home/user/CS13...', 36, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
+2017-05-05 11:34:27 Error: Fatal Error (1): Trait 'Cake\Datasource\ConnectionManager' not found in [/home/user/CS130/current/lamp/cakephp/app/Model/User.php, line 36]
+2017-05-05 11:34:27 Error: [FatalErrorException] Trait 'Cake\Datasource\ConnectionManager' not found
+Request URL: /cake/profile
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/lib/Cake/Error/ErrorHandler.php(212): ErrorHandler::handleFatalError(1, 'Trait 'Cake\\Dat...', '/home/user/CS13...', 36)
+#1 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(970): ErrorHandler::handleError(1, 'Trait 'Cake\\Dat...', '/home/user/CS13...', 36, Array)
+#2 /home/user/CS130/current/lamp/cakephp/lib/Cake/Core/App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}
