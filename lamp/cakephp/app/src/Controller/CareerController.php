@@ -43,6 +43,9 @@ class CareerController extends PagesController
     $page = ((in_array($focus,
       array('video', 'salary', 'education', 'skills', 'outlook', 'world_of_work')))?
       $focus:'video');
+
+    
+
     $this->display($page);
   }
 }

@@ -19,7 +19,7 @@
 }
 
 span.upthumb {
-	background-image: url('/images/upthumbs.png');
+	background-image: url('../img/upthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -32,7 +32,7 @@ span.upthumb:hover{
 
 .upthumb-selected {
 	background-position: 0 -61px;
-	background-image: url('/images/upthumbs.png');
+	background-image: url('../img/upthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -41,7 +41,7 @@ span.upthumb:hover{
 
 .midthumb-selected {
 	background-position: 0 -61px;
-	background-image: url('/images/midthumbs.png');
+	background-image: url('../img/midthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -50,7 +50,7 @@ span.upthumb:hover{
 
 .downthumb-selected {
 	background-position: 0 -61px;
-	background-image: url('/images/downthumbs.png');
+	background-image: url('../img/downthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -58,7 +58,7 @@ span.upthumb:hover{
 }
 
 span.midthumb {
-	background-image: url('/images/midthumbs.png');
+	background-image: url('../img/midthumbs.png');
 	background-size: cover;
 	width: 30px;
 	height: 30px;
@@ -69,7 +69,7 @@ span.midthumb:hover{
 	background-position: 0 -31px;
 }
 span.downthumb {
-	background-image: url('/images/downthumbs.png');
+	background-image: url('../img/downthumbs.png');
 	background-size: cover;
 	width: 30px;
 	height: 30px;

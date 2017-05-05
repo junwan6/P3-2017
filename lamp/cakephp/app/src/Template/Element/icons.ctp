@@ -36,9 +36,9 @@
 
     <div id="videoCategory" class="category">
       <div id="videoSegment" class="iconSegment">
+        <a href="video">
         Video
         <br>
-        <?php echo '<a href="video">'; ?>
           <i id="video" class="fa fa-video-camera fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -63,9 +63,9 @@
         ?>
       </div>
       <div id="salarySegment" class="iconSegment" data-dialog-trigger="#salaryDialog">
+        <a href="salary">
         Salary
         <br>
-        <?php echo '<a href="salary">'; ?>
           <i id="salary" class="fa fa-usd fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -77,9 +77,9 @@
         <?php echo $educationRequired; ?>
       </div>
       <div id="educationSegment" class="iconSegment" data-dialog-trigger="#educationDialog">
+        <a href="education">
         Education
         <br>
-        <?php echo '<a href="education">'; ?>
           <i id="education" class="fa fa-graduation-cap fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -101,9 +101,9 @@
         ?>
       </div>
       <div id="skillsSegment" class="iconSegment" data-dialog-trigger="#skillsDialog">
+        <a href="skills">
         Skills
         <br>
-        <?php echo '<a href="skills">'; ?>
           <i id="skills" class="fa fa-clipboard fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -117,9 +117,9 @@
         <?php echo $careerGrowth; ?>
       </div>
       <div id="careerOutlookSegment" class="iconSegment" data-dialog-trigger="#careerOutlookDialog">
+        <a href="outlook">
         Career Outlook
         <br>
-        <?php echo '<a href="outlook">'; ?>
           <i id="careerOutlook" class="fa fa-sun-o fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
@@ -130,9 +130,9 @@
         World of Work Info
       </div>
       <div id="worldOfWorkSegment" class="iconSegment" data-dialog-trigger="#worldOfWorkDialog">
+        <a href="world_of_work">
         World of Work
         <br>
-        <?php echo '<a href="world_of_work">'; ?>
           <i id="worldOfWork" class="fa fa-globe fa-3x icon" aria-hidden="true"></i>
         </a>
       </div>
