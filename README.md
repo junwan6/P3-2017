@@ -1,7 +1,21 @@
 # P3 (Passionate People Project)
 
 ## A webapp that allows people to explore jobs based on their passion
+### Directory Structure
+* `lamp/` - Contains the current implementation of the P3 website for a LAMP server
+* `lamp/www/` - DEPRECATED: PHP Implementation of NodeJS view templates
+* `lamp/cakephp/` - IN PROGRESS: CakePHP MVC implementation of website
+* `info/`, `Meeting Notes/`, `Video/`, `team2/` - "See Previous Work" below
 
+### Team
+* Andrew Chen
+* Gezer Domingo
+* Brian Li
+* Daniel O'Laughlin
+* John Storch
+
+
+## Previous Work (Prior to Spring Quarter 2017)
 ### Directory Structure
 * `info/` - Contains documents that provide background information for the application
 * `Meeting Notes/` - Contains notes from some of the meetings between the developers and the clients

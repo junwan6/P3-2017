@@ -1,43 +1,4 @@
-Configuring CakePHP:
-  Set app/ folder owner to www-data (webserver user):
-    sudo chown -R www-data app/
-  Add alias to Apache config file:
-    """
-    Alias "/cake/" "/home/user/CS130/current/lamp/cakephp/app/webroot/"
-    <Directory "/home/user/CS130/current/lamp/cakephp/app/webroot/">
-      AllowOverride All
-      Require all granted
-    </Directory>
-    """
-  Set salt and seed in "app/Config/core.php:840-844":
-    salt: arbitrary string
-    seed: large integer
-  Configure database connection:
-    Copy/rename "app/Config/database.php.default" to "app/Config/database.php"
-    Set host, port, login information
-  Configure .htaccess:
-    cakephp root:
-      """
-      <IfModule mod_rewrite.c>
-       RewriteEngine on
-       RewriteRule    ^$ app/webroot/    [L]
-       RewriteRule    (.*) app/webroot/$1 [L]
-      </IfModule>
-      """
-    cakephp/app:
-      """
-      <IfModule mod_rewrite.c>
-        RewriteEngine on
-        RewriteRule    ^$    webroot/    [L]
-        RewriteRule    (.*) webroot/$1    [L]
-      </IfModule>
-      """
-    cakephp/app/webroot:
-      """
-      <IfModule mod_rewrite.c>
-        RewriteEngine On
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteRule ^(.*)$ index.php [QSA,L]
-      </IfModule>
-      """
+Configuring CakePHP 3.x:
+  Install via Composer or zip file
+  Install PHP intl and mbstring modules
+  Set config/bootstrap.php database login information
