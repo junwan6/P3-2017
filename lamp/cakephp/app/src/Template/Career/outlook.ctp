@@ -9,16 +9,6 @@
 			<title>
 				PPP
 			</title>
-      <?php
-        //TODO: Fill in following variables from the NodeJS serverside scripts:
-        //  controllers/occupation-controller.js
-        //  models/occupation.js
-        $occupationTitle = "Not Implemented";
-        $careerGrowth = "Not Implemented";
-        $currentEmployment = "Not Implemented";
-        $futureEmployment = "Not Implemented";
-        $jobOpenings = "Not Implemented";
-      ?>
 		</head>
     <body>
       <div class="container-fluid">

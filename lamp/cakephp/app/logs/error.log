@@ -3583,3 +3583,62 @@ Stack Trace:
 2017-05-06 05:42:02 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
 2017-05-06 05:42:08 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
 2017-05-06 05:42:16 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 05:59:58 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 05:59:58 Error: [ParseError] syntax error, unexpected ';', expecting ',' or ')' in /home/user/CS130/current/lamp/cakephp/app/src/Controller/CareerController.php on line 98
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/vendor/composer/ClassLoader.php(301): Composer\Autoload\includeFile('/home/user/CS13...')
+#1 [internal function]: Composer\Autoload\ClassLoader->loadClass('App\\Controller\\...')
+#2 [internal function]: spl_autoload_call('App\\Controller\\...')
+#3 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(152): class_exists('App\\Controller\\...')
+#4 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(64): Cake\Core\App::_classExistsInBase('\\Controller\\Car...', 'App')
+#5 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(68): Cake\Core\App::className('Career', 'Controller', 'Controller')
+#6 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(90): Cake\Http\ControllerFactory->create(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/BaseApplication.php(78): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#8 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#9 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(59): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#10 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#11 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#12 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#13 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(92): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#15 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#16 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Server.php(80): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#17 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(37): Cake\Http\Server->run()
+#18 {main}
+
+
+2017-05-06 06:01:14 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:02:02 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:02:03 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:02:10 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:05:18 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:05:18 Error: [ParseError] syntax error, unexpected '.' in /home/user/CS130/current/lamp/cakephp/app/src/Controller/CareerController.php on line 101
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/vendor/composer/ClassLoader.php(301): Composer\Autoload\includeFile('/home/user/CS13...')
+#1 [internal function]: Composer\Autoload\ClassLoader->loadClass('App\\Controller\\...')
+#2 [internal function]: spl_autoload_call('App\\Controller\\...')
+#3 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(152): class_exists('App\\Controller\\...')
+#4 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(64): Cake\Core\App::_classExistsInBase('\\Controller\\Car...', 'App')
+#5 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(68): Cake\Core\App::className('Career', 'Controller', 'Controller')
+#6 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(90): Cake\Http\ControllerFactory->create(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/BaseApplication.php(78): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#8 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#9 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(59): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#10 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#11 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#12 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#13 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(92): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#15 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#16 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Server.php(80): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#17 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(37): Cake\Http\Server->run()
+#18 {main}
+
+
+2017-05-06 06:05:32 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
