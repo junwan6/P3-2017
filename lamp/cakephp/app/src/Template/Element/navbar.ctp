@@ -4,6 +4,25 @@
     //  controllers/browse-controller.js
     //  controllers/temp-controller.js
     $loggedIn = false;
+
+    /**
+     * Wrapper function for Url->build
+     * Parameters: [link] [prepend] [append]
+     *  link: Optional, defaults to '/'. Link to be made from base url
+     *  prepend: Optional. String to be prepended to path
+     *  append: Optional. String to be appended to path
+     */
+    function baseLink(...$args){
+      $view = $args[0];
+      $str = $view->Url->build('/');
+      if (count($args) >= 2){
+        $str .= $args[1];
+      }
+      if (count($args) == 4){
+        $str = $args[2] . $str . $args[3];
+      }
+      return $str;
+    }
   ?>
 
   <?php if (!$loggedIn) { ?>
@@ -11,7 +30,7 @@
     <div id="signUpContent">
       <br>
       <p id="signUpTitle" class="centered">Sign Up</p>
-      <form action="signup" method="post">
+      <?php echo baseLink($this, 'signup', '<form action="', '" method="post">'); ?>
         <div class="signUpInfo form-group">
           <label for="firstName">First Name</label>
           <input type="text" class="formTextField form-control" name="firstName"/>
@@ -34,8 +53,8 @@
         </div>
 
         <input id="signUpButton" class="btn btn-default formButton" type="submit" value="Sign Up"/>
-
-        <a href="auth/linkedin">
+        
+        <?php echo baseLink($this, 'auth/linkedin', '<a href"', '">'); ?>
           <div id="linkedinBox">
             <div id="linkedinButton"></div>
           </div>
@@ -53,7 +72,7 @@
     <div id="loginContent">
       <br>
       <p id="loginTitle" class="centered">Log In</p>
-      <form action="login" method="post">
+      <?php echo baseLink($this, 'login', '<form action="', '" method="post">'); ?>
         <div class="loginInfo form-group">
           <label for="email">Email</label>
           <input type="text" class="formTextField form-control" name="email"/>
@@ -69,9 +88,11 @@
         </div>
         <input id="loginButton" type="submit" class="btn btn-default formButton" value="Log In"/>
         <br>
-        <a href="auth/facebook" class="btn btn-default"><div id="fbTestBox"><div id="fbTest">Log in with Facebook</div></div></a>
+        <?php echo baseLink($this, 'auth/facebook', '<a href="', '" class="btn btn-default">'); ?>
+          <div id="fbTestBox"><div id="fbTest">Log in with Facebook</div></div>
+        </a>
         <br>
-        <a href="recover-account" class="loginOption">Forgot password?</a>
+        <?php echo baseLink($this, 'recover-account', '<a href="', '" class="loginOption">Forgot password?</a>'); ?>
         <br>
         <a id="switchToSignUp" class="loginOption">Create your free account</a>
 
@@ -84,29 +105,29 @@
     <div class="container-fluid">
       <div class="row row-eq-height">
         <div class="col-md-3">
-          <a href="index">
+          <?php echo baseLink($this, '', '<a href="', '">'); ?>
             <?php echo $this->Html->image('p3logo.png', array('id'=>'logo')); ?>
             <span class="logo">Passionate People Project </span>
           </a>
         </div>
         <div id="mainButtons" class="col-md-6">
-          <a href="index">
+          <?php echo baseLink($this, '', '<a href="', '">'); ?>
             <div id="home" class="navibutton">
               Home
             </div>
           </a>
-        <a href="profile">
+        <?php echo baseLink($this, 'profile', '<a href="', '">'); ?>
           <div id="myProfile" class="navibutton">
             My Profile
           </div>
         </a>
-        <a href="browse">
+        <?php echo baseLink($this, 'browse', '<a href="', '">'); ?>
           <div id="browse" class="navibutton">
             Browse
           </div>
         </a>
 
-        <form id="searchBarForm" class="form-inline" action="search" method="get" role="form">
+        <?php echo baseLink($this, 'search', '<form id="searchBarForm" class="form-inline" action="', '" method="get" role="form">'); ?>
           <div class="input-group">
             <input id="searchBar" class="form-control" type="text" name="q" placeholder="Search careers...">
               <span class="input-group-btn">
@@ -118,7 +139,7 @@
         </form>
 
         <div class="navibutton">
-          <a href="donors">
+          <?php echo baseLink($this, 'donors', '<a href="', '">'); ?>
             Donors
           </a>
         </div>
@@ -133,7 +154,7 @@
         </div>
       </div>
       <?php } else { ?>
-      <form action="logout" method="post">
+      <?php echo baseLink($this, 'logout', '<form action="', '" method="post">'); ?>
         <input id="logout" class="navibutton" type="submit" value="Logout"/>
       </form>
       <?php } ?>
