@@ -9,11 +9,13 @@
   echo $this->Html->css('icons.css');
   //TODO: Fill in following variables from the NodeJS serverside scripts:
   // any script used by "careerOutlook.php", "skills.php", "salary.php", "education.php"
+  /*
   $skillsArray = null;
   $wageTypeIsAnnual = true;
   $averageWage = 0;
   $educationRequired = "Not Implemented";
   $careerGrowth = "Not Implemented";
+   */
 ?>
 <!-- 
 {{#if skillsArray}}
@@ -59,7 +61,8 @@
         -->
         <?php
           echo 'Average U.S. ';
-          echo ($wageTypeIsAnnual)?'Salary <br> per year':'Wage <br> per hour';
+          echo ($wageTypeIsAnnual)?'Salary <br> ' . $averageWage . ' per year'
+            :'Wage <br> ' . $averageWage . ' per hour';
         ?>
       </div>
       <div id="salarySegment" class="iconSegment" data-dialog-trigger="#salaryDialog">

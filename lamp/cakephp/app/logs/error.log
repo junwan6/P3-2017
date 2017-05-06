@@ -3642,3 +3642,283 @@ Stack Trace:
 
 
 2017-05-06 06:05:32 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:26:10 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:26:10 Error: [ParseError] syntax error, unexpected '$occupationFields' (T_VARIABLE), expecting ',' or ')' in /home/user/CS130/current/lamp/cakephp/app/src/Controller/CareerController.php on line 59
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/vendor/composer/ClassLoader.php(301): Composer\Autoload\includeFile('/home/user/CS13...')
+#1 [internal function]: Composer\Autoload\ClassLoader->loadClass('App\\Controller\\...')
+#2 [internal function]: spl_autoload_call('App\\Controller\\...')
+#3 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(152): class_exists('App\\Controller\\...')
+#4 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(64): Cake\Core\App::_classExistsInBase('\\Controller\\Car...', 'App')
+#5 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(68): Cake\Core\App::className('Career', 'Controller', 'Controller')
+#6 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(90): Cake\Http\ControllerFactory->create(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/BaseApplication.php(78): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#8 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#9 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(59): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#10 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#11 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#12 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#13 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(92): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#15 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#16 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Server.php(80): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#17 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(37): Cake\Http\Server->run()
+#18 {main}
+
+
+2017-05-06 06:26:12 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:26:12 Error: [ParseError] syntax error, unexpected '$occupationFields' (T_VARIABLE), expecting ',' or ')' in /home/user/CS130/current/lamp/cakephp/app/src/Controller/CareerController.php on line 59
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/vendor/composer/ClassLoader.php(301): Composer\Autoload\includeFile('/home/user/CS13...')
+#1 [internal function]: Composer\Autoload\ClassLoader->loadClass('App\\Controller\\...')
+#2 [internal function]: spl_autoload_call('App\\Controller\\...')
+#3 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(152): class_exists('App\\Controller\\...')
+#4 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Core/App.php(64): Cake\Core\App::_classExistsInBase('\\Controller\\Car...', 'App')
+#5 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ControllerFactory.php(68): Cake\Core\App::className('Career', 'Controller', 'Controller')
+#6 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(90): Cake\Http\ControllerFactory->create(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#7 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/BaseApplication.php(78): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#8 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#9 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(59): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#10 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#11 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#12 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#13 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(92): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#14 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#15 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#16 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Server.php(80): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#17 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(37): Cake\Http\Server->run()
+#18 {main}
+
+
+2017-05-06 06:26:50 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:32:51 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:34:30 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:35:19 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:50:57 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:50:57 Error: [Error] Call to undefined function App\Controller\setupIconTemplateData() in /home/user/CS130/current/lamp/cakephp/app/src/Controller/CareerController.php on line 75
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Controller/Controller.php(440): App\Controller\CareerController->displayCareer('41-4011', 'salary')
+#1 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(119): Cake\Controller\Controller->invokeAction()
+#2 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(93): Cake\Http\ActionDispatcher->_invoke(Object(App\Controller\CareerController))
+#3 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/BaseApplication.php(78): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#4 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#5 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(59): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#6 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#7 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#8 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#9 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(92): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#10 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#11 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#12 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Server.php(80): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#13 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(37): Cake\Http\Server->run()
+#14 {main}
+
+
+2017-05-06 06:51:23 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:51:23 Error: [Error] Call to undefined function App\Controller\setupIconTemplateData() in /home/user/CS130/current/lamp/cakephp/app/src/Controller/CareerController.php on line 95
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Stack Trace:
+#0 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Controller/Controller.php(440): App\Controller\CareerController->displayCareer('41-4011', 'salary')
+#1 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(119): Cake\Controller\Controller->invokeAction()
+#2 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ActionDispatcher.php(93): Cake\Http\ActionDispatcher->_invoke(Object(App\Controller\CareerController))
+#3 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/BaseApplication.php(78): Cake\Http\ActionDispatcher->dispatch(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#4 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Http\BaseApplication->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#5 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php(59): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#6 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\RoutingMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#7 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php(88): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#8 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Routing\Middleware\AssetMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#9 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php(92): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#10 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(65): Cake\Error\Middleware\ErrorHandlerMiddleware->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response), Object(Cake\Http\Runner))
+#11 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Runner.php(51): Cake\Http\Runner->__invoke(Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#12 /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/Server.php(80): Cake\Http\Runner->run(Object(Cake\Http\MiddlewareQueue), Object(Cake\Http\ServerRequest), Object(Cake\Http\Response))
+#13 /home/user/CS130/current/lamp/cakephp/app/webroot/index.php(37): Cake\Http\Server->run()
+#14 {main}
+
+
+2017-05-06 06:51:42 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:51:42 Warning: Warning (512): Unable to emit headers. Headers sent in file=/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php line=822 in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 48]
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 48
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 06:51:42 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 148]
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 148
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 54
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 06:51:42 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 178]
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 178
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 55
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 06:52:00 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:52:00 Warning: Warning (512): Unable to emit headers. Headers sent in file=/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php line=822 in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 48]
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 48
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 06:52:00 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 148]
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 148
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 54
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 06:52:00 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 178]
+Request URL: /career/41-4011/salary
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/outlook
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 178
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 55
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 06:52:28 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:55:32 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:55:40 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:55:41 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 06:55:47 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:00:17 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:00:34 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:02:45 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:02:53 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:03:40 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:03:58 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:04:37 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:04:37 Warning: Warning (512): Unable to emit headers. Headers sent in file=/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php line=822 in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 48]
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 48
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 07:04:37 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 148]
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 148
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 54
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 07:04:37 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 178]
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 178
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 55
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 07:06:35 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.
+2017-05-06 07:06:35 Warning: Warning (512): Unable to emit headers. Headers sent in file=/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php line=822 in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 48]
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 48
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 07:06:35 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 148]
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 148
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 54
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 07:06:35 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Error/Debugger.php:822) in [/home/user/CS130/current/lamp/cakephp/app/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 178]
+Request URL: /career/41-4011/outlook
+Referer URL: http://23.243.209.238:9080/cake/career/41-4011/salary
+Client IP: 10.0.2.2
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 153
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 178
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 55
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 105
+[main] - ROOT/webroot/index.php, line 37
+
+
+
+2017-05-06 07:09:12 Warning: DebugKit not enabled. You need to either install pdo_sqlite, or define the "debug_kit" connection name.

@@ -108,7 +108,16 @@
 
 			<div class="col-md-2">
         <!-- {{> icons }} -->
-        <?php echo $this->element('icons'); ?>
+          <?php
+            echo $this->element('icons', [
+              'occupationTitle' => $occupationTitle,
+              'wageTypeIsAnnual' => $wageTypeIsAnnual,
+              'averageWage' => $averageWage,
+              'careerGrowth' => $careerGrowth,
+              'educationRequired' => $educationRequired,
+              'skillsArray' => $skillsArray,
+            ]);
+          ?>
 			</div>
 
 		</div>
