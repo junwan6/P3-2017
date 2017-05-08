@@ -9,13 +9,6 @@
       <title>
         PPP
       </title>
-      <?php
-        //TODO: Fill in following variables from the NodeJS serverside scripts:
-        //  controllers/occupation-controller.js
-        //  models/occupation.js
-        $occupationTitle = "Not Implemented";
-        $skillsArray = null; //array, not implemented in original code
-      ?>
 		</head>
     <body>
       <div class="container-fluid">
@@ -43,88 +36,15 @@
                 {{/if}}
                 -->
                 <?php
-                  if (!$skillsArray){
+                  if (!isset($skillsArray)){
                     echo '<div class="intelligenceTitle">';
                     echo '  Information for this career is not in the database yet.';
                     echo '</div>';
+                  } else {
+                    echo '<div id="mainSkillsPieChart" style="width: 500px; height: 500px; margin: 0 auto"></div>';
                   }
                 ?>
-                                  <!--
-				      <div class="intelligenceTitle">
-					Logical-Mathematical Intelligence
-				      </div>
-				      <div class="intelligenceDefinition">
-					<ul>
-					  <li>
-					    Logical-mathematical intelligences is the ability to calculate, quantify, consider propositions and hypotheses, and carry out complete mathematical operations.  It enables us to perceive relationships and connections and to use abstract, symbolic thought sequential reasoning skills; and inductive and deductive thinking patterns.
-					  </li>
-					</ul>
-				      </div>
-				      <div class="intelligenceTasks">
-					<ul>
-					  <li>
-					    Maintain accurate, complete, and correct student records as required by laws, district policies, and administrative regulations.
-					  </li>
-					  <li>
-					    Prepare, administer, and grade tests and assignments to evaluate students' progress.
-					  </li>
-					  <li>
-					    Assign lessons and correct homework.
-					  </li>
-					</ul>
-				      </div>
-
-				      <div class="intelligenceTitle">
-					Interpersonal Intelligence
-				      </div>
-				      <div class="intelligenceDefinition">
-					<ul>
-					  <li>
-					    Interpersonal intelligence is the ability to understand and interact effect with others. It involves effective verbal and nonverbal communication, the ability to note distinctions among others, sensitivity to the moods and temperaments of others, and certain multiple perspectives. 
-					  </li>
-					</ul>
-				      </div>
-				      <div class="intelligenceTasks">
-					<ul>
-					  <li>
-					    Adapt teaching methods and instructional materials to meet students' varying needs and interests.
-					  </li>
-					  <li>
-					    Establish and enforce rules for behavior and procedures for maintaining order among students.
-					  </li>
-					  <li>
-					    Confer with parents or guardians, other teachers, counselors, and administrators to resolve students' behavioral and academic problems.
-					  </li>
-					  <li>
-					    Instruct through lectures, discussions, and demonstrations in one or more subjects, such as English, mathematics, or social studies.
-					  </li>
-					  <li>
-					    Establish clear objectives for all lessons, units, and projects, and communicate these objectives to students.
-					  </li>
-					  <li>
-					    Assist students who need extra help, such as by tutoring and preparing and implementing remedial programs.
-					  </li>
-					</ul>
-				      </div>
-
-				      <div class="intelligenceTitle">
-					Spatial Intelligence
-				      </div>
-				      <div class="intelligenceDefinition">
-					<ul>
-					  <li>
-					    Spatial intelligence is the ability to think in three dimensions.  Core capacities include mental imagery, spatial reasoning, image manipulation, graphic and artistic skills, and an active imagination.  
-					  </li>
-					</ul>
-				      </div>
-				      <div class="intelligenceTasks">
-					<ul>
-					  <li>
-					    Prepare materials and classrooms for class activities.
-					  </li>
-					</ul>
-				      </div>
-				      -->
+              <!-- Populated by skills.js -->
 			        </div>
               </div>
             </div>

@@ -51,6 +51,37 @@ class CareerController extends PagesController
 
     return $iconData;
   }
+  public function setupSkillIconTemplateData($r){
+    $skillsArray = [];
+    $skillsText = json_decode($r['skillsText'],true);
+    $intelligences = [
+      'naturalist' => 'Naturalistic',
+      'musical' => 'Musical',
+      'logical' => 'Logical-Mathematical',
+      'existential' => 'Existential',
+      'interpersonal' => 'Interpersonal',
+      'intrapersonal' => 'Intra-personal',
+      'body' => 'Bodily-Kinesthetic',
+      'linguistic' => 'Linguistic',
+      'spatial' => 'Sptial'
+    ];
+    foreach ($intelligences as $intel => $intelName){
+      if ($r[$intel . 'Percent'] > 0){
+			$skillsArray[] = [$r[$intel . 'Percent'], $intelName . " Intelligence",
+				implode(',', $skillsText[$intel . 'Skills'])];
+      }
+    }
+    usort($skillsArray, function($a,$b){
+      $n = $b[0]-$a[0];
+      // Sign extraction taken from
+      // https://stackoverflow.com/questions/7556574/how-to-get-sign-of-a-number
+      // Necessary as usort converts to int, this ensures correct sorting
+      return ($n > 0) - ($n < 0);
+    });
+    return implode(',', array_map(function($intel){
+      return implode(',', $intel);
+    }, $skillsArray));
+  }
 
   public function displayCareer(...$path){
     $soc = '15-1142'; // TODO: Determine behavior on accessing career/ with no path
@@ -77,6 +108,7 @@ class CareerController extends PagesController
     $occupationFields = ['title', 'averageWage', 'wagetype', 'careerGrowth', 'educationRequired'];
     switch($focus){
     case 'salary':
+      // in addition to ['title', 'averageWage', 'wagetype', 'careerGrowth', 'educationRequired']
       array_push($occupationFields, 'averageWageOutOfRange', 'lowWage', 'lowWageOutOfRange',
         'medianWage', 'medianWageOutOfRange', 'highWage', 'highWageOutOfRange');
       $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
@@ -103,19 +135,95 @@ class CareerController extends PagesController
       $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
 
       foreach ($results as $r){
-        // No behavior given on averageWageOutOfRange, no rows are set to 1
-        $this->set($r['statecode'] . 'Avg', $r['averageWage']);
-        $this->set($r['statecode'] . 'Hi', $r['highWage']);
-        $this->set($r['statecode'] . 'Med', $r['medianWage']);
-        $this->set($r['statecode'] . 'Lo', $r['lowWage']);
-        $this->set($r['statecode'], true);
+        if ($r['averageWage'] != 0){
+          // No behavior given on averageWageOutOfRange, no rows are set to 1
+          $this->set($r['statecode'] . 'Avg', $r['averageWage']);
+          $this->set($r['statecode'] . 'Hi', $r['highWage']);
+          $this->set($r['statecode'] . 'Med', $r['medianWage']);
+          $this->set($r['statecode'] . 'Lo', $r['lowWage']);
+          $this->set($r['statecode'], true);
+        }
       }
+      $query = 'SELECT * FROM Skills WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      foreach ($results as $r){
+        $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+      }
+
       break;
+
     // TODO: Implement education
     case 'education':
+      // Hardcoded into occupation-controller.js
+      // TODO: Add to some hardcoded configuration file
+      $schoolData = [
+        'associate' => ['Undergraduate', 'Associate\'s Degree', '2', 2, 0, false],
+        'bachelor' => ['Undergraduate', 'Bachelor\'s Degree', '4', 4, 0, false],
+        'master' => ['Graduate', 'Master\'s Degree', '6', 4, 2, true],
+        'doctoral or professional' => ['Graduate or Professional',
+          'Doctorage or Professional Degree', '8', 4, 4, true]
+        ];
+      $schoolFields = ['typeOfSchool', 'typeOfDegree' ,'yearsInSchool'
+        ,'yearsInUndergrad' ,'yearsInGrad', 'gradSchool'];
+      // in addition to ['title', 'averageWage', 'wagetype', 'careerGrowth', 'educationRequired']
+      array_push($occupationFields, 'lowWage', 'medianWage', 'highWage');
+      $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+      //If there is more than one, something's gone wrong, but get last one anyways
+      foreach ($results as $r){
+        // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
+        $this->set($this->setupIconTemplateData($r));
+        
+        // Does not use 'OutOfRange' values like Salary page
+        // TODO: Figure out which to use, make consistent
+        $this->set('NATAvg', $r['averageWage']);
+        $this->set('NATHi', $r['highWage']);
+        $this->set('NATMed', $r['medianWage']);
+        $this->set('NATLo', $r['lowWage']);
+        $this->set('NAT', true);
+
+        $this->set(array_combine($schoolFields, $schoolData[$r['educationRequired']]));
+      }
+
+      $query = 'SELECT statecode, averageWage, averageWageOutOfRange, lowWage,' .
+        'lowWageOutOfRange, medianWage, medianWageOutOfRange, highWage,' .
+        ' highWageOutOfRange FROM StateOccupation WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+      foreach ($results as $r){
+        if ($r['averageWage'] != 0){
+          // No behavior given on averageWageOutOfRange, no rows are set to 1
+          $this->set($r['statecode'] . 'Avg', $r['averageWage']);
+          $this->set($r['statecode'] . 'Hi', $r['highWage']);
+          $this->set($r['statecode'] . 'Med', $r['medianWage']);
+          $this->set($r['statecode'] . 'Lo', $r['lowWage']);
+          $this->set($r['statecode'], true);
+        }
+      }
+      $query = 'SELECT * FROM Skills WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      foreach ($results as $r){
+        $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+      }
       break;
+
     // TODO: Implement skills
     case 'skills':
+      $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+      //If there is more than one, something's gone wrong, but get last one anyways
+      foreach ($results as $r){
+        // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
+        $this->set($this->setupIconTemplateData($r));
+        $this->set('occupationTitle', $r['title']);
+      }
+      $query = 'SELECT * FROM Skills WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      foreach ($results as $r){
+        $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+      }
       break;
     case 'outlook':
       array_push($occupationFields, 'currentEmployment', 'futureEmployment', 'jobOpenings');
@@ -132,10 +240,45 @@ class CareerController extends PagesController
         $this->set('futureEmployment', number_format(floatval($r['futureEmployment']) * 1000));
         $this->set('jobOpenings', number_format(floatval($r['jobOpenings']) * 1000));
       }
+      $query = 'SELECT * FROM Skills WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      foreach ($results as $r){
+        $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+      }
       break;
+
     // TODO: Implement world_of_work
     case 'world_of_work':
+      $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+      //If there is more than one, something's gone wrong, but get last one anyways
+      foreach ($results as $r){
+        // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
+        $this->set($this->setupIconTemplateData($r));
+        $this->set('occupationTitle', $r['title']);
+      }
+
+      $interestsFields = ['realistic', 'investigative', 'artistic', 'social', 'enterprising',
+        'conventional'];
+      $query = 'SELECT ' . implode(',', $interestsFields) . ' FROM OccupationInterests WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      if (count($results) == 0){
+        $this->set('noData', true);
+      } else {
+        // Template variables named same as table columns, and no processing needed
+        foreach ($results as $r){
+          $this->set($r);
+        }
+        $this->set('noData', false);
+      }
+      $query = 'SELECT * FROM Skills WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      foreach ($results as $r){
+        $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+      }
       break;
+
     // TODO: Implement video
     case 'video':
     default:

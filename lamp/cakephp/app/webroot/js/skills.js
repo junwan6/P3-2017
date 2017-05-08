@@ -3,6 +3,7 @@ $(document).ready(function(){
 		skillsArray = document.getElementById('skillsArray').innerHTML;
 		skillsArray = skillsArray.split(",");
 		j = 0;
+		var data = [];
 		while (j < skillsArray.length) {
 			//For some reason this checks if it's not NaN
 			if (Number(skillsArray[j])) {
@@ -11,6 +12,8 @@ $(document).ready(function(){
 				//document.getElementById('contentContainer').innerHTML += "<div class='intelligenceTitle'>" + skillsArray[j+1] + " " + 100*Number(skillsArray[j]) + "%</div>";
 				document.getElementById('contentContainer').innerHTML += "<div class='intelligenceTitle'>" + 100*Number(skillsArray[j]) + "% " + skillsArray[j+1] + "</div>";
 				
+				data.push({name: (100*Number(skillsArray[j])).toString() + '% ' + skillsArray[j+1], y: 100*Number(skillsArray[j])});
+
 				//Definitions + Tasks
 				var taskString = "";
 				taskString += "<div class='intelligenceDefinition'><ul><li>";
@@ -76,11 +79,39 @@ $(document).ready(function(){
 				taskString += "</ul></div>";
 				document.getElementById('contentContainer').innerHTML += taskString;
 
-				
-
-
 			}
 		}
+
+    // Build the chart
+    $('#mainSkillsPieChart').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Skills'
+        },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            name: 'Intelligences',
+            colorByPoint: true,
+            data: data
+        }]
+    });
 	}
 });
 

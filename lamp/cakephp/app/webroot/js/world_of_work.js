@@ -176,7 +176,7 @@ var createCanvas = function() {
 
 	// Specify the src to load the image
 	// the WoW seems to be 500px by 530px
-	img.src = "static/images/wow.png";
+	img.src = "../../img/wow.png";
 }
 
 $(document).ready(function(){

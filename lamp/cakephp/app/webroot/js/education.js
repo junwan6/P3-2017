@@ -244,7 +244,7 @@ $(document).ready(function(){
 
 	$('#salaryStateInput').change(function() {
 		switch($('#salaryStateInput').val()) {
-			case "US":
+			case "NAT":
 				salaryState = 0;
 				break;
 			case "AL":

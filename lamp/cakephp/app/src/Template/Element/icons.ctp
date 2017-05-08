@@ -25,8 +25,8 @@
 {{/if}}
 -->
 <?php
-  if ($skillsArray){
-    echo '<div id="skillsArray"';
+  if (isset($skillsArray)){
+    echo '<div id="skillsArray">';
     echo $skillsArray;
     echo '</div>';
   }

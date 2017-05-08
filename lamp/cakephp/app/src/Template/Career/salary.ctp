@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <!-- {{> global_header }} -->
   <?php
     echo $this->Html->script(array(
       "https://code.highcharts.com/highcharts.js",
@@ -31,7 +30,6 @@
 					</div>
 
 					<div id="careerTitle">
-            <!-- {{occupationTitle}} -->
             <?php echo $occupationTitle; ?>
 					</div>
 
@@ -47,10 +45,14 @@
               <?php
                 foreach ($states as $st){
                   echo '<tr>';
-                  echo '<td>' . ${$st . 'Avg'} . '</td>';
-                  echo '<td>' . ${$st . 'Lo'} . '</td>';
-                  echo '<td>' . ${$st . 'Med'} . '</td>';
-                  echo '<td>' . ${$st . 'Hi'} . '</td>';
+                  if (isset(${$st})){
+                    echo '<td>' . ${$st . 'Avg'} . '</td>';
+                    echo '<td>' . ${$st . 'Lo'} . '</td>';
+                    echo '<td>' . ${$st . 'Med'} . '</td>';
+                    echo '<td>' . ${$st . 'Hi'} . '</td>';
+                  } else {
+                    echo '<td><td><td><td></td></td></td></td>';
+                  }
                   echo '</tr>';
                 }
               ?>
@@ -62,6 +64,7 @@
 						<div class="row inputRow">
 							<select id="salaryStateInput" class="col form-control chartOption" style="display: table-cell; margin:auto;">
                 <?php
+                  // Converted from "www.50states.com/abbreviations.htm"
                     $statename = array(
                     "NAT"=>"National Average",
                     "AL"=>"Alabama",
@@ -131,12 +134,11 @@
                     "AE"=>"Armed Forces (Other)",
                     "AP"=>"Armed Forces Pacific"
                   );
-                  if (is_null($_GET['st'])){
+                  if (!isset($_GET['st'])){
                     $_GET['st'] = 'NAT';
                   }
-                  // Converted from "www.50states.com/abbreviations.htm"
                   foreach ($states as $st){
-                    if (${$st} == true){
+                    if (isset(${$st})){
                       echo '<option value ="' . $st . '"' . (($st == $_GET['st'])?' selected="selected"':'')  . '>' . $statename[$st] . '</option>';
                     }
                   }
@@ -149,7 +151,6 @@
 			</div>
 
 			<div class="col-md-2">
-        <!-- {{> icons }} -->
         <?php
           echo $this->element('icons', [
             'occupationTitle' => $occupationTitle,

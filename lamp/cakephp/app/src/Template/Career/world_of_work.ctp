@@ -17,20 +17,6 @@
 	<title>
 		PPP
 	</title>
-      <?php
-        //TODO: Fill in following variables from the NodeJS serverside scripts:
-        // controllers/occupation-controller.js
-        // models/occupation.js
-        $occupationTitle = "Not Implemented";
-        $noData = true;
-        $soc = "Not Implemented";
-        $realistic = "Not Implemented";
-        $investigative = "Not Implemented";
-        $artistic = "Not Implemented";
-        $social = "Not Implemented";
-        $enterprising = "Not Implemented";
-        $conventional = "Not Implemented";
-      ?>
 </head>
 
 <body>

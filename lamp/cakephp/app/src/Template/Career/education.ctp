@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html>
 		<head>
-      <!-- {{> global_header }} -->
 
       <?php
         echo $this->Html->script([
@@ -17,28 +16,9 @@
 
 			<title>
 				PPP
-			</title>
+      </title>
       <?php
-        //TODO: Fill in following variables from the NodeJS serverside scripts:
-        // controllers/occupation-controller.js
-        // models/occupation.js
-        $occupationTitle = "Not Implemented";
-        $typeOfSchool = "Not Implemented";
-        $typeOfDegree = "Not Implemented";
-        $yearsInSchool = "Not Implemented";
-        $yearsInUndergrad = "Not Implemented";
-        $yearsInGrad = "Not Implemented";
-        $gradSchool = false;
-
-        // every state + Avg, Lo, Med, Hi
         $states = array('NAT', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY');
-        foreach ($states as $st){
-          ${$st . 'Avg'} = '0';
-          ${$st . 'Lo'} = '0';
-          ${$st . 'Med'} = '0';
-          ${$st . 'Hi'} = '0';
-          ${$st} = null; 
-        }
       ?>
 		</head>
     <body>
@@ -50,17 +30,16 @@
 				  Education
 			        </div>
 			        <div id="careerTitle">
-          <!-- {{occupationTitle}} -->
           <?php echo $occupationTitle; ?>
 			        </div>
 
-			        <div id="contentContainer">
+              <div id="contentContainer">
+          <!-- WARNING: JAVASCRIPT TAKES CONTENTS OF <div> TAG INCLUDING COMMENTS-->
 				  <div class="educationLine">
 				    <div class="educationCategory">
 				      Type of School:
 				    </div>
 				    <div id="typeOfSchool" class="educationValue">
-            <!-- {{typeOfSchool}} -->
             <?php echo $typeOfSchool; ?>
 				    </div>
 				  </div>
@@ -70,7 +49,6 @@
 				      Type of Degree:
 				    </div>
             <div id="typeOfDegree" class="educationValue">
-            <!-- {{typeOfDegree}} -->
             <?php echo $typeOfDegree; ?>
 				    </div>
 				  </div>
@@ -80,8 +58,7 @@
 				      Years in School:
 				    </div>
 				    <div id="yearsInSchool" class="educationValue">
-            <!-- {{yearsInSchool}} -->
-            <?php echo $yearsInSchool; ?>
+              <?php echo $yearsInSchool; ?>
 				    </div>
 				  </div>
 
@@ -99,11 +76,9 @@
 
                     <div id="careerInformation">
                     <div id="yearsInUndergrad">
-                      <!-- {{yearsInUndergrad}} -->
                       <?php echo $yearsInUndergrad; ?>
                     </div>
                     <div id="yearsInGrad">
-                      <!-- {{yearsInGrad}} -->
                       <?php echo  $yearsInGrad; ?>
                     </div>
 
@@ -130,67 +105,17 @@
                     	</table>
 
                       <table id="careerTable">
-                        <!--
-                    		<tr><td>{{NATAvg}}</td><td>{{NATLo}}</td><td>{{NATMed}}</td><td>{{NATHi}}</td></tr> <!-- -->
-                    		<tr><td>{{ALAvg}}</td><td>{{ALLo}}</td><td>{{ALMed}}</td><td>{{ALHi}}</td></tr> <!-- -->
-                    		<tr><td>{{AKAvg}}</td><td>{{AKLo}}</td><td>{{AKMed}}</td><td>{{AKHi}}</td></tr> <!-- -->
-                    		<tr><td>{{AZAvg}}</td><td>{{AZLo}}</td><td>{{AZMed}}</td><td>{{AZHi}}</td></tr> <!-- -->
-                    		<tr><td>{{ARAvg}}</td><td>{{ARLo}}</td><td>{{ARMed}}</td><td>{{ARHi}}</td></tr> <!-- -->
-                    		<tr><td>{{CAAvg}}</td><td>{{CALo}}</td><td>{{CAMed}}</td><td>{{CAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{COAvg}}</td><td>{{COLo}}</td><td>{{COMed}}</td><td>{{COHi}}</td></tr> <!-- -->
-                    		<tr><td>{{CTAvg}}</td><td>{{CTLo}}</td><td>{{CTMed}}</td><td>{{CTHi}}</td></tr> <!-- -->
-                    		<tr><td>{{DEAvg}}</td><td>{{DELo}}</td><td>{{DEMed}}</td><td>{{DEHi}}</td></tr> <!-- -->
-                    		<tr><td>{{DCAvg}}</td><td>{{DCLo}}</td><td>{{DCMed}}</td><td>{{DCHi}}</td></tr> <!-- -->
-                    		<tr><td>{{FLAvg}}</td><td>{{FLLo}}</td><td>{{FLMed}}</td><td>{{FLHi}}</td></tr> <!-- -->
-                    		<tr><td>{{GAAvg}}</td><td>{{GALo}}</td><td>{{GAMed}}</td><td>{{GAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{HIAvg}}</td><td>{{HILo}}</td><td>{{HIMed}}</td><td>{{HIHi}}</td></tr> <!-- -->
-                    		<tr><td>{{IDAvg}}</td><td>{{IDLo}}</td><td>{{IDMed}}</td><td>{{IDHi}}</td></tr> <!-- -->
-                    		<tr><td>{{ILAvg}}</td><td>{{ILLo}}</td><td>{{ILMed}}</td><td>{{ILHi}}</td></tr> <!-- -->
-                    		<tr><td>{{INAvg}}</td><td>{{INLo}}</td><td>{{INMed}}</td><td>{{INHi}}</td></tr> <!-- -->
-                    		<tr><td>{{IAAvg}}</td><td>{{IALo}}</td><td>{{IAMed}}</td><td>{{IAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{KSAvg}}</td><td>{{KSLo}}</td><td>{{KSMed}}</td><td>{{KSHi}}</td></tr> <!-- -->
-                    		<tr><td>{{KYAvg}}</td><td>{{KYLo}}</td><td>{{KYMed}}</td><td>{{KYHi}}</td></tr> <!-- -->
-                    		<tr><td>{{LAAvg}}</td><td>{{LALo}}</td><td>{{LAMed}}</td><td>{{LAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MEAvg}}</td><td>{{MELo}}</td><td>{{MEMed}}</td><td>{{MEHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MDAvg}}</td><td>{{MDLo}}</td><td>{{MDMed}}</td><td>{{MDHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MAAvg}}</td><td>{{MALo}}</td><td>{{MAMed}}</td><td>{{MAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MIAvg}}</td><td>{{MILo}}</td><td>{{MIMed}}</td><td>{{MIHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MNAvg}}</td><td>{{MNLo}}</td><td>{{MNMed}}</td><td>{{MNHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MSAvg}}</td><td>{{MSLo}}</td><td>{{MSMed}}</td><td>{{MSHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MOAvg}}</td><td>{{MOLo}}</td><td>{{MOMed}}</td><td>{{MOHi}}</td></tr> <!-- -->
-                    		<tr><td>{{MTAvg}}</td><td>{{MTLo}}</td><td>{{MTMed}}</td><td>{{MTHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NEAvg}}</td><td>{{NELo}}</td><td>{{NEMed}}</td><td>{{NEHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NVAvg}}</td><td>{{NVLo}}</td><td>{{NVMed}}</td><td>{{NVHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NHAvg}}</td><td>{{NHLo}}</td><td>{{NHMed}}</td><td>{{NHHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NJAvg}}</td><td>{{NJLo}}</td><td>{{NJMed}}</td><td>{{NJHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NMAvg}}</td><td>{{NMLo}}</td><td>{{NMMed}}</td><td>{{NMHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NYAvg}}</td><td>{{NYLo}}</td><td>{{NYMed}}</td><td>{{NYHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NCAvg}}</td><td>{{NCLo}}</td><td>{{NCMed}}</td><td>{{NCHi}}</td></tr> <!-- -->
-                    		<tr><td>{{NDAvg}}</td><td>{{NDLo}}</td><td>{{NDMed}}</td><td>{{NDHi}}</td></tr> <!-- -->
-                    		<tr><td>{{OHAvg}}</td><td>{{OHLo}}</td><td>{{OHMed}}</td><td>{{OHHi}}</td></tr> <!-- -->
-                    		<tr><td>{{OKAvg}}</td><td>{{OKLo}}</td><td>{{OKMed}}</td><td>{{OKHi}}</td></tr> <!-- -->
-                    		<tr><td>{{ORAvg}}</td><td>{{ORLo}}</td><td>{{ORMed}}</td><td>{{ORHi}}</td></tr> <!-- -->
-                    		<tr><td>{{PAAvg}}</td><td>{{PALo}}</td><td>{{PAMed}}</td><td>{{PAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{RIAvg}}</td><td>{{RILo}}</td><td>{{RIMed}}</td><td>{{RIHi}}</td></tr> <!-- -->
-                    		<tr><td>{{SCAvg}}</td><td>{{SCLo}}</td><td>{{SCMed}}</td><td>{{SCHi}}</td></tr> <!-- -->
-                    		<tr><td>{{SDAvg}}</td><td>{{SDLo}}</td><td>{{SDMed}}</td><td>{{SDHi}}</td></tr> <!-- -->
-                    		<tr><td>{{TNAvg}}</td><td>{{TNLo}}</td><td>{{TNMed}}</td><td>{{TNHi}}</td></tr> <!-- -->
-                    		<tr><td>{{TXAvg}}</td><td>{{TXLo}}</td><td>{{TXMed}}</td><td>{{TXHi}}</td></tr> <!-- -->
-                    		<tr><td>{{UTAvg}}</td><td>{{UTLo}}</td><td>{{UTMed}}</td><td>{{UTHi}}</td></tr> <!-- -->
-                    		<tr><td>{{VTAvg}}</td><td>{{VTLo}}</td><td>{{VTMed}}</td><td>{{VTHi}}</td></tr> <!-- -->
-                    		<tr><td>{{VAAvg}}</td><td>{{VALo}}</td><td>{{VAMed}}</td><td>{{VAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{WAAvg}}</td><td>{{WALo}}</td><td>{{WAMed}}</td><td>{{WAHi}}</td></tr> <!-- -->
-                    		<tr><td>{{WVAvg}}</td><td>{{WVLo}}</td><td>{{WVMed}}</td><td>{{WVHi}}</td></tr> <!-- -->
-                    		<tr><td>{{WIAvg}}</td><td>{{WILo}}</td><td>{{WIMed}}</td><td>{{WIHi}}</td></tr> <!-- -->
-                    		<tr><td>{{WYAvg}}</td><td>{{WYLo}}</td><td>{{WYMed}}</td><td>{{WYHi}}</td></tr> <!-- -->
-                        -->
                         <?php
                           foreach ($states as $st){
                             echo '<tr>';
-                            echo '<td>' . ${$st . 'Avg'} . '</td>';
-                            echo '<td>' . ${$st . 'Lo'} . '</td>';
-                            echo '<td>' . ${$st . 'Med'} . '</td>';
-                            echo '<td>' . ${$st . 'Hi'} . '</td>';
+                            if (isset(${$st})){
+                              echo '<td>' . ${$st . 'Avg'} . '</td>';
+                              echo '<td>' . ${$st . 'Lo'} . '</td>';
+                              echo '<td>' . ${$st . 'Med'} . '</td>';
+                              echo '<td>' . ${$st . 'Hi'} . '</td>';
+                            } else {
+                              echo '<td><td><td><td></td></td></td></td>';
+                            }
                             echo '</tr>';
                           }
                         ?>
@@ -217,7 +142,6 @@
 		                	<div id="undergraduateCostDisplay"></div>
 		                </div>
 
-                    <!-- {{#if gradSchool}} -->
                     <?php if ($gradSchool){ ?>
 		                <div id="graduateInputs" class="col" style="display: table-cell">
 		                	Graduate
@@ -232,69 +156,16 @@
 		                	</div>
 		                	<div id="graduateCostDisplay"></div>
 		                </div>
-                    <!-- {{/if}} -->
                     <?php } ?>
 
 		                <div id="careerInputs" class="col" style="display: table-cell">
 		                	Career
 		                	<div class="row inputRow" style="display: table">
 		                		<select id="salaryStateInput" class="col form-control chartOption" style="display: table-cell">
-                    <option value="US">National Average</option>
-                    <!--
-								    {{#if AL}}<option value="AL">Alabama</option>{{/if}}
-								    {{#if AK}}<option value="AK">Alaska</option>{{/if}}
-								    {{#if AZ}}<option value="AZ">Arizona</option>{{/if}}
-								    {{#if AR}}<option value="AR">Arkansas</option>{{/if}}
-								    {{#if CA}}<option value="CA">California</option>{{/if}}
-								    {{#if CO}}<option value="CO">Colorado</option>{{/if}}
-								    {{#if CT}}<option value="CT">Connecticut</option>{{/if}}
-								    {{#if DE}}<option value="DE">Delaware</option>{{/if}}
-								    {{#if DC}}<option value="DC">District Of Columbia</option>{{/if}}
-								    {{#if FL}}<option value="FL">Florida</option>{{/if}}
-								    {{#if GA}}<option value="GA">Georgia</option>{{/if}}
-								    {{#if HI}}<option value="HI">Hawaii</option>{{/if}}
-								    {{#if ID}}<option value="ID">Idaho</option>{{/if}}
-								    {{#if IL}}<option value="IL">Illinois</option>{{/if}}
-								    {{#if IN}}<option value="IN">Indiana</option>{{/if}}
-								    {{#if IA}}<option value="IA">Iowa</option>{{/if}}
-								    {{#if KS}}<option value="KS">Kansas</option>{{/if}}
-								    {{#if KY}}<option value="KY">Kentucky</option>{{/if}}
-								    {{#if LA}}<option value="LA">Louisiana</option>{{/if}}
-								    {{#if ME}}<option value="ME">Maine</option>{{/if}}
-								    {{#if MD}}<option value="MD">Maryland</option>{{/if}}
-								    {{#if MA}}<option value="MA">Massachusetts</option>{{/if}}
-								    {{#if MI}}<option value="MI">Michigan</option>{{/if}}
-								    {{#if MN}}<option value="MN">Minnesota</option>{{/if}}
-								    {{#if MS}}<option value="MS">Mississippi</option>{{/if}}
-								    {{#if MO}}<option value="MO">Missouri</option>{{/if}}
-								    {{#if MT}}<option value="MT">Montana</option>{{/if}}
-								    {{#if NE}}<option value="NE">Nebraska</option>{{/if}}
-								    {{#if NV}}<option value="NV">Nevada</option>{{/if}}
-								    {{#if NH}}<option value="NH">New Hampshire</option>{{/if}}
-								    {{#if NJ}}<option value="NJ">New Jersey</option>{{/if}}
-								    {{#if NM}}<option value="NM">New Mexico</option>{{/if}}
-								    {{#if NY}}<option value="NY">New York</option>{{/if}}
-								    {{#if NC}}<option value="NC">North Carolina</option>{{/if}}
-								    {{#if ND}}<option value="ND">North Dakota</option>{{/if}}
-								    {{#if OH}}<option value="OH">Ohio</option>{{/if}}
-								    {{#if OK}}<option value="OK">Oklahoma</option>{{/if}}
-								    {{#if OR}}<option value="OR">Oregon</option>{{/if}}
-								    {{#if PA}}<option value="PA">Pennsylvania</option>{{/if}}
-								    {{#if RI}}<option value="RI">Rhode Island</option>{{/if}}
-								    {{#if SC}}<option value="SC">South Carolina</option>{{/if}}
-								    {{#if SD}}<option value="SD">South Dakota</option>{{/if}}
-								    {{#if TN}}<option value="TN">Tennessee</option>{{/if}}
-								    {{#if TX}}<option value="TX">Texas</option>{{/if}}
-								    {{#if UT}}<option value="UT">Utah</option>{{/if}}
-								    {{#if VT}}<option value="VT">Vermont</option>{{/if}}
-								    {{#if VA}}<option value="VA">Virginia</option>{{/if}}
-								    {{#if WA}}<option value="WA">Washington</option>{{/if}}
-								    {{#if WV}}<option value="WV">West Virginia</option>{{/if}}
-								    {{#if WI}}<option value="WI">Wisconsin</option>{{/if}}
-                    {{#if WY}}<option value="WY">Wyoming</option>{{/if}}
-                    -->
                     <?php
-                      $statename = array(
+                      // Converted from "www.50states.com/abbreviations.htm"
+                        $statename = array(
+                        "NAT"=>"National Average",
                         "AL"=>"Alabama",
                         "AK"=>"Alaska",
                         "AZ"=>"Arizona",
@@ -362,10 +233,12 @@
                         "AE"=>"Armed Forces (Other)",
                         "AP"=>"Armed Forces Pacific"
                       );
-                      // Converted from "www.50states.com/abbreviations.htm"
+                      if (!isset($_GET['st'])){
+                        $_GET['st'] = 'NAT';
+                      }
                       foreach ($states as $st){
-                        if (${$st}){
-                          echo '<option value ="' . $st . '">' . $statename[$st] . '</option>';
+                        if (isset(${$st})){
+                          echo '<option value ="' . $st . '"' . (($st == $_GET['st'])?' selected="selected"':'')  . '>' . $statename[$st] . '</option>';
                         }
                       }
                     ?>
@@ -384,7 +257,6 @@
               </div>
             </div>
             <div class="col-md-2">
-            <!-- {{> icons }} -->
             <?php
               echo $this->element('icons', [
                 'occupationTitle' => $occupationTitle,

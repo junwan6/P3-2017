@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html>
 		<head>
-      <!-- {{> global_header }} -->
       <?php
         echo $this->Html->css('outlook.css');
       ?>
@@ -19,13 +18,11 @@
 			          Career Outlook
 			        </div>
 			        <div id="careerTitle">
-                <!-- {{occupationTitle}} -->
                 <?php echo $occupationTitle; ?>
 			        </div>
                                 <div id="growthPercent">
                                   <i id="growthPercentIcon" class="fa fa-sun-o fa-5x" aria-hidden="true"></i>
                                   <p id="growthPercentText">
-                                    <!-- {{careerGrowth}} -->
                                     <?php echo $careerGrowth ?>
                                   </p>
                                 </div>
@@ -44,13 +41,6 @@
                                       <th>2024</th>
                                     </tr>
                                     <tr>
-                                      <!-- 
-                                      <td>{{occupationTitle}}</td>
-                                      <td>{{currentEmployment}}</td>
-                                      <td>{{futureEmployment}}</td>
-                                      <td>{{careerGrowth}}</td>
-                                      <td>{{jobOpenings}}</td>
-                                      -->
                                       <?php
                                         echo '<td>' . $occupationTitle . '</td>';
                                         echo '<td>' . $currentEmployment . '</td>';
@@ -64,7 +54,6 @@
                               </div>
                             </div>
                             <div class="col-md-2">
-                              <!-- {{> icons }} -->
                               <?php
                                 echo $this->element('icons', [
                                   'occupationTitle' => $occupationTitle,
