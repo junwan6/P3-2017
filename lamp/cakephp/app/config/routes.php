@@ -76,14 +76,18 @@ Router::scope('/', function (RouteBuilder $routes) {
      * Includes login, logout, password reset, passports, etc.
      * TODO: Implement UserController
      */
+
+    $routes->connect('/signup', ['controller' => 'user',
+      'action' => 'signup']); 
     // Profile page (loads liked/disliked videos)
-    $routes->connect('/profile', ['controller' => 'user', 'action' => 'display', 'profile']);
+    //$routes->connect('/profile', ['controller' => 'user',
+    //  'action' => 'display', 'profile']);
     // TODO: Register (create and insert user)
     //$routes->connect('/register', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
     // TODO: Login Attempt (AJAX, sends password salt for clientside password hashing)
     //$routes->connect('/login-attempt', ['controller' => 'user',
-    //  'action' => 'display', 'profile']);
+    // 'action' => 'display', 'profile']);
     // TODO: Login (send hashed attempt, create session)
     //$routes->connect('/login', ['controller' => 'user',
     //  'action' => 'display', 'profile']);

@@ -97,7 +97,7 @@ class CareerController extends PagesController
 
     // Takes the place of the Model, CakePHP requires one-to-one model-to-table
     // which is not compatible with the current database
-    $connection = ConnectionManager::get('test');
+    $connection = ConnectionManager::get($this->datasource);
     // Fields used by all pages:
     //  Occupation: title => occupationTitle
     //  Occupation: wageType => wageTypeIsAnnual
@@ -324,7 +324,8 @@ class CareerController extends PagesController
         }
         $videos[$r['personNum']]['videos'][$r['questionNum']] =
           ['question' => $r['question'],
-          'fileName' => $r['fileName']];
+          'fileName' => $r['soc'] . '_' . $r['personNum'] . '_' .
+            $r['person'] . '/' . $r['fileName']];
       }
       $this->set('videos', $videos);
     break;
@@ -340,7 +341,7 @@ class CareerController extends PagesController
 
   public function redirectRandom(){
     $soc = '15-1142'; // TODO: Error handling for empty database?
-    $connection = ConnectionManager::get('test');
+    $connection = ConnectionManager::get($this->datasource);
     $results = [];
 
     $wowX = $this->request->getQuery('x');

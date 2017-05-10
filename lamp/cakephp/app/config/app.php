@@ -279,7 +279,41 @@ return [
             'log' => false,
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
             'url' => env('DATABASE_TEST_URL', null),
-        ],
+          ],
+        /**
+         * The json connection allows for database configuration from an external file
+         */
+        'json' => (function(){
+          try{
+          $filepath = dirname(__FILE__) . '/db_config.json';
+          $file = fopen($filepath, 'r');
+          $jsonString = fread($file, filesize($filepath));
+          fclose($file);
+          $loginInfo = json_decode($jsonString,  true);
+          // Allows for overwriting of variables, below are default values
+          return array_replace([
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Mysql',
+            'persistent' => false,
+            'host' => 'localhost',
+            //'port' => 'non_standard_port_number',
+            'username' => 'root',
+            'password' => 'root',
+            'database' => 'p3_test',
+            'encoding' => 'utf8',
+            'timezone' => 'UTC',
+            'cacheMetadata' => true,
+            'quoteIdentifiers' => false,
+            'log' => false,
+            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
+            //'url' => env('DATABASE_TEST_URL', null),
+          ], $loginInfo);
+          // TODO: More specific error handling
+          } catch (Exception $e){
+            error_log('Error loading database configuration from file');
+            return null;
+          }
+        })(),
     ],
 
     /**

@@ -26,7 +26,38 @@ use Cake\View\Exception\MissingTemplateException;
  *
  * @link http://book.cakephp.org/3.0/en/controllers/pages-controller.html
  */
-class CareerController extends PagesController
+class UserController extends PagesController
 {
+	public function signup(){	
+   	//print("hello world");  
+    $db = mysqli_connect("localhost", "root", "root", "p3_test"); 
+   
+    //$connection = ConnectionManager::get($this->datasource);
+   
+    if($_SERVER["REQUEST_METHOD"] == "POST")
+      {
+	      $myusername = mysqli_real_escape_string($db,$_POST['email']);
+		    $mypassword = mysqli_real_escape_string($db,$_POST['password']);
+			  $sql = "SELECT id FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";
+				$result = mysqli_query($db,$sql);
+        if($result == false)
+          print("fuck");
+        $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+			  $active = $row['active'];
+			  $count = mysqli_num_rows($result);
+			}
 
+    if($count == 1)
+      {
+	      session_register("myusername");
+	      $_SESSION['login_user'] = $myusername;
+		    header("location: welcome.php");
+		  }
+	  else
+		  {
+				$error = "Your Login Name or Password is invalid";
+      }
+
+     $this->display("profile");
+    }					    
 }

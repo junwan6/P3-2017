@@ -1,0 +1,82 @@
+#!/bin/sh
+
+#
+#  init_db
+#
+# This script runs each of the Python scripts to generate the batch-importable
+# files, and then imports them.
+#
+# Future work: redesign this data import process so that you don't have to tear
+# down the database and re-process the data from scratch.
+
+script_dir="$(dirname $0)"
+data_dir="../data/"
+db_config="../app/config/db_config"
+tmp="$(mktemp -d -t 'build-XXXXX' -p . -u)"
+
+if [ $# -eq 0 ]; then
+  echo "Running with default parameters data_dir=../data/, db_config=../app/config/db_config";
+elif [ $# -eq 1 ]; then
+  echo "Running with default parameter db_config=../app/config/db_config";
+  data_dir="$1";
+elif [ $# -eq 2 ]; then
+  data_dir="$1";
+  db_config="$2";
+elif [ $# -eq 3 ]; then
+  data_dir="$1";
+  db_config="$2";
+  tmp="$3";
+  echo "Using pregenerated database tables";
+fi;
+
+for scr in get_db_config.php create.sql load.sql videos.csv; do
+  if [ ! -f "$script_dir/$scr" ]; then
+    echo "$scr missing from local directory";
+    exit 1;
+  fi;
+done;
+
+if [ $# -eq 2 ]; then
+
+  if [ ! -d "$data_dir" ]; then
+    echo "Invalid data directory $data_dir";
+    exit 1;
+  fi
+
+  for xlsx in occupation.xlsx all_data_M_2015.xlsx Interests.xlsx skills.xlsx; do
+    if [ ! -f "$data_dir/$xlsx" ]; then
+      echo "Data directory missing $xlsx";
+      exit 1;
+    fi;
+  done;
+
+  for scr in export_database.py export_state_database.py export_interests_database.py export_skills_database.py; do
+    if [ ! -f "$script_dir/$scr" ]; then
+      echo "$scr missing from local directory";
+      exit 1;
+    fi;
+  done;
+
+  mkdir $tmp;
+  echo "Generating table Occupation...";
+  "$script_dir/export_database.py" "$data_dir/occupation.xlsx" "$data_dir/all_data_M_2015.xlsx" "$tmp/occupation.dat";
+  echo "Generating table StateOccupation...";
+  "$script_dir/export_state_database.py" "$data_dir/all_data_M_2015.xlsx" "$tmp/stateOccupation.dat";
+  echo "Generating table Interests...";
+  "$script_dir/export_interests_database.py" "$data_dir/Interests.xlsx" "$tmp/interest.dat";
+  echo "Generating table Skills...";
+  "$script_dir/export_skills_database.py" "$data_dir/skills.xlsx" "$tmp/skills.dat";
+
+fi;
+mysql_string=$("$script_dir/get_db_config.php" "$db_config");
+(
+    cp "$script_dir/create.sql" "$tmp"
+    cp "$script_dir/load.sql" "$tmp"
+    cp "$script_dir/videos.csv" "$tmp"
+    cd "$tmp"
+    echo "Loading into p3_test database..."
+    
+#    cat create.sql load.sql | mysql -u p3_admin -p --local-infile=1 p3_test
+    $mysql_string < create.sql
+    $mysql_string < load.sql
+)
