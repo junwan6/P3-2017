@@ -88,7 +88,7 @@ class CareerController extends PagesController
 		if (!empty($path[0])) {
 			$soc = $path[0];
     }
-    $focus = 'video'; // Default view if accessing career/12-4125/ with no focus
+    $focus = 'none'; // Must be default: case to redirect, change URL so relative paths work
     if (!empty($path[1])) {
       $focus = $path[1];
     }
@@ -149,10 +149,8 @@ class CareerController extends PagesController
       foreach ($results as $r){
         $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
       }
+    break;
 
-      break;
-
-    // TODO: Implement education
     case 'education':
       // Hardcoded into occupation-controller.js
       // TODO: Add to some hardcoded configuration file
@@ -206,9 +204,8 @@ class CareerController extends PagesController
       foreach ($results as $r){
         $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
       }
-      break;
+    break;
 
-    // TODO: Implement skills
     case 'skills':
       $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
       $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
@@ -224,7 +221,8 @@ class CareerController extends PagesController
       foreach ($results as $r){
         $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
       }
-      break;
+    break;
+
     case 'outlook':
       array_push($occupationFields, 'currentEmployment', 'futureEmployment', 'jobOpenings');
       $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
@@ -245,9 +243,8 @@ class CareerController extends PagesController
       foreach ($results as $r){
         $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
       }
-      break;
+    break;
 
-    // TODO: Implement world_of_work
     case 'world_of_work':
       $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
       $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
@@ -277,15 +274,97 @@ class CareerController extends PagesController
       foreach ($results as $r){
         $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
       }
-      break;
+    break;
 
-    // TODO: Implement video
+    // Temporary minimal change to database
+    //   Videos table added columns 'person', 'fileName'
+    //   CREATE TABLE Videos (
+    //     soc CHAR(7),
+    //     personNum TINYINT,
+    //     person TEXT,
+    //     questionNum TINYINT,
+    //     question TEXT,
+    //     fileName TEXT,
+    //     PRIMARY KEY(soc, personNum, questionNum)
+    //   );
+    // TODO: Make database have proper form instead of above
+    // Required following changes to database:
+    //   Create Interview table (Replaced Videos, more accurate name) 
+    //   Interview Table add column 'fileName'
+    //   Interview Table repurpose column 'personNum' for order of showing if multiple
+    //   Create People table (proper form, avoids redundant names with personNum)
+    //     soc, personNum, name
+    //     primary key (soc, personNum)
     case 'video':
+      $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+      //If there is more than one, something's gone wrong, but get last one anyways
+      foreach ($results as $r){
+        // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
+        $this->set($this->setupIconTemplateData($r));
+        $this->set('occupationTitle', $r['title']);
+      }
+      $query = 'SELECT * FROM Skills WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      foreach ($results as $r){
+        $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+      }
+
+      $videos = [];
+      $query = 'SELECT * FROM Videos WHERE soc = :soc';
+      $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+      foreach ($results as $r){
+        if (!isset($videos[$r['personNum']])){
+          $videos[$r['personNum']] = [];
+        }
+        $videos[$r['personNum']]['name'] = $r['person'];
+        if (!isset($videos[$r['personNum']]['videos'])){
+          $videos[$r['personNum']]['videos'] = [];
+        }
+        $videos[$r['personNum']]['videos'][$r['questionNum']] =
+          ['question' => $r['question'],
+          'fileName' => $r['fileName']];
+      }
+      $this->set('videos', $videos);
+    break;
+    
     default:
-      $focus = 'video';
+      $this->redirect(['controller' => 'career', 'action' => 'displayCareer', $soc, 'video']);
+      return;
     }
 
     // TODO: Figure out implementation of switcher (set JS variable?)
     $this->display($focus);
+  }
+
+  public function redirectRandom(){
+    $soc = '15-1142'; // TODO: Error handling for empty database?
+    $connection = ConnectionManager::get('test');
+    $results = [];
+
+    $wowX = $this->request->getQuery('x');
+    $wowY = $this->request->getQuery('y');
+    if (!is_null($wowX) && !is_null($wowY)){
+      // Implementation taken from 'occupation.js:getRandomSOCInWOWRegion()'
+      $rad = atan2($wowY, $wowX);
+      $rad = ($rad >= 0)?($rad):($rad + 2.0*pi());
+      $deg = $rad * (180.0/pi());
+      $region = floor(min(max(0,$deg/30.0), 11));
+      // Additional check added as Interests may be defined for occupation without other data
+      $query = 'SELECT soc FROM OccupationInterests WHERE wowRegion = :region AND soc IN (SELECT soc FROM Occupation) ORDER BY RAND() LIMIT 1';
+      $results = $connection->execute($query, ['region' => $region])->fetchAll('assoc');
+    } else {
+      $query = 'SELECT soc FROM Occupation ORDER BY RAND() LIMIT 1';
+      $results = $connection->execute($query)->fetchAll('assoc');
+    }
+
+    // Should always have one result as per query
+    foreach ($results as $r){
+      $soc = $r['soc'];
+    }
+    // TODO: Handle 0 results, from full or constrained random
+
+    $this->redirect(['controller' => 'career', 'action' => 'displayCareer', $soc, 'video']);
   }
 }

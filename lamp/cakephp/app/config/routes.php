@@ -126,12 +126,12 @@ Router::scope('/', function (RouteBuilder $routes) {
         'soc' => '[0-9]{2}-[0-9]{4}']);
     // Default focus = video, cakephp does not support optional params
     $routes->connect('/career/:soc', ['controller' => 'career',
-      'action' => 'displayCareer', 'video'], ['pass' => ['soc'],
+      'action' => 'displayCareer'], ['pass' => ['soc'],
         'soc' => '[0-9]{2}-[0-9]{4}']);
     // TODO: Automatic redirect to random SOC of available. Changes URL on redirect
     // May take x and y parameters for weighted randomness on World of Work graphic
-    //$routes->connect('/career/random', ['controller' => 'career',
-    //  'action' => 'display', 'salary']);
+    $routes->connect('/career/random', ['controller' => 'career',
+      'action' => 'redirectRandom']);
     // TODO: Search results from search bar or browse search
     //$routes->connect('/career/search', ['controller' => 'career',
     //  'action' => 'display', 'salary']);

@@ -15,14 +15,64 @@
 			<title>
 				PPP
 			</title>
-      <?php
-        //TODO: Fill in following variables from the NodeJS serverside scripts:
-        //  controllers/occupation-controller.js
-        //  models/occupation.js
-        $occupationTitle = "Not Implemented";
-
-        // majority of work to be done in static/js/vidmain.js
-        // implement video database
+  <?php
+      // Videos:
+      //  25-2022: Amy
+      //  25-2052: Melody
+      //  25-1011: Todd
+      //  PLACEHOLDERS BELOW
+      //  11-1031: Sara
+      //  11-2011: Miguel
+      // majority of work to be done in static/js/vidmain.js
+      // Array/Dict passed from controller: $videos
+      // ex.
+      //[
+      //  (int) 0 => [
+      //    'name' => 'Amy',
+      //    'videos' => [
+      //      (int) 1 => [
+      //        'question' => 'What do you do as a teacher',
+      //        'fileName' => '11-1011_0_Amy/1 What do you do as a teacher.m4v'
+      //      ],
+      //      (int) 2 => [
+      //        'question' => 'What skills have led you to this job that you are so passionate about',
+      //        'fileName' => '11-1011_0_Amy/2 What skills have led you to this job that you are so passionate about.mp4'
+      //      ],
+      //      (int) 3 => [
+      //        'question' => 'What makes you excited to come to work',
+      //        'fileName' => '11-1011_0_Amy/3 What makes you excited to come to work.mp4'
+      //      ],
+      //      (int) 4 => [
+      //        'question' => 'Please explain a time when you've experienced passion for your job',
+      //        'fileName' => '11-1011_0_Amy/4 Please explain a time when you've experienced passion for your job.mp4'
+      //      ],
+      //      (int) 5 => [
+      //        'question' => 'What are one or two things that you have done that make you most proud of your work',
+      //        'fileName' => '11-1011_0_Amy/5 What are one or two things that you have done that make you most proud of your work.mp4'
+      //      ],
+      //      (int) 6 => [
+      //        'question' => 'What are the things you love the most about your career',
+      //        'fileName' => '11-1011_0_Amy/6 What are the things you love the most about your career.mp4'
+      //      ],
+      //      (int) 7 => [
+      //        'question' => 'Tell me about a specific instance when you were fully absorbed in your work',
+      //        'fileName' => '11-1011_0_Amy/7 Tell me about a specific instance when you were fully absorbed in your work.mp4'
+      //      ],
+      //      (int) 8 => [
+      //        'question' => 'Are there any other ways that your work is meaningful to you',
+      //        'fileName' => '11-1011_0_Amy/8 Are there any other ways that your work is meaningful to you.mp4'
+      //      ],
+      //      (int) 9 => [
+      //        'question' => 'What are some of your favorite things about being a teacher',
+      //        'fileName' => '11-1011_0_Amy/9 What are some of your favorite things about being a teacher.mp4'
+      //      ],
+      //      (int) 10 => [
+      //        'question' => 'What do you want to be remembered for in your line of work',
+      //        'fileName' => '11-1011_0_Amy/10 What do you want to be remembered for in your line of work.mp4'
+      //      ]
+      //    ]
+      //  ]
+      //]
       ?>
 		</head>
     <body>
@@ -46,7 +96,16 @@
 				       width="100%"
 				       height="100%"
 				       id="vidtag"
-				       >
+               >
+              <?php
+              foreach ($videos as $person){
+                foreach ($person['videos'] as $v){
+                  $filePath = '../../vid/' . $v['fileName'];
+                  echo '<source type="video/mp4" src="' . $filePath . 
+                    '" title="' . $v['question'] . '" data-poster="track2.png">';
+                }
+              }
+              ?>
 				    </video>
 
 				</div>
@@ -105,7 +164,7 @@
 
             <?php
               echo $this->Html->script([
-                'vidMain.js',
+//                'vidMain.js',
                 'johndyer-mediaelement-8adf73f/build/mediaelement-and-player.min.js',
                 'mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.js'
               ]);
