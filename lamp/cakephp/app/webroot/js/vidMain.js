@@ -7,6 +7,8 @@ function updateTitle(){
   document.getElementById("vidtitle").textContent = document.getElementsByClassName("current")[0].textContent;
   document.getElementById("fullscreen-overlay").textContent = document.getElementsByClassName("current")[0].textContent;
 }
+
+/*
     var files = [   "1 What do you do as a teacher.m4v", 
                     "2 What skills have led you to this job that you are so passionate about.mp4",
                     "3 What makes you excited to come to work.mp4",
@@ -128,3 +130,4 @@ var question_words = ["Who", "What", "Where", "Why", "When", "Is", "Are", "Were"
     else if (person == "Melody"){
         document.getElementById("jobtitle").innerHTML = "Special Education Teacher";
     }
+*/

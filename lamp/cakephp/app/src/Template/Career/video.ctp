@@ -88,27 +88,35 @@
 				  <p id="jobtitle"> </p>
 				  <p id="vidtitle"></p>
 				  <div onclick="updateTitle()">
-				  <div id="video-wrapper" style="width:530px; height: 300px;">
-				    <video 
-				       autoplay="autoplay"
-				       data-showplaylist="true" 
-				       class="mep-playlist"
-				       width="100%"
-				       height="100%"
-				       id="vidtag"
-               >
-              <?php
-              foreach ($videos as $person){
-                foreach ($person['videos'] as $v){
-                  $filePath = '../../vid/' . $v['fileName'];
-                  echo '<source type="video/mp4" src="' . $filePath . 
-                    '" title="' . $v['question'] . '" data-poster="track2.png">';
-                }
-              }
-              ?>
-				    </video>
+            <?php
+              if (empty($videos)) 
+                echo '<h2>Sorry, no videos are currently available for this job.</h2>';
+              else {
+                echo '
+        				  <div id="video-wrapper" style="width:530px; height: 300px;">
+        				    <video 
+        				       autoplay="autoplay"
+        				       data-showplaylist="true" 
+        				       class="mep-playlist"
+        				       width="100%"
+        				       height="100%"
+        				       id="vidtag"
+                       >';
 
-				</div>
+                foreach ($videos as $person){
+                  foreach ($person['videos'] as $v){
+                    $filePath = '../../vid/' . $v['fileName'];
+                    echo '<source type="video/mp4" src="' . $filePath . 
+                      '" title="' . $v['question'] . '" data-poster="track2.png">';
+                  }
+                }
+              
+				        echo '</video>
+
+				          </div>';
+              } 
+            ?>
+            
 				    <div style="margin-left:720px; margin-top: 10px">
 
 				      <a onclick="showNextCareerButton('up');updateRank('like')" value="Call2Functions" href="#vidup"><span class="upthumb"></span></a>
@@ -164,7 +172,7 @@
 
             <?php
               echo $this->Html->script([
-//                'vidMain.js',
+                'vidMain.js',
                 'johndyer-mediaelement-8adf73f/build/mediaelement-and-player.min.js',
                 'mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.js'
               ]);
