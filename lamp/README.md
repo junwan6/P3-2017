@@ -19,3 +19,9 @@
     * UNTESTED: execution from outside local directory
     * UNTESTED: nonstandard arguments (globbing, variables, ~, etc)
 * Set Apache documentroot or alias to app/webroot directory
+
+# Directory:
+* `cakephp`: Current working directory, contains the implementation of the website in CakePHP 3.x
+* `www`: Contains 'view' files converted to PHP from NodeJS template format.
+  * DEPRECATED: Set up for basic viewing through Apache aliased at <address>/p3/
+  * Contains placeholder values for all database-populated variables
