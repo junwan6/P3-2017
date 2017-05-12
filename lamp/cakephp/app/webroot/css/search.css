@@ -18,6 +18,7 @@ a.video-link:visited {
 .detail-icon {
     font-size: 16px;
     color: #666666;
+    margin-left: 1em;
 }
 
 .detail-text {

@@ -84,11 +84,11 @@ class CareerController extends PagesController
   }
 
   public function displayCareer(...$path){
-    $soc = '15-1142'; // TODO: Determine behavior on accessing career/ with no path
+    $soc = '15-1142'; // soc must be set, due to routing. Default anyways
 		if (!empty($path[0])) {
 			$soc = $path[0];
     }
-    $focus = 'none'; // Must be default: case to redirect, change URL so relative paths work
+    $focus = 'none'; // routing forces focus to be a valid value. Defaults to default: case anyways
     if (!empty($path[1])) {
       $focus = $path[1];
     }
@@ -336,7 +336,38 @@ class CareerController extends PagesController
     }
 
     // TODO: Figure out implementation of switcher (set JS variable?)
+    // Currently switches webpages
     $this->display($focus);
+  }
+
+  // TODO: Implement better search
+  public function search(){
+    $connection = ConnectionManager::get($this->datasource);
+    $keywords = preg_split('/[,\s]+/', $this->request->getQuery('q'));
+    if ($this->request->getQuery('q') == ''){
+      $this->set('query', '');
+      $this->set('resultsEmpty', true);
+      $this->display('search');
+      return;
+    }
+
+    $query = 'SELECT soc,title,wagetype,averageWage,educationRequired,careerGrowth FROM Occupation WHERE ';
+    $query .= implode(' AND ', array_map(function($s){
+      return 'title LIKE "%' . $s . '%"';
+    }, $keywords));
+    $results = $connection->execute($query)->fetchAll('assoc');
+    
+    $searchResults = [];
+    foreach ($results as $r){
+      $soc = $r['soc'];
+      $summary = $this->setupIconTemplateData($r);
+      $summary['soc'] = $soc;
+      $searchResults[] = $summary;
+    }
+    $this->set('query', $this->request->getQuery('q'));
+    $this->set('resultsEmpty', count($searchResults) == 0);
+    $this->set('results', $searchResults);
+    $this->display('search');
   }
 
   public function redirectRandom(){
