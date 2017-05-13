@@ -127,7 +127,7 @@
           </div>
         </a>
 
-        <?php echo baseLink($this, 'search', '<form id="searchBarForm" class="form-inline" action="', '" method="get" role="form">'); ?>
+        <?php echo baseLink($this, 'career/search', '<form id="searchBarForm" class="form-inline" action="', '" method="get" role="form">'); ?>
           <div class="input-group">
             <input id="searchBar" class="form-control" type="text" name="q" placeholder="Search careers...">
               <span class="input-group-btn">

@@ -127,18 +127,22 @@ Router::scope('/', function (RouteBuilder $routes) {
     // Focus not constrained, invalid inputs go to video rather than 404
     $routes->connect('/career/:soc/:focus', ['controller' => 'career',
       'action' => 'displayCareer'], ['pass' => ['soc','focus'],
-        'soc' => '[0-9]{2}-[0-9]{4}']);
+        'soc' => '[0-9]{2}-[0-9]{4}',
+        'focus' => 'video|salary|education|skills|outlook|world\-of\-work']);
     // Default focus = video, cakephp does not support optional params
-    $routes->connect('/career/:soc', ['controller' => 'career',
+    $routes->connect('/career/:soc/*', ['controller' => 'career',
       'action' => 'displayCareer'], ['pass' => ['soc'],
         'soc' => '[0-9]{2}-[0-9]{4}']);
-    // TODO: Automatic redirect to random SOC of available. Changes URL on redirect
+    // If no soc given, go to random soc
+    $routes->connect('/career/*', ['controller' => 'career',
+      'action' => 'redirectRandom']);
+    // Special case of above, explicitly defined as link exists
     // May take x and y parameters for weighted randomness on World of Work graphic
     $routes->connect('/career/random', ['controller' => 'career',
       'action' => 'redirectRandom']);
     // TODO: Search results from search bar or browse search
-    //$routes->connect('/career/search', ['controller' => 'career',
-    //  'action' => 'display', 'salary']);
+    $routes->connect('/career/search', ['controller' => 'career',
+      'action' => 'search']);
 
     /**
      * Connect video rating pages to AlgorithmController

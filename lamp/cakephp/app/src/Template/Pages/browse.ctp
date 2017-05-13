@@ -29,7 +29,7 @@
                     <a class="collapsed accordionHeading" role="button" data-toggle="collapse" data-parent="#browseAccordion" href="#specificOccupationOptions" aria-expanded="false" aria-controls="specificOccupationOptions">By Search</a>
                   </div>
                   <div id="specificOccupationOptions" class="panel-collapse collapse" role="tab-panel">
-                    <form class="form-inline" action="search" method="get" role="form">
+                    <form class="form-inline" action="career/search" method="get" role="form">
                       <div class="input-group">
                         <input class="form-control" type="search" name="q" placeholder="Search careers...">
                         <span class="input-group-btn">

@@ -133,7 +133,7 @@
         World of Work Info
       </div>
       <div id="worldOfWorkSegment" class="iconSegment" data-dialog-trigger="#worldOfWorkDialog">
-        <a href="world_of_work">
+        <a href="world-of-work">
         World of Work
         <br>
           <i id="worldOfWork" class="fa fa-globe fa-3x icon" aria-hidden="true"></i>

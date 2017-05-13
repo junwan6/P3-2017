@@ -23,5 +23,6 @@
 # Directory:
 * `cakephp`: Current working directory, contains the implementation of the website in CakePHP 3.x
 * `www`: Contains 'view' files converted to PHP from NodeJS template format.
-  * DEPRECATED: Set up for basic viewing through Apache aliased at <address>/p3/
+  * SEMI-DEPRECATED: Any versions in cakephp are more up-to-date, but not all have been added.
+  * Set up for basic viewing through Apache alias at [address]/p3/
   * Contains placeholder values for all database-populated variables
