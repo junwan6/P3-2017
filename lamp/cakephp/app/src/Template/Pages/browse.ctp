@@ -30,13 +30,19 @@
                   </div>
                   <div id="specificOccupationOptions" class="panel-collapse collapse" role="tab-panel">
                     <form class="form-inline" action="career/search" method="get" role="form">
-                      <div class="input-group">
+                      <div class="input-group" id="browse-search">
                         <input class="form-control" type="search" name="q" placeholder="Search careers...">
                         <span class="input-group-btn">
                           <button class="btn btn-secondary" type="submit">
                             <i class="fa fa-search" aria-hidden="true"></i>
                           </button>
                         </span>
+                      </div>
+                      <div id="search-filters">
+                        Only show occupations with:&nbsp;
+                        <input type="checkbox" name="video">videos&nbsp;
+                        <input type="checkbox" name="skills">skills&nbsp;
+                        <input type="checkbox" name="growth">positive career growth&nbsp;
                       </div>
                     </form>
                   </div>

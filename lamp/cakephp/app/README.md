@@ -1,3 +1,11 @@
+# Directory:
+* `config/`: Configuration files, addition of `db_config.json` containing database info
+* `src/`: Application implementation folder, contains MVC classes and files.
+* `webroot/`: Static files (js, css, images, videos)
+## Unmodified
+* All other files.
+
+# CakePHP-included README
 # CakePHP Application Skeleton
 
 [![Build Status](https://img.shields.io/travis/cakephp/app/master.svg?style=flat-square)](https://travis-ci.org/cakephp/app)

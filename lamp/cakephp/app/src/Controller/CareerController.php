@@ -82,7 +82,7 @@ class CareerController extends PagesController
       return implode(',', $intel);
     }, $skillsArray));
   }
-
+/*
   public function displayCareer(...$path){
     $soc = '15-1142'; // soc must be set, due to routing. Default anyways
 		if (!empty($path[0])) {
@@ -245,7 +245,7 @@ class CareerController extends PagesController
       }
     break;
 
-    case 'world_of_work':
+    case 'world-of-work':
       $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
       $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
 
@@ -339,24 +339,38 @@ class CareerController extends PagesController
     // Currently switches webpages
     $this->display($focus);
   }
-
+*/
   // TODO: Implement better search
   public function search(){
     $connection = ConnectionManager::get($this->datasource);
     $keywords = preg_split('/[,\s]+/', $this->request->getQuery('q'));
-    if ($this->request->getQuery('q') == ''){
+    if (count($this->request->query) == 1 && !is_null($this->request->getQuery('q'))
+      && $this->request->getQuery('q') == ''){
       $this->set('query', '');
       $this->set('resultsEmpty', true);
       $this->display('search');
       return;
     }
 
+    // Variable substitution must avoid string operations due to SQL injection
+    $keySubs = [];
     $query = 'SELECT soc,title,wagetype,averageWage,educationRequired,careerGrowth FROM Occupation WHERE ';
-    $query .= implode(' AND ', array_map(function($s){
-      return 'title LIKE "%' . $s . '%"';
+    $query .= implode(' AND ', array_map(function($s) use (&$keySubs){
+      $sub = 'keyword' . count($keySubs);
+      $keySubs[$sub] = '%' . $s . '%';
+      return 'title LIKE :' . $sub;
     }, $keywords));
-    $results = $connection->execute($query)->fetchAll('assoc');
-    
+    // TODO: add better search filters
+    if (!is_null($this->request->getQuery('video'))){
+      $query .= ' AND soc IN (SELECT soc FROM Videos)';
+    }
+    if (!is_null($this->request->getQuery('skills'))){
+      $query .= ' AND soc IN (SELECT soc FROM Skills)';
+    }
+    if (!is_null($this->request->getQuery('growth'))){
+      $query .= ' AND careerGrowth >= 0.0';
+    }
+    $results = $connection->execute($query, $keySubs)->fetchAll('assoc');
     $searchResults = [];
     foreach ($results as $r){
       $soc = $r['soc'];
@@ -397,6 +411,117 @@ class CareerController extends PagesController
     }
     // TODO: Handle 0 results, from full or constrained random
 
-    $this->redirect(['controller' => 'career', 'action' => 'displayCareer', $soc, 'video']);
+    $this->redirect(['controller' => 'career', 'action' => 'displayCareerSingle', $soc, 'video']);
+  }
+
+  public function displayCareerSingle(...$path){
+    $soc = '15-1142'; // soc must be set, due to routing. Default anyways
+		if (isset($path[0])) {
+			$soc = $path[0];
+    }
+
+    $focus = $path[1];
+    if (!isset($path[1]) || !in_array($path[1], ['video', 'salary', 'education',
+      'outlook', 'skills', 'world-of-work'])){
+      $focus = 'video';
+    }
+
+    $this->set('soc', $soc);
+    $this->set('focus', $focus);
+
+    $connection = ConnectionManager::get($this->datasource);
+
+    $occupationFields = ['title', 'averageWage', 'wagetype', 'careerGrowth',
+      'educationRequired', 'averageWageOutOfRange', 'lowWage', 'lowWageOutOfRange',
+      'medianWage', 'medianWageOutOfRange', 'highWage', 'highWageOutOfRange',
+      'currentEmployment', 'futureEmployment', 'jobOpenings'];
+    $schoolData = [
+      'associate' => ['Undergraduate', 'Associate\'s Degree', '2', 2, 0, false],
+      'bachelor' => ['Undergraduate', 'Bachelor\'s Degree', '4', 4, 0, false],
+      'master' => ['Graduate', 'Master\'s Degree', '6', 4, 2, true],
+      'doctoral or professional' => ['Graduate or Professional',
+        'Doctorage or Professional Degree', '8', 4, 4, true]
+      ];
+    $schoolFields = ['typeOfSchool', 'typeOfDegree' ,'yearsInSchool'
+      ,'yearsInUndergrad' ,'yearsInGrad', 'gradSchool'];
+    $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+    //If there is more than one, something's gone wrong, but get last one anyways
+    foreach ($results as $r){
+      // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
+      $this->set($this->setupIconTemplateData($r));
+      
+      // Hardcoded values set in original code
+      // No behavior given on averageWageOutOfRange, no rows are set to 1
+      // TODO: Add to some global configuration file
+      $this->set('NATAvg', $r['averageWage']);
+      $this->set('NATHi', (($r['highWageOutOfRange'] == 0)?$r['highWage']:187200) );
+      $this->set('NATMed', (($r['medianWageOutOfRange'] == 0)?$r['medianWage']:187200) );
+      $this->set('NATLo', (($r['lowWageOutOfRange'] == 0)?$r['lowWage']:187200) );
+      $this->set('NAT', true);
+
+      $this->set(array_combine($schoolFields, $schoolData[$r['educationRequired']]));
+
+      $this->set('currentEmployment', number_format(floatval($r['currentEmployment']) * 1000));
+      $this->set('futureEmployment', number_format(floatval($r['futureEmployment']) * 1000));
+      $this->set('jobOpenings', number_format(floatval($r['jobOpenings']) * 1000));
+    }
+
+    $query = 'SELECT statecode, averageWage, averageWageOutOfRange, lowWage,' .
+      'lowWageOutOfRange, medianWage, medianWageOutOfRange, highWage,' .
+      ' highWageOutOfRange FROM StateOccupation WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+    foreach ($results as $r){
+      if ($r['averageWage'] != 0){
+        // No behavior given on averageWageOutOfRange, no rows are set to 1
+        $this->set($r['statecode'] . 'Avg', $r['averageWage']);
+        $this->set($r['statecode'] . 'Hi', $r['highWage']);
+        $this->set($r['statecode'] . 'Med', $r['medianWage']);
+        $this->set($r['statecode'] . 'Lo', $r['lowWage']);
+        $this->set($r['statecode'], true);
+      }
+    }
+
+    $query = 'SELECT * FROM Skills WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+    foreach ($results as $r){
+      $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+    }
+
+    $interestsFields = ['realistic', 'investigative', 'artistic', 'social', 'enterprising',
+      'conventional'];
+    $query = 'SELECT ' . implode(',', $interestsFields) . ' FROM OccupationInterests WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+    if (count($results) == 0){
+      $this->set('noData', true);
+    } else {
+      // Template variables named same as table columns, and no processing needed
+      foreach ($results as $r){
+        $this->set($r);
+      }
+      $this->set('noData', false);
+    }
+
+    $videos = [];
+    $query = 'SELECT * FROM Videos WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+    foreach ($results as $r){
+      if (!isset($videos[$r['personNum']])){
+        $videos[$r['personNum']] = [];
+      }
+      $videos[$r['personNum']]['name'] = $r['person'];
+      if (!isset($videos[$r['personNum']]['videos'])){
+        $videos[$r['personNum']]['videos'] = [];
+      }
+      $videos[$r['personNum']]['videos'][$r['questionNum']] =
+        ['question' => $r['question'],
+        'fileName' => $r['soc'] . '_' . $r['personNum'] . '_' .
+          $r['person'] . '/' . $r['fileName']];
+    }
+    $this->set('videos', $videos);
+
+    $this->display('career');
   }
 }

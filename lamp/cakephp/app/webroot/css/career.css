@@ -1,0 +1,276 @@
+#pageTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 30px;
+}
+
+#careerTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 20px;
+}
+
+#outlookTable {
+	text-align: center;
+	color: black;
+}
+
+#growthPercent {
+	text-align: center;
+}
+
+#growthPercentIcon {
+	color: hsl(45, 60%, 50%);
+}
+
+#growthPercentText {
+	position: relative;
+        top: -65px;
+	color: black;
+}
+
+ body {
+ 	color: white;		
+ }
+
+#salary-careerInformation {
+	display: none;
+}
+
+.white {
+	color: white;
+}
+
+.input-container {
+	max-width: 150px; 
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.form-control {
+	text-align: center;
+}
+ 
+#contentContainer {
+	overflow: auto;
+}
+
+.intelligenceTitle {
+	color: hsl(0, 30%, 50%);
+	text-align: left;
+	margin-left: 1em;
+	margin-right: 1em;
+	font-size: 23px;
+}
+
+.intelligenceDefinition {
+	color: black;
+	text-align: left;
+	margin-left: 1em;
+	margin-right: 1em;
+	font-size: 15px;
+}
+
+.intelligenceTasks {
+	color: black;
+	text-align: left;
+	margin-left: 2em;
+	margin-right: 1em;
+	font-size: 18px;
+	font-style: italic;
+}
+
+#fullscreen-overlay{
+	color: white;
+	display: none;
+	width: 100%;
+	padding: 10px;
+	background-color: black;
+    opacity: .60; /* Standard: FF gt 1.5, Opera, Safari, CSS3 */
+    filter: alpha(opacity=50); /* IE lt 8 */
+    -ms-filter: "alpha(opacity=50)"; /* IE 8 */
+    -khtml-opacity: .50; /* Safari 1.x */
+    -moz-opacity: .50; /* FF lt 1.5, Netscape */
+}
+
+span.upthumb {
+	background-image: url('../img/upthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+span.upthumb:hover{
+	background-position: 0 -31px;
+}
+
+.upthumb-selected {
+	background-position: 0 -61px;
+	background-image: url('../img/upthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+.midthumb-selected {
+	background-position: 0 -61px;
+	background-image: url('../img/midthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+.downthumb-selected {
+	background-position: 0 -61px;
+	background-image: url('../img/downthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+}
+
+span.midthumb {
+	background-image: url('../img/midthumbs.png');
+	background-size: cover;
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+}
+
+span.midthumb:hover{
+	background-position: 0 -31px;
+}
+span.downthumb {
+	background-image: url('../img/downthumbs.png');
+	background-size: cover;
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+}
+
+span.downthumb:hover{
+	background-position: 0 -31px;
+}
+
+#next-career {
+	display: none;
+
+}
+
+.next-career {
+	display:inline-block;
+	text-align: center;
+	width: 100px;
+	padding: 1px;
+	color: white;
+	background-color: green;
+	border: 2px green solid;
+	font-size: 10px;
+}#pageTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 30px;
+}
+
+#careerTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 20px;
+}
+/*
+#container{
+    display:inline-block;
+    width:auto; 
+    height:auto;
+    margin: 0 auto; 
+    background: pink; 
+    position:relative; 
+    border:5px solid black; 
+    border-radius: 10px; 
+    box-shadow: 0 5px 50px #333
+}
+*/
+#canvas{
+    position:relative;
+    z-index:20;
+}
+
+#interestsTableDiv {
+    display: none;
+}
+
+.educationLine {
+	text-align: left;
+	margin: 0.5em;
+}
+
+.educationCategory {
+	display: inline-block;
+	color: hsl(210, 60%, 50%);
+}
+
+.educationValue {
+	display: inline-block;
+	color: black;
+}
+
+#chartContainer {
+	height: 250px;
+	width: 250px;
+}
+
+#education-careerInformation {
+	display: none;
+}
+
+#input-container {
+	text-align: center;
+    width: 100%;
+    margin: auto;
+	color: hsl(210, 60%, 50%);
+}
+
+#undergraduateInputs {
+	width: 33%;
+}
+
+#graduateInputs {
+	width: 33%;
+}
+
+#careerInputs {
+	width: 33%;
+}
+
+.inputRow {
+	text-align: center;
+	width: 100%;
+	margin: auto;
+}
+
+.chartOption {
+	max-width: 130px;
+	height: 25px;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	font-size: 11px;
+}
+
+#vidtitle{
+	font-size: 20px;
+	font-family: arial;
+}
+
+#jobtitle{
+	font-family: arial;
+	font-size: 25px;
+	text-align: center;
+	font-weight: bold;
+	color: #2c3747;
+}
+
+.active-body { display: inline;}
+.inactive-body { display: none;}   

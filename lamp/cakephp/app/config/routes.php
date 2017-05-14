@@ -113,8 +113,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     /**
      * Connect pages requiring career information to CareerController
      * Includes SOC codes (Search, random)
-     * TODO: Implement CareerController
-     * TODO: Combined pages into single load
+     * TODO: Combine pages into single load
      */
     // Combined access to eventual single file return
     // focus=video (Find video linked to SOC, questions, etc.)
@@ -123,16 +122,19 @@ Router::scope('/', function (RouteBuilder $routes) {
     // focus=skills (Skills data)
     // focus=outlook (Outlook data)
     // focus=world-of-work (Skills, intelligences data)
-    // TODO: Single page/function that takes parameters to display correct page
-    // Focus not constrained, invalid inputs go to video rather than 404
+    $routes->connect('/career/:soc/:focus', ['controller' => 'career',
+      'action' => 'displayCareerSingle'], ['pass' => ['soc', 'focus'],
+        'soc' => '[0-9]{2}-[0-9]{4}']);
+    /* Old separate-page-per-type, may be more stable but requires load for each page
     $routes->connect('/career/:soc/:focus', ['controller' => 'career',
       'action' => 'displayCareer'], ['pass' => ['soc','focus'],
         'soc' => '[0-9]{2}-[0-9]{4}',
         'focus' => 'video|salary|education|skills|outlook|world\-of\-work']);
-    // Default focus = video, cakephp does not support optional params
+    // Invalid focus goes to video via Controller to modify URL
     $routes->connect('/career/:soc/*', ['controller' => 'career',
       'action' => 'displayCareer'], ['pass' => ['soc'],
         'soc' => '[0-9]{2}-[0-9]{4}']);
+    */
     // If no soc given, go to random soc
     $routes->connect('/career/*', ['controller' => 'career',
       'action' => 'redirectRandom']);
@@ -140,7 +142,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     // May take x and y parameters for weighted randomness on World of Work graphic
     $routes->connect('/career/random', ['controller' => 'career',
       'action' => 'redirectRandom']);
-    // TODO: Search results from search bar or browse search
+    // Search results from search bar or browse search
     $routes->connect('/career/search', ['controller' => 'career',
       'action' => 'search']);
 

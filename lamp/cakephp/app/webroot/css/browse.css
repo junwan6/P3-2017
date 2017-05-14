@@ -50,3 +50,10 @@ a.detailedOccupationLink:visited {
 .heading {
 	background-color: transparent;
 }
+
+#browse-search {
+  width: 100%;
+}
+#search-filters{
+  color: black;
+}

@@ -15,4 +15,4 @@
 * `load.sql`: MySQL script to load files created by .py scripts into the MySQL database
 * `test_db_config.json`: Connection data for test database
 * `videos.csv`: Initial data for videos
-* `build-zDSPr`: Temporary build directory, containing Excel spreadsheets converted to MySQL .dat files
+* `build-zDSPr/`: Temporary build directory, containing Excel spreadsheets converted to MySQL .dat files
