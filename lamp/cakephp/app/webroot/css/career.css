@@ -272,5 +272,7 @@ span.downthumb:hover{
 	color: #2c3747;
 }
 
+#careerTable { display: none;}  
+
 .active-body { display: inline;}
 .inactive-body { display: none;}   

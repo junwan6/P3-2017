@@ -447,6 +447,12 @@ class CareerController extends PagesController
     $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
     $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
 
+    $avg = [];
+    $hi = [];
+    $med = [];
+    $lo = [];
+    $sts = [];
+    
     //If there is more than one, something's gone wrong, but get last one anyways
     foreach ($results as $r){
       // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
@@ -455,11 +461,11 @@ class CareerController extends PagesController
       // Hardcoded values set in original code
       // No behavior given on averageWageOutOfRange, no rows are set to 1
       // TODO: Add to some global configuration file
-      $this->set('NATAvg', $r['averageWage']);
-      $this->set('NATHi', (($r['highWageOutOfRange'] == 0)?$r['highWage']:187200) );
-      $this->set('NATMed', (($r['medianWageOutOfRange'] == 0)?$r['medianWage']:187200) );
-      $this->set('NATLo', (($r['lowWageOutOfRange'] == 0)?$r['lowWage']:187200) );
-      $this->set('NAT', true);
+      $avg['NAT'] = $r['averageWage'];
+      $hi['NAT'] = (($r['highWageOutOfRange'] == 0)?$r['highWage']:187200);
+      $med['NAT'] = (($r['medianWageOutOfRange'] == 0)?$r['medianWage']:187200);
+      $lo['NAT'] = (($r['lowWageOutOfRange'] == 0)?$r['lowWage']:187200);
+      $sts[] = 'NAT';
 
       $this->set(array_combine($schoolFields, $schoolData[$r['educationRequired']]));
 
@@ -475,15 +481,19 @@ class CareerController extends PagesController
 
     foreach ($results as $r){
       if ($r['averageWage'] != 0){
-        // No behavior given on averageWageOutOfRange, no rows are set to 1
-        $this->set($r['statecode'] . 'Avg', $r['averageWage']);
-        $this->set($r['statecode'] . 'Hi', $r['highWage']);
-        $this->set($r['statecode'] . 'Med', $r['medianWage']);
-        $this->set($r['statecode'] . 'Lo', $r['lowWage']);
-        $this->set($r['statecode'], true);
+        $avg[$r['statecode']] = $r['averageWage'];
+        $hi[$r['statecode']] = $r['highWage'];
+        $med[$r['statecode']] = $r['medianWage'];
+        $lo[$r['statecode']] = $r['lowWage'];
+        $sts[] = $r['statecode'];
       }
     }
-
+    $this->set('avg', $avg);
+    $this->set('hi', $hi);
+    $this->set('med', $med);
+    $this->set('lo', $lo);
+    $this->set('sts', $sts);
+    
     $query = 'SELECT * FROM Skills WHERE soc = :soc';
     $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
     foreach ($results as $r){

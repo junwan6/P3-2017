@@ -1,9 +1,9 @@
 //--------------------------------------------CAREER
-var skillsData = null;
+var skillsData = [];
 var changeFocus = function(focus){
   document.getElementsByClassName("active-body")[0].className = "inactive-body";
   document.getElementById(focus + "-body").className = "active-body";
-  window.history.pushState("","", focus.replace('/_/g', '-'));
+  window.history.pushState("","", focus);
   if (focus == 'salary'){
     salary_drawChart();
   }
@@ -225,9 +225,12 @@ var createCanvas = function() {
 }
 //--------------------------------------------VIDEO
 function addFullScreenOverlay(){
-  $("#mep_0").prepend("<div id='fullscreen-overlay' style='z-index:1001' class='mejs-overlay mejs-layer'><div>" + document.getElementsByClassName("current")[0].textContent + "</div></div>");
+  $("#mep_0").prepend("<div id='fullscreen-overlay' style='z-index:1001'" + 
+    "class='mejs-overlay mejs-layer'><div>" +
+    document.getElementsByClassName("current")[0].textContent +
+    "</div></div>");
 }
-
+                  
 function updateTitle(){
   document.getElementById("vidtitle").textContent = document.getElementsByClassName("current")[0].textContent;
   document.getElementById("fullscreen-overlay").textContent = document.getElementsByClassName("current")[0].textContent;
@@ -284,10 +287,10 @@ var salary_salaryState = 0;
 // I believe I need a calculateData() function
 // dynamically push in value for salary (every new one though, you must pop out the old value)
 var salary_calculateData = function() {
-	var averageSalary = document.getElementById('salary-careerTable').rows[salary_salaryState].cells[0].innerHTML;
-	var lowSalary = document.getElementById('salary-careerTable').rows[salary_salaryState].cells[1].innerHTML;
-	var medianSalary = document.getElementById('salary-careerTable').rows[salary_salaryState].cells[2].innerHTML;
-	var highSalary = document.getElementById('salary-careerTable').rows[salary_salaryState].cells[3].innerHTML;
+	var averageSalary = document.getElementById('careerTable').rows[salary_salaryState].cells[0].innerHTML;
+	var lowSalary = document.getElementById('careerTable').rows[salary_salaryState].cells[1].innerHTML;
+	var medianSalary = document.getElementById('careerTable').rows[salary_salaryState].cells[2].innerHTML;
+	var highSalary = document.getElementById('careerTable').rows[salary_salaryState].cells[3].innerHTML;
 
 	averageSalary = parseInt(averageSalary);
 	lowSalary = parseInt(lowSalary);
@@ -375,7 +378,7 @@ var salaryPosition = 0;
 var edu_data;
 
 var edu_calculateData = function() {
-	var salary = document.getElementById('education-careerTable').rows[edu_salaryState].cells[salaryPosition].innerHTML;
+	var salary = document.getElementById('careerTable').rows[edu_salaryState].cells[salaryPosition].innerHTML;
 	salary = parseInt(salary);
 	document.getElementById('careerSalaryDisplay').innerHTML = "Annual Salary: $" + formatMoney(salary);
 
@@ -398,21 +401,21 @@ var edu_calculateData = function() {
 	yearsInSchool = yearsInUndergrad + yearsInGrad;
 
 
-	data = [];
+	edu_data = [];
 
 	var currentDebt = 0;
 	var currentYears = 0;
 
-	data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
+	edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
 
 	//Cost of getting the degree
 	while (currentYears < yearsInUndergrad) {
 		currentDebt -= undergradCostPerYear;
 		currentYears += 1;
 		if (currentYears == yearsInSchool) {
-			data.push({y: currentDebt, x: currentYears, marker:{enabled: true}});
+			edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: true}});
 		} else {
-			data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
+			edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
 		}
 	}
 
@@ -421,9 +424,9 @@ var edu_calculateData = function() {
 			currentDebt -= gradCostPerYear;
 			currentYears += 1;
 			if (currentYears == yearsInSchool) {
-				data.push({y: currentDebt, x: currentYears, marker:{enabled: true}});
+				edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: true}});
 			} else {
-				data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
+				edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
 			}
 		}
 	}
@@ -431,7 +434,7 @@ var edu_calculateData = function() {
 	while (currentDebt < (-salary)) {
 		currentDebt += salary;
 		currentYears += 1;
-		data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
+		edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
 	}
 
 	var untilZero = -currentDebt;
@@ -442,16 +445,16 @@ var edu_calculateData = function() {
 
 	currentDebt += untilZero;
 	currentYears += timeUntilZero;
-	data.push({y: currentDebt, x: currentYears, marker:{enabled: true}});
+	edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: true}});
 
 	currentDebt += restOfSalary;
 	currentYears += nextYear;
-	data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
+	edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
 
 	while (currentDebt < (3*salary)) {
 		currentDebt += salary;
 		currentYears += 1;
-		data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
+		edu_data.push({y: currentDebt, x: currentYears, marker:{enabled: false}});
 	}
 
 };
@@ -501,7 +504,7 @@ var edu_drawChart = function() {
         },
         series: [{
             showInLegend: false,
-            data: data
+            data: edu_data
         }]
     });
 };
@@ -681,7 +684,7 @@ $(document).ready(function(){
 		skillsArray = document.getElementById('skillsArray').innerHTML;
 		skillsArray = skillsArray.split(",");
 		j = 0;
-		var data = [];
+		var skills_data = [];
 		while (j < skillsArray.length) {
 			//For some reason this checks if it's not NaN
 			if (Number(skillsArray[j])) {
@@ -690,7 +693,7 @@ $(document).ready(function(){
 				//document.getElementById('contentContainer').innerHTML += "<div class='intelligenceTitle'>" + skillsArray[j+1] + " " + 100*Number(skillsArray[j]) + "%</div>";
 				document.getElementById('skills-contentContainer').innerHTML += "<div class='intelligenceTitle'>" + 100*Number(skillsArray[j]) + "% " + skillsArray[j+1] + "</div>";
 				
-				data.push({name: (100*Number(skillsArray[j])).toString() + '% ' + skillsArray[j+1], y: 100*Number(skillsArray[j])});
+				skills_data.push({name: (100*Number(skillsArray[j])).toString() + '% ' + skillsArray[j+1], y: 100*Number(skillsArray[j])});
 
 				//Definitions + Tasks
 				var taskString = "";
@@ -759,7 +762,8 @@ $(document).ready(function(){
 
 			}
 		}
-    skillsData = data;
+    // global set, for reuse for rerendering chart on focus change
+    skillsData = skills_data;
     // Build the chart
     $('#mainSkillsPieChart').highcharts({
         chart: {
@@ -787,7 +791,7 @@ $(document).ready(function(){
         series: [{
             name: 'Intelligences',
             colorByPoint: true,
-            data: data
+            data: skills_data
         }]
     });
 	}
@@ -795,7 +799,7 @@ $(document).ready(function(){
   salary_calculateData();
   salary_drawChart();
 
-  $('#salary_salaryStateInput').change(function() {
+  $('#salary-salaryStateInput').change(function() {
     salary_salaryState = salaryStateToCode($('#salary-salaryStateInput').val());
     salary_calculateData();
     salary_drawChart();
@@ -811,6 +815,8 @@ $(document).ready(function(){
 
 
 	$('#salaryPositionInput').change(function() {
+    
+    console.log($('#education-salaryStateInput').val());
 		switch ($('#salaryPositionInput').val()) {
 			case "average":
 				salaryPosition = 0;
@@ -880,8 +886,8 @@ $(document).ready(function(){
 		edu_drawChart();
 	});
 
-	$('#education_salaryStateInput').change(function() {
-		edu_salaryState = salaryStateToCode($('#education_salaryStateInput').val());
+	$('#education-salaryStateInput').change(function() {
+		edu_salaryState = salaryStateToCode($('#education-salaryStateInput').val());
 		edu_calculateData();
 		edu_drawChart();
 	});
