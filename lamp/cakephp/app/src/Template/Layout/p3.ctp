@@ -26,7 +26,7 @@
     <?php
       // Converted from partials/global_header.html
       echo $this->Html->script(array(
-        'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js',
         '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'
       ));

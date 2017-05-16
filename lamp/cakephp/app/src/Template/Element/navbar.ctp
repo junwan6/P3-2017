@@ -24,7 +24,33 @@
       return $str;
     }
   ?>
-
+  <style>
+  .ui-autocomplete {
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  </style>
+  <script>
+    var baselink = "<?php echo baseLink($this, ''); ?>";
+    var careerList = [];
+    var getAutoComplete = function(){
+      if (careerList.length == 0){
+        var searchAutoComp = $.ajax({
+          url: baselink + 'career/autocomplete',
+          success: function(result){
+            careerList = JSON.parse(result);
+            $('#searchBar').autocomplete({
+              source: careerList,
+              select: function(event, ui){
+                window.location.href = baselink + "career/" + ui.item.soc;
+              }
+            });
+          }
+        });
+      }
+    };
+  </script>
   <?php if (!$loggedIn) { ?>
   <div id="signUpBox">
     <div id="signUpContent">
@@ -129,7 +155,7 @@
 
         <?php echo baseLink($this, 'career/search', '<form id="searchBarForm" class="form-inline" action="', '" method="get" role="form">'); ?>
           <div class="input-group">
-            <input id="searchBar" class="form-control" type="text" name="q" placeholder="Search careers...">
+            <input id="searchBar" class="form-control" type="text" name="q" placeholder="Search careers..." autocomplete="off" onfocus="getAutoComplete()">
               <span class="input-group-btn">
               <button id="searchButton" class="btn btn-secondary" type="submit">
                 <i class="fa fa-search" aria-hidden="true"></i>

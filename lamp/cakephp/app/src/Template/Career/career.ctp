@@ -8,7 +8,6 @@
         'icons.js',
         'johndyer-mediaelement-8adf73f/build/mediaelement-and-player.min.js',
         'mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.js',
-        'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',
         'https://code.highcharts.com/highcharts.js',
         'https://code.highcharts.com/modules/data.js',
         'https://code.highcharts.com/modules/exporting.js'

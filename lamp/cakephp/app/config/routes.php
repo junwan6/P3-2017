@@ -77,8 +77,9 @@ Router::scope('/', function (RouteBuilder $routes) {
      * TODO: Implement UserController
      */
 
-    $routes->connect('/signup', ['controller' => 'user',
-      'action' => 'signup']); 
+    $routes->connect('/login', ['controller' => 'user',
+      'action' => 'login']);
+    $routes->connect('/signup', ['controller' => 'user', 'action' => 'signup']);
     // Profile page (loads liked/disliked videos)
     //$routes->connect('/profile', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
@@ -125,16 +126,10 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/career/:soc/:focus', ['controller' => 'career',
       'action' => 'displayCareerSingle'], ['pass' => ['soc', 'focus'],
         'soc' => '[0-9]{2}-[0-9]{4}']);
-    /* Old separate-page-per-type, may be more stable but requires load for each page
-    $routes->connect('/career/:soc/:focus', ['controller' => 'career',
-      'action' => 'displayCareer'], ['pass' => ['soc','focus'],
-        'soc' => '[0-9]{2}-[0-9]{4}',
-        'focus' => 'video|salary|education|skills|outlook|world\-of\-work']);
-    // Invalid focus goes to video via Controller to modify URL
-    $routes->connect('/career/:soc/*', ['controller' => 'career',
-      'action' => 'displayCareer'], ['pass' => ['soc'],
+    // If bare soc entered, redirect to video
+    $routes->connect('/career/:soc', ['controller' => 'career',
+      'action' => 'displayCareerSingle'], ['pass' => ['soc'],
         'soc' => '[0-9]{2}-[0-9]{4}']);
-    */
     // If no soc given, go to random soc
     $routes->connect('/career/*', ['controller' => 'career',
       'action' => 'redirectRandom']);
@@ -145,6 +140,19 @@ Router::scope('/', function (RouteBuilder $routes) {
     // Search results from search bar or browse search
     $routes->connect('/career/search', ['controller' => 'career',
       'action' => 'search']);
+    // AJAX JSON for autocomplete results
+    $routes->connect('/career/autocomplete', ['controller' => 'career',
+      'action' => 'getAutoComplete']);
+    /* Old separate-page-per-type, may be more stable but requires load for each page
+    $routes->connect('/career/:soc/:focus', ['controller' => 'career',
+      'action' => 'displayCareer'], ['pass' => ['soc','focus'],
+        'soc' => '[0-9]{2}-[0-9]{4}',
+        'focus' => 'video|salary|education|skills|outlook|world\-of\-work']);
+    // Invalid focus goes to video via Controller to modify URL
+    $routes->connect('/career/:soc/*', ['controller' => 'career',
+      'action' => 'displayCareer'], ['pass' => ['soc'],
+        'soc' => '[0-9]{2}-[0-9]{4}']);
+    */
 
     /**
      * Connect video rating pages to AlgorithmController

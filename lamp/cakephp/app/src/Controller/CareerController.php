@@ -82,7 +82,222 @@ class CareerController extends PagesController
       return implode(',', $intel);
     }, $skillsArray));
   }
-/*
+
+  // TODO: Implement better search
+  public function search($query){
+    $connection = ConnectionManager::get($this->datasource);
+    $keywords = preg_split('/[,\s]+/', $this->request->getQuery('q'));
+    if (count($this->request->query) == 1 && !is_null($this->request->getQuery('q'))
+      && $this->request->getQuery('q') == ''){
+      $this->set('query', '');
+      $this->set('resultsEmpty', true);
+      $this->display('search');
+      return;
+    }
+
+    // Variable substitution must avoid string operations due to SQL injection
+    $keySubs = [];
+    $query = 'SELECT soc,title,wagetype,averageWage,educationRequired,careerGrowth FROM Occupation WHERE ';
+    $query .= implode(' AND ', array_map(function($s) use (&$keySubs){
+      $sub = 'keyword' . count($keySubs);
+      $keySubs[$sub] = '%' . $s . '%';
+      return 'title LIKE :' . $sub;
+    }, $keywords));
+    // TODO: add better search filters
+    if (!is_null($this->request->getQuery('video'))){
+      $query .= ' AND soc IN (SELECT soc FROM Videos)';
+    }
+    if (!is_null($this->request->getQuery('skills'))){
+      $query .= ' AND soc IN (SELECT soc FROM Skills)';
+    }
+    if (!is_null($this->request->getQuery('growth'))){
+      $query .= ' AND careerGrowth >= 0.0';
+    }
+    $results = $connection->execute($query, $keySubs)->fetchAll('assoc');
+    $searchResults = [];
+    foreach ($results as $r){
+      $soc = $r['soc'];
+      $summary = $this->setupIconTemplateData($r);
+      $summary['soc'] = $soc;
+      $searchResults[] = $summary;
+    }
+    $this->set('query', $this->request->getQuery('q'));
+    $this->set('resultsEmpty', count($searchResults) == 0);
+    $this->set('results', $searchResults);
+    $this->display('search');
+  }
+
+  public function redirectRandom(){
+    $soc = '15-1142'; // TODO: Error handling for empty database?
+    $connection = ConnectionManager::get($this->datasource);
+    $results = [];
+
+    $wowX = $this->request->getQuery('x');
+    $wowY = $this->request->getQuery('y');
+    if (!is_null($wowX) && !is_null($wowY)){
+      // Implementation taken from 'occupation.js:getRandomSOCInWOWRegion()'
+      $rad = atan2($wowY, $wowX);
+      $rad = ($rad >= 0)?($rad):($rad + 2.0*pi());
+      $deg = $rad * (180.0/pi());
+      $region = floor(min(max(0,$deg/30.0), 11));
+      // Additional check added as Interests may be defined for occupation without other data
+      $query = 'SELECT soc FROM OccupationInterests WHERE wowRegion = :region AND soc IN (SELECT soc FROM Occupation) ORDER BY RAND() LIMIT 1';
+      $results = $connection->execute($query, ['region' => $region])->fetchAll('assoc');
+    } else {
+      $query = 'SELECT soc FROM Occupation ORDER BY RAND() LIMIT 1';
+      $results = $connection->execute($query)->fetchAll('assoc');
+    }
+
+    // Should always have one result as per query
+    foreach ($results as $r){
+      $soc = $r['soc'];
+    }
+    // TODO: Handle 0 results, from full or constrained random
+
+    $this->redirect(['controller' => 'career', 'action' => 'displayCareerSingle', $soc, 'video']);
+  }
+  
+  public function getAutoComplete(){
+    $query = $this->request->getQuery('q');
+    $connection = ConnectionManager::get($this->datasource);
+    $keywords = preg_split('/[,\s]+/', $this->request->getQuery('q'));
+    
+    $keySubs = [];
+    $query = 'SELECT soc,title AS label FROM Occupation WHERE ';
+    $query .= implode(' AND ', array_map(function($s) use (&$keySubs){
+      $sub = 'keyword' . count($keySubs);
+      $keySubs[$sub] = '%' . $s . '%';
+      return 'title LIKE :' . $sub;
+    }, $keywords));
+    $results = $connection->execute($query, $keySubs)->fetchAll('assoc');
+    echo json_encode($results);
+    die();
+  }
+
+  public function displayCareerSingle(...$path){
+    $soc = '15-1142'; // soc must be set, due to routing. Default anyways
+		if (isset($path[0])) {
+			$soc = $path[0];
+    }
+
+    $focus = $path[1];
+    if (!isset($path[1]) || !in_array($path[1], ['video', 'salary', 'education',
+      'outlook', 'skills', 'world-of-work'])){
+      $this->redirect(['controller' => 'career',
+        'action' => 'displayCareerSingle', $soc, 'video']);
+    }
+
+    $this->set('soc', $soc);
+    $this->set('focus', $focus);
+
+    $connection = ConnectionManager::get($this->datasource);
+
+    $occupationFields = ['title', 'averageWage', 'wagetype', 'careerGrowth',
+      'educationRequired', 'averageWageOutOfRange', 'lowWage', 'lowWageOutOfRange',
+      'medianWage', 'medianWageOutOfRange', 'highWage', 'highWageOutOfRange',
+      'currentEmployment', 'futureEmployment', 'jobOpenings'];
+    $schoolData = [
+      'associate' => ['Undergraduate', 'Associate\'s Degree', '2', 2, 0, false],
+      'bachelor' => ['Undergraduate', 'Bachelor\'s Degree', '4', 4, 0, false],
+      'master' => ['Graduate', 'Master\'s Degree', '6', 4, 2, true],
+      'doctoral or professional' => ['Graduate or Professional',
+        'Doctorage or Professional Degree', '8', 4, 4, true]
+      ];
+    $schoolFields = ['typeOfSchool', 'typeOfDegree' ,'yearsInSchool'
+      ,'yearsInUndergrad' ,'yearsInGrad', 'gradSchool'];
+    $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+    $avg = [];
+    $hi = [];
+    $med = [];
+    $lo = [];
+    $sts = [];
+    
+    //If there is more than one, something's gone wrong, but get last one anyways
+    foreach ($results as $r){
+      // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
+      $this->set($this->setupIconTemplateData($r));
+      
+      // Hardcoded values set in original code
+      // No behavior given on averageWageOutOfRange, no rows are set to 1
+      // TODO: Add to some global configuration file
+      $avg['NAT'] = $r['averageWage'];
+      $hi['NAT'] = (($r['highWageOutOfRange'] == 0)?$r['highWage']:187200);
+      $med['NAT'] = (($r['medianWageOutOfRange'] == 0)?$r['medianWage']:187200);
+      $lo['NAT'] = (($r['lowWageOutOfRange'] == 0)?$r['lowWage']:187200);
+      $sts[] = 'NAT';
+
+      $this->set(array_combine($schoolFields, $schoolData[$r['educationRequired']]));
+
+      $this->set('currentEmployment', number_format(floatval($r['currentEmployment']) * 1000));
+      $this->set('futureEmployment', number_format(floatval($r['futureEmployment']) * 1000));
+      $this->set('jobOpenings', number_format(floatval($r['jobOpenings']) * 1000));
+    }
+
+    $query = 'SELECT statecode, averageWage, averageWageOutOfRange, lowWage,' .
+      'lowWageOutOfRange, medianWage, medianWageOutOfRange, highWage,' .
+      ' highWageOutOfRange FROM StateOccupation WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+
+    foreach ($results as $r){
+      if ($r['averageWage'] != 0){
+        $avg[$r['statecode']] = $r['averageWage'];
+        $hi[$r['statecode']] = $r['highWage'];
+        $med[$r['statecode']] = $r['medianWage'];
+        $lo[$r['statecode']] = $r['lowWage'];
+        $sts[] = $r['statecode'];
+      }
+    }
+    $this->set('avg', $avg);
+    $this->set('hi', $hi);
+    $this->set('med', $med);
+    $this->set('lo', $lo);
+    $this->set('sts', $sts);
+    
+    $query = 'SELECT * FROM Skills WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+    foreach ($results as $r){
+      $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
+    }
+
+    $interestsFields = ['realistic', 'investigative', 'artistic', 'social', 'enterprising',
+      'conventional'];
+    $query = 'SELECT ' . implode(',', $interestsFields) . ' FROM OccupationInterests WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+    if (count($results) == 0){
+      $this->set('noData', true);
+    } else {
+      // Template variables named same as table columns, and no processing needed
+      foreach ($results as $r){
+        $this->set($r);
+      }
+      $this->set('noData', false);
+    }
+
+    $videos = [];
+    $query = 'SELECT * FROM Videos WHERE soc = :soc';
+    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
+    foreach ($results as $r){
+      if (!isset($videos[$r['personNum']])){
+        $videos[$r['personNum']] = [];
+      }
+      $videos[$r['personNum']]['name'] = $r['person'];
+      if (!isset($videos[$r['personNum']]['videos'])){
+        $videos[$r['personNum']]['videos'] = [];
+      }
+      $videos[$r['personNum']]['videos'][$r['questionNum']] =
+        ['question' => $r['question'],
+        'fileName' => $r['soc'] . '_' . $r['personNum'] . '_' .
+          $r['person'] . '/' . $r['fileName']];
+    }
+    $this->set('videos', $videos);
+
+    $this->display('career');
+  }
+
+/*  ORIGINAL CAREER PAGE DISPLAY
+ *  Separated out into each page, and data needed for each one
   public function displayCareer(...$path){
     $soc = '15-1142'; // soc must be set, due to routing. Default anyways
 		if (!empty($path[0])) {
@@ -339,199 +554,5 @@ class CareerController extends PagesController
     // Currently switches webpages
     $this->display($focus);
   }
-*/
-  // TODO: Implement better search
-  public function search(){
-    $connection = ConnectionManager::get($this->datasource);
-    $keywords = preg_split('/[,\s]+/', $this->request->getQuery('q'));
-    if (count($this->request->query) == 1 && !is_null($this->request->getQuery('q'))
-      && $this->request->getQuery('q') == ''){
-      $this->set('query', '');
-      $this->set('resultsEmpty', true);
-      $this->display('search');
-      return;
-    }
-
-    // Variable substitution must avoid string operations due to SQL injection
-    $keySubs = [];
-    $query = 'SELECT soc,title,wagetype,averageWage,educationRequired,careerGrowth FROM Occupation WHERE ';
-    $query .= implode(' AND ', array_map(function($s) use (&$keySubs){
-      $sub = 'keyword' . count($keySubs);
-      $keySubs[$sub] = '%' . $s . '%';
-      return 'title LIKE :' . $sub;
-    }, $keywords));
-    // TODO: add better search filters
-    if (!is_null($this->request->getQuery('video'))){
-      $query .= ' AND soc IN (SELECT soc FROM Videos)';
-    }
-    if (!is_null($this->request->getQuery('skills'))){
-      $query .= ' AND soc IN (SELECT soc FROM Skills)';
-    }
-    if (!is_null($this->request->getQuery('growth'))){
-      $query .= ' AND careerGrowth >= 0.0';
-    }
-    $results = $connection->execute($query, $keySubs)->fetchAll('assoc');
-    $searchResults = [];
-    foreach ($results as $r){
-      $soc = $r['soc'];
-      $summary = $this->setupIconTemplateData($r);
-      $summary['soc'] = $soc;
-      $searchResults[] = $summary;
-    }
-    $this->set('query', $this->request->getQuery('q'));
-    $this->set('resultsEmpty', count($searchResults) == 0);
-    $this->set('results', $searchResults);
-    $this->display('search');
-  }
-
-  public function redirectRandom(){
-    $soc = '15-1142'; // TODO: Error handling for empty database?
-    $connection = ConnectionManager::get($this->datasource);
-    $results = [];
-
-    $wowX = $this->request->getQuery('x');
-    $wowY = $this->request->getQuery('y');
-    if (!is_null($wowX) && !is_null($wowY)){
-      // Implementation taken from 'occupation.js:getRandomSOCInWOWRegion()'
-      $rad = atan2($wowY, $wowX);
-      $rad = ($rad >= 0)?($rad):($rad + 2.0*pi());
-      $deg = $rad * (180.0/pi());
-      $region = floor(min(max(0,$deg/30.0), 11));
-      // Additional check added as Interests may be defined for occupation without other data
-      $query = 'SELECT soc FROM OccupationInterests WHERE wowRegion = :region AND soc IN (SELECT soc FROM Occupation) ORDER BY RAND() LIMIT 1';
-      $results = $connection->execute($query, ['region' => $region])->fetchAll('assoc');
-    } else {
-      $query = 'SELECT soc FROM Occupation ORDER BY RAND() LIMIT 1';
-      $results = $connection->execute($query)->fetchAll('assoc');
-    }
-
-    // Should always have one result as per query
-    foreach ($results as $r){
-      $soc = $r['soc'];
-    }
-    // TODO: Handle 0 results, from full or constrained random
-
-    $this->redirect(['controller' => 'career', 'action' => 'displayCareerSingle', $soc, 'video']);
-  }
-
-  public function displayCareerSingle(...$path){
-    $soc = '15-1142'; // soc must be set, due to routing. Default anyways
-		if (isset($path[0])) {
-			$soc = $path[0];
-    }
-
-    $focus = $path[1];
-    if (!isset($path[1]) || !in_array($path[1], ['video', 'salary', 'education',
-      'outlook', 'skills', 'world-of-work'])){
-      $focus = 'video';
-    }
-
-    $this->set('soc', $soc);
-    $this->set('focus', $focus);
-
-    $connection = ConnectionManager::get($this->datasource);
-
-    $occupationFields = ['title', 'averageWage', 'wagetype', 'careerGrowth',
-      'educationRequired', 'averageWageOutOfRange', 'lowWage', 'lowWageOutOfRange',
-      'medianWage', 'medianWageOutOfRange', 'highWage', 'highWageOutOfRange',
-      'currentEmployment', 'futureEmployment', 'jobOpenings'];
-    $schoolData = [
-      'associate' => ['Undergraduate', 'Associate\'s Degree', '2', 2, 0, false],
-      'bachelor' => ['Undergraduate', 'Bachelor\'s Degree', '4', 4, 0, false],
-      'master' => ['Graduate', 'Master\'s Degree', '6', 4, 2, true],
-      'doctoral or professional' => ['Graduate or Professional',
-        'Doctorage or Professional Degree', '8', 4, 4, true]
-      ];
-    $schoolFields = ['typeOfSchool', 'typeOfDegree' ,'yearsInSchool'
-      ,'yearsInUndergrad' ,'yearsInGrad', 'gradSchool'];
-    $query = 'SELECT ' . implode(',', $occupationFields) . ' FROM Occupation WHERE soc = :soc';
-    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
-
-    $avg = [];
-    $hi = [];
-    $med = [];
-    $lo = [];
-    $sts = [];
-    
-    //If there is more than one, something's gone wrong, but get last one anyways
-    foreach ($results as $r){
-      // set averageWage, wageTypeIsAnnual, educationRequired, careerGrowth for icons
-      $this->set($this->setupIconTemplateData($r));
-      
-      // Hardcoded values set in original code
-      // No behavior given on averageWageOutOfRange, no rows are set to 1
-      // TODO: Add to some global configuration file
-      $avg['NAT'] = $r['averageWage'];
-      $hi['NAT'] = (($r['highWageOutOfRange'] == 0)?$r['highWage']:187200);
-      $med['NAT'] = (($r['medianWageOutOfRange'] == 0)?$r['medianWage']:187200);
-      $lo['NAT'] = (($r['lowWageOutOfRange'] == 0)?$r['lowWage']:187200);
-      $sts[] = 'NAT';
-
-      $this->set(array_combine($schoolFields, $schoolData[$r['educationRequired']]));
-
-      $this->set('currentEmployment', number_format(floatval($r['currentEmployment']) * 1000));
-      $this->set('futureEmployment', number_format(floatval($r['futureEmployment']) * 1000));
-      $this->set('jobOpenings', number_format(floatval($r['jobOpenings']) * 1000));
-    }
-
-    $query = 'SELECT statecode, averageWage, averageWageOutOfRange, lowWage,' .
-      'lowWageOutOfRange, medianWage, medianWageOutOfRange, highWage,' .
-      ' highWageOutOfRange FROM StateOccupation WHERE soc = :soc';
-    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
-
-    foreach ($results as $r){
-      if ($r['averageWage'] != 0){
-        $avg[$r['statecode']] = $r['averageWage'];
-        $hi[$r['statecode']] = $r['highWage'];
-        $med[$r['statecode']] = $r['medianWage'];
-        $lo[$r['statecode']] = $r['lowWage'];
-        $sts[] = $r['statecode'];
-      }
-    }
-    $this->set('avg', $avg);
-    $this->set('hi', $hi);
-    $this->set('med', $med);
-    $this->set('lo', $lo);
-    $this->set('sts', $sts);
-    
-    $query = 'SELECT * FROM Skills WHERE soc = :soc';
-    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
-    foreach ($results as $r){
-      $this->set('skillsArray', $this->setupSkillIconTemplateData($r));
-    }
-
-    $interestsFields = ['realistic', 'investigative', 'artistic', 'social', 'enterprising',
-      'conventional'];
-    $query = 'SELECT ' . implode(',', $interestsFields) . ' FROM OccupationInterests WHERE soc = :soc';
-    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
-    if (count($results) == 0){
-      $this->set('noData', true);
-    } else {
-      // Template variables named same as table columns, and no processing needed
-      foreach ($results as $r){
-        $this->set($r);
-      }
-      $this->set('noData', false);
-    }
-
-    $videos = [];
-    $query = 'SELECT * FROM Videos WHERE soc = :soc';
-    $results = $connection->execute($query, ['soc' => $soc])->fetchAll('assoc');
-    foreach ($results as $r){
-      if (!isset($videos[$r['personNum']])){
-        $videos[$r['personNum']] = [];
-      }
-      $videos[$r['personNum']]['name'] = $r['person'];
-      if (!isset($videos[$r['personNum']]['videos'])){
-        $videos[$r['personNum']]['videos'] = [];
-      }
-      $videos[$r['personNum']]['videos'][$r['questionNum']] =
-        ['question' => $r['question'],
-        'fileName' => $r['soc'] . '_' . $r['personNum'] . '_' .
-          $r['person'] . '/' . $r['fileName']];
-    }
-    $this->set('videos', $videos);
-
-    $this->display('career');
-  }
+ */
 }

@@ -11,6 +11,32 @@
 				PPP
 			</title>
 		</head>
+    <style>
+    .ui-autocomplete {
+      height: 200px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+    </style>
+    <script>
+      var careerList = [];
+      var getAutoCompleteFull = function(){
+        if (careerList.length == 0){
+          $.ajax({
+            url: 'career/autocomplete',
+            success: function(result){
+              careerList = JSON.parse(result);
+              $('#fullSearchBar').autocomplete({
+                source: careerList,
+                select: function(event, ui){
+                  window.location.href = "career/" + ui.item.soc;
+                }
+              });
+            }
+          });
+        }
+      };
+    </script>
     <body>
 
       <div id="browseContainer" class="container-fluid">
@@ -31,7 +57,8 @@
                   <div id="specificOccupationOptions" class="panel-collapse collapse" role="tab-panel">
                     <form class="form-inline" action="career/search" method="get" role="form">
                       <div class="input-group" id="browse-search">
-                        <input class="form-control" type="search" name="q" placeholder="Search careers...">
+                        <input id="fullSearchBar" class="form-control" type="search" name="q"
+                          placeholder="Search careers..." autocomplete="off" onfocus="getAutoCompleteFull()">
                         <span class="input-group-btn">
                           <button class="btn btn-secondary" type="submit">
                             <i class="fa fa-search" aria-hidden="true"></i>
