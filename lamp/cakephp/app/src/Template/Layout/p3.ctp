@@ -39,7 +39,8 @@
       ));
       echo $this->Html->script(array(
         'global.js',
-        'index.js'
+        // TODO: Figure out what is used from index.js, separate out
+        'Pages/index.js'
       ));
       echo $this->Html->css(array(
         'global.css'

@@ -112,7 +112,7 @@ html, body {
 
 #imageContainer {
 	position: fixed;
-	background-image: url("../img/home-dim.jpg");
+	background-image: url("../../img/home-dim.jpg");
 	background-position: center center;
 	background-size: cover;
 	flex: 1 1 auto;

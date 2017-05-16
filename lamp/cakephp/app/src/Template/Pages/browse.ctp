@@ -3,8 +3,8 @@
 		<head>
       <!-- {{> global_header }} -->
       <?php
-        echo $this->Html->script('browse.js');
-        echo $this->Html->css('browse.css');
+        echo $this->Html->script('Pages/browse.js');
+        echo $this->Html->css('Pages/browse.css');
       ?>
 
 			<title>

@@ -153,6 +153,25 @@ Router::scope('/', function (RouteBuilder $routes) {
       'action' => 'displayCareer'], ['pass' => ['soc'],
         'soc' => '[0-9]{2}-[0-9]{4}']);
     */
+    
+    /**
+     * Connect administrator actions to AdminController
+     * TODO: Implement AdminController
+     */
+    // Display list of videos currently present, with ability to replace and add
+    $routes->connect('/admin/videos', ['controller' => 'admin',
+      'action' => 'displayVideos']);
+    // Back-end page/AJAX to receive a file, create a folder, and update rows
+    $routes->connect('/admin/upload', ['controller' => 'admin',
+      'action' => 'uploadVideos']);
+    // TODO: Summary page of traffic, etc. Entry point for admin portal
+    //$routes->connect('/admin/', ['controller' => 'admin',
+    //  'action' => 'displaySummary']);
+    //$routes->connect('/admin/summary', ['controller' => 'admin',
+    //  'action' => 'displaySummary']);
+    // TODO: Display user data (list of users, option to download data?)
+    //$routes->connect('/admin/users', ['controller' => 'admin',
+    //  'action' => 'displayUsers']);
 
     /**
      * Connect video rating pages to AlgorithmController

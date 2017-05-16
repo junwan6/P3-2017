@@ -4,7 +4,7 @@
     <!-- Replaced by Layouts/default.ctp -->
     <!-- {{> global_header }} -->
     <?php
-      echo $this->Html->css('index.css');
+      echo $this->Html->css('Pages/index.css');
     ?>
     <title>
       PPP

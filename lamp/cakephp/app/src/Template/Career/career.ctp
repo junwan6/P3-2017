@@ -4,8 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php
       echo $this->Html->script([
-        'career.js',
-        'icons.js',
+        'Career/career.js',
+        'Career/icons.js',
         'johndyer-mediaelement-8adf73f/build/mediaelement-and-player.min.js',
         'mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.js',
         'https://code.highcharts.com/highcharts.js',
@@ -13,8 +13,8 @@
         'https://code.highcharts.com/modules/exporting.js'
       ]);
       echo $this->Html->css([
-        'career.css',
-        'icons.css',
+        'Career/career.css',
+        'Career/icons.css',
         '../js/johndyer-mediaelement-8adf73f/build/mediaelementplayer.css',
         '../js/mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.css'
       ]);

@@ -1,0 +1,33 @@
+.titleText {
+  color: #333333;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.careerVideos {
+  color: #444444;
+  font-size: 16px;
+  text-align: center;
+}
+.socCode {
+  font-size: 12px;
+}
+.uploadTable {
+  width: 100%;
+}
+.questionText {
+  width: 75%;
+  font-size: 12px;
+}
+.videoFile {
+  width: 25%;
+  font-size: 8px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+input[type=file]{
+  display: none;
+}

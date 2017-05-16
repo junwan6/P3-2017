@@ -2,7 +2,7 @@
 <html>
   <head>
     <!-- {{> global_header }} -->
-    <?php echo $this->Html->css('donors.css'); ?>
+    <?php echo $this->Html->css('Pages/donors.css'); ?>
     <title>
       PPP
     </title>
