@@ -118,6 +118,9 @@ class AdminController extends PagesController
               $update['tmp_name'], $dest, $update['name']
             ];
             $setFields['fileName'] = $update['name'];
+            if (count($results) != 0){
+              $queuedUpdates['orphans'][] = $results[0]['fileName'];
+            }
           }
           // If a new or changed entry:
           if (count($results) == 0){
@@ -128,13 +131,11 @@ class AdminController extends PagesController
             $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum,
             'person'=>$name, 'questionNum'=>$qNum];
             $queuedUpdates['database'][] = [$setFields, $checkedFields];
-            // Will only be one row due to primary key
-            $queuedUpdates['orphans'][] = $results[0];
           }
         }
       }
     }
-  debug($queuedUpdates);
-  // TODO: DECIDE WHAT TO DO WITH PAGE (AJAX/'upload complete')
+    debug($queuedUpdates);
+    // TODO: DECIDE WHAT TO DO WITH PAGE (AJAX/'upload complete')
   }
 }
