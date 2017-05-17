@@ -1,0 +1,17 @@
+.titleText {
+    color: #333333;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.videoHeader {
+    color: #444444;
+    font-size: 16px;
+    text-align: center;
+}
+
+.videoRow {
+    color: #444444;
+    font-size: 12px;
+}

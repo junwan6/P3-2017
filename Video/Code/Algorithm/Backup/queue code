@@ -1,0 +1,102 @@
+// computes weights of major group by SOC weights
+function computeMajorWeights(mapTree)
+{
+	for (var i in mapTree)
+		mapTree[i]['weight'] = getMajorGroupWeight(mapTree[i]);
+
+	return mapTree;
+}
+
+
+
+var job_queue = new Array();
+var counter = 0;
+var seen_socs = {};
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+ //fill job_queue with socs to show next, shuffle  order of jobs to add randomness
+function fill_queue(){
+	for (var i = 0; i < 5; i++)
+	{
+		var soc = chooseSOC(socMapTree);
+		if (!seen_socs[soc])
+		{
+			job_queue.push(soc);
+			seen_socs[soc] = true;
+		}
+	}
+	shuffle(job_queue);
+}
+
+
+
+// Chooses a weighted random SOC code and updates the website
+//chooses based on front of job_queue, adds more to queue periodically (adds max 5 jobs to queue every 3 jobs shown to user)
+function getSOC(){
+	//var soc = chooseSOC(socMapTree)
+	if (seen_socs.length == 819) {
+		document.getElementById("SOC2").innerHTML += "Search Exhausted <br>";
+		return;
+	}
+
+	var soc;
+	if (counter == 3)
+	{
+		fill_queue();
+		counter = 0;
+	}
+	else
+	{
+		counter++;
+	}
+
+	if (job_queue.length > 0)
+	{
+		soc = job_queue[0];
+		job_queue.splice(0, 1);
+
+		// Updates the HTML text with an SOC number
+		document.getElementById("SOC2").innerHTML += soc + "<br>";
+
+	}
+	else
+	{
+		fill_queue();
+		counter--;
+		getSOC();
+	}
+	
+}
+
+
+function generateWeightOnlyTree(mapTree)
+{
+	var weightOnlyTree = {};
+
+	for (var majorIndex in mapTree)
+	{
+		weightOnlyTree[majorIndex] = {};
+		weightOnlyTree[majorIndex].weight = getMajorGroupWeight(mapTree[majorIndex])
+
+		for (var minorIndex in mapTree[majorIndex])
+			weightOnlyTree[majorIndex][minorIndex] = {weight:getMinorGroupWeight(mapTree[majorIndex][minorIndex])}
+	}
+	return weightOnlyTree;
+}

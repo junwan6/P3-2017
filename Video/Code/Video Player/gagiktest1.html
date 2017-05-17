@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>P3</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="../../johndyer-mediaelement-8adf73f/build/mediaelementplayer.css" />
+<link rel="stylesheet" href="../../mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.css">
+<link rel="stylesheet" href="gagiktest1.css" />
+
+</head>
+
+<body>
+    <p id="jobtitle"> </p>
+<p id="vidtitle"></p>
+<div onclick="updateTitle()">
+<video 
+    data-showplaylist="true" 
+    class="mep-playlist"
+    width="530" 
+    height="300"
+    id="vidtag"
+    autoplay="true"
+    >
+
+</video>
+<div style="margin-left:430px; margin-top: 10px">
+    <a href="#up"><img src="img/upthumb.png" width="30px"></a>
+    <a href="#mid"><img src="img/middlethumb.jpg" width="30px"></a>
+    <a href="#down" onclick="nextJob()"><img src="img/downthumb.png" width="30px"></a>
+    <a href="#next" onclick="nextJob()"><img src="http://cdn2.hubspot.net/hub/375363/file-2234927924-png/success-next-button.png?t=1460373906044" width="30px">
+</div>
+
+<script src="js/main.js"></script>
+
+<script src="../../johndyer-mediaelement-8adf73f/build/mediaelement-and-player.min.js"></script>
+<script src="../../mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.js"></script>
+<script>
+
+        // video playlist
+    $('video.mep-playlist').mediaelementplayer({
+        "features": ['playlistfeature', 'prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'volume', 'playlist', 'fullscreen', ],
+        "shuffle": false,
+        "loop": true
+    });
+    updateTitle();
+
+</script>
+</body>
+</html>

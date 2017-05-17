@@ -1,0 +1,84 @@
+#pageTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 30px;
+}
+
+#careerTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 20px;
+}
+
+#contentContainer {
+/*
+	position: absolute;
+	left: 15em;
+	right: 15em;
+	top: 7em;
+	bottom: 2em;
+	overflow: auto;
+*/
+}
+
+.educationLine {
+	text-align: left;
+	margin: 0.5em;
+}
+
+.educationCategory {
+	display: inline-block;
+	color: hsl(210, 60%, 50%);
+}
+
+.educationValue {
+	display: inline-block;
+	color: black;
+}
+
+#chartContainer {
+	height: 250px;
+	width: 250px;
+}
+
+#careerInformation {
+	display: none;
+}
+
+#input-container {
+	text-align: center;
+    width: 100%;
+    margin: auto;
+	color: hsl(210, 60%, 50%);
+}
+
+#undergraduateInputs {
+	width: 33%;
+}
+
+#graduateInputs {
+	width: 33%;
+}
+
+#careerInputs {
+	width: 33%;
+}
+
+.inputRow {
+	text-align: center;
+	width: 100%;
+	margin: auto;
+}
+
+.chartOption {
+	max-width: 130px;
+	height: 25px;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	font-size: 11px;
+}
+
+
+
+
+

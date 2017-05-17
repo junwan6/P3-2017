@@ -1,0 +1,38 @@
+#pageTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 30px;
+}
+
+#careerTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 20px;
+}
+
+.white {
+	color: white;
+}
+
+ .input-container {
+    max-width: 150px; 
+    margin-left: auto;
+    margin-right: auto;
+ }
+
+ .form-control {
+ 	text-align: center;
+ }
+
+ body {
+ 	color: white;		
+ }
+
+#careerInformation {
+	display: none;
+}
+
+/*.center {
+	width: 15%; 
+	margin: auto;
+}*/

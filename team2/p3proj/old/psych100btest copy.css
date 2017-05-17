@@ -1,0 +1,35 @@
+body {
+	background-color: black;
+	color: white;
+	font-family: Georgia;
+	font-size: 25px;
+	text-align: center;
+}
+
+.content {
+	text-align: center;
+	width: 1050px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+p {
+	text-align: left;
+}
+
+#timer {
+	position: fixed;
+	font-size: 40px;
+}
+
+#stressTimer {
+	position: fixed;
+	font-size: 100px;
+	color: red;
+}
+
+#emphasized {
+	color: red;
+	font-weight: bold;
+}

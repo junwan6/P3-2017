@@ -1,0 +1,5 @@
+ErrorDocument 404 /p3/404.php
+
+RewriteEngine on
+RewriteRule career/random(?:\?(.*))?$ career.php?random&$1
+RewriteRule career/(.*)/(.*)$ career.php?soc=$1&focus=$2

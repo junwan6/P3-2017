@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTML5 MediaElement</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="../../johndyer-mediaelement-8adf73f/build/mediaelement-and-player.min.js"></script>
+<script src="../../mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.js"></script>
+<link rel="stylesheet" href="../../mediaelement-playlist-plugin-master/_build/mediaelement-playlist-plugin.min.css">
+<link rel="stylesheet" href="../../johndyer-mediaelement-8adf73f/build/mediaelementplayer.min.css" />
+<link rel="stylesheet" href="gagiktest1.css" />
+
+
+
+
+</head>
+
+<body>
+<p id="vidtitle"></p>
+<div onclick="updateTitle()">
+<video 
+    data-showplaylist="true" 
+    class="mep-playlist"
+    width="600" 
+    height="400" 
+    >
+
+    <!-- Track 1 as .webm and .mp4 -->
+    <!-- <source src="track1.webm" type="video/webm" title="Track 1" data-poster="track1.png"> -->
+    <source src="CatalystVid.mp4"  type="video/mp4"  title="Why do you like your job?" data-poster="track1.png">
+
+    <!-- Track 1 as .webm and .mp4 -->
+    <!-- <source src="track2.webm" type="video/webm" title="Track 2" data-poster="track2.png"> -->
+    <source src="squirrel2.mp4"  type="video/mp4"  title="Why do you hate your job?" data-poster="track2.png">
+
+    <!-- Track 1 as .webm and .mp4 -->
+    <!-- <source src="track3.webm" type="video/webm" title="Are you as passionate as Todd?" data-poster="track3.png"> -->
+    <source src="CatalystVid.mp4"  type="video/mp4"  title="Are you as passionate as Todd?" data-poster="track3.png">
+
+    <!-- image fallback only - flash version does not support playlists -->
+    <img src="no-video-playlist.png" title="No video playlist capabilities.">
+</video>
+</div>
+<script>
+    function updateTitle(){
+      document.getElementById('vidtitle').textContent=document.getElementsByClassName("current")[0].textContent;
+    }
+    // video playlist
+    $('video.mep-playlist').mediaelementplayer({
+        "features": ['playlistfeature', 'prevtrack', 'playpause', 'nexttrack', 'loop', 'shuffle', 'current', 'progress', 'duration', 'volume', 'playlist', 'fullscreen'],
+        "shuffle": false,
+        "loop": false
+    });
+
+    // audio playlist
+    $('audio.mep-playlist').mediaelementplayer({
+        "features": ['playlistfeature', 'prevtrack', 'playpause', 'nexttrack', 'loop', 'shuffle', 'current', 'progress', 'duration', 'volume', 'playlist'],
+        "audioVolume": "vertical", // just like video player
+        "shuffle": false,
+        "loop": false
+    });
+
+    // regular video
+    $('video:not(.mep-playlist)').mediaelementplayer({
+        "features": ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'],
+    });
+</script>
+
+</body>
+</html>

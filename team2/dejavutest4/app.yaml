@@ -1,0 +1,22 @@
+application: dejavutest4
+version: 1
+runtime: php55
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: /static
+  static_dir: static
+
+- url: /images
+  static_dir: images
+
+- url: .*/video
+  script: video.php
+
+- url: .*
+  script: psych100btest.php

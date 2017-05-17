@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	{{> global_header }}
+	<script type="text/javascript" language="javascript" src="/static/icons.js"></script>
+	<link type="text/css" rel="stylesheet" href="/static/icons.css">
+
+	<script type="text/javascript" language="javascript" src="/static/worldOfWork.js"></script>
+	<link type="text/css" rel="stylesheet" href="/static/worldOfWork.css">
+
+	<title>
+		PPP
+	</title>
+</head>
+
+<body>
+	{{#if loggedIn}}
+	{{> navbarlogout }}
+	{{else}}
+	{{> navbar}}
+	{{/if}}
+
+	<!-- PAGE CODE HERE -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-9 col-md-offset-1">
+				<div class="box">
+
+					<div id="pageTitle">
+						<br>
+						World of Work
+						<p></p>
+					</div>
+
+					<div id="careerTitle">
+						{{occupationTitle}}
+						<p></p>
+
+					<!-- http://stackoverflow.com/questions/15639726/how-to-set-canvas-on-top-of-image-in-html -->
+<!-- 					<div id="container">
+						<a href="#" data-toggle="tooltip" title="Middle School Teacher">
+
+							<canvas id="c"  style="z-index: 1;"></canvas>
+							<canvas id="cover" style="z-index: 2;"></canvas>
+							
+							<img class='img' src="/images/wow.png" alt="World of Work" align="center" width="auto" height="auto">
+							
+							<canvas id="canvas" width="0px" height="0px"></canvas>
+								
+						</a>
+					</div> -->					
+				<div>
+                                  {{#if noData}}
+                                  Sorry, we don't have World of Work data for this occupation.
+                                  {{else}}
+					<canvas id="d"  style="z-index: 1;"></canvas>
+					<!-- <canvas id="cover" style="z-index: 2;"></canvas> -->
+					<div id="interestsTableDiv">
+						<table id="interestsTable">
+							<tr><td>{{soc}}</td></tr>
+							<tr><td>{{realistic}}</td></tr>
+							<tr><td>{{investigative}}</td></tr>
+							<tr><td>{{artistic}}</td></tr>
+							<tr><td>{{social}}</td></tr>
+							<tr><td>{{enterprising}}</td></tr>
+							<tr><td>{{conventional}}</td></tr>
+						</table>
+					</div>
+                                  {{/if}}
+				</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				{{> icons }}
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+#pageTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 30px;
+}
+
+#careerTitle {
+	text-align: center;
+	color: hsl(210, 60%, 50%);
+	font-size: 20px;
+}
+
+#contentContainer {
+	overflow: auto;
+}
+
+.intelligenceTitle {
+	color: hsl(0, 30%, 50%);
+	text-align: left;
+	margin-left: 1em;
+	margin-right: 1em;
+	font-size: 23px;
+}
+
+.intelligenceDefinition {
+	color: black;
+	text-align: left;
+	margin-left: 1em;
+	margin-right: 1em;
+	font-size: 15px;
+}
+
+.intelligenceTasks {
+	color: black;
+	text-align: left;
+	margin-left: 2em;
+	margin-right: 1em;
+	font-size: 18px;
+	font-style: italic;
+}
+
+

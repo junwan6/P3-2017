@@ -1,0 +1,363 @@
+/*******************************************************************************
+   GLOBAL
+********************************************************************************/
+
+body {
+	background-color: #EEEEEE;
+	color: white;
+	font-family: Lato, sans-serif;
+	font-size: 20px;
+}
+
+.stop-scrolling {
+  height: 100%;
+}
+
+.centered {
+    text-align: center;
+}
+
+.box {
+	margin: 0.5em;
+        padding: 1em;
+	background-color: white;
+        border-radius: 2px;
+        box-shadow: 0px 2px 2px #DDDDDD;
+}
+
+.formTextField, .formTextField:focus {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-width: 2px;
+}
+
+.formButton {
+	background-color: hsl(210, 60%, 50%);
+        color: white;
+        border-radius: 0;
+	transition: background-color 0.125s;
+}
+
+.formButton:hover {
+	background-color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+.formButton:active {
+	background-color: hsl(210, 60%, 60%);
+}
+
+/*
+ * Row with equal height columns
+ * --------------------------------------------------
+ */
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+
+/*******************************************************************************
+   NAVIGATION BAR
+********************************************************************************/
+
+.navibutton {
+	display: inline-block;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	vertical-align: middle;
+	transition: background-color 0.125s; 
+}
+
+/* Hacks to workaround default browser and Bootstrap input styling */
+input.navibutton {
+	background-color: inherit;
+	border: none;
+        outline: none;
+}
+
+.navibutton:hover {
+	cursor: pointer;
+	background-color: hsl(210, 60%, 75%);
+}
+
+#navibar {
+	text-decoration: none;
+	background-color: hsl(210, 60%, 60%);
+	font-size: 18px;
+	vertical-align: middle;
+}
+
+#navibar a {
+	text-decoration: none;
+	color: white;
+	outline: 0;
+}
+
+#navibar a:link {
+	text-decoration: none;
+	color: white;
+}
+
+#navibar a:visited {
+	text-decoration: none;
+	color: white;
+}
+
+#navibar a:hover {
+	text-decoration: none;
+	color: white;
+}
+
+#fader {
+	display: none;
+	top: 0em;
+	bottom: 0em;
+	right: 0em;
+	left: 0em;
+	width: 100%;
+	position: fixed;
+	background-color: black;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	z-index: 2;
+}
+
+#PASSION {
+	color: black;
+	position: absolute;
+	font-size: 12px;
+	opacity: 0.8;
+	line-height: 1;
+	filter: alpha(opacity=80);
+	padding: 5px;
+	background: #FDD017;
+	z-index:1000;
+}
+
+a#passionWord {
+	color: black !important;
+	display: inline-block;
+	font-size: 10px;
+}
+
+#passionDef {
+	display:none;
+}
+
+#mainButtons {
+        margin: auto auto;
+	text-align: center;
+}
+
+#signUpLoginColumn {
+	margin: auto 0;
+	text-align: right;
+}
+
+#searchBarForm {
+    display: inline;
+}
+
+#searchBar {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-color: hsl(210, 60%, 57%);
+}
+
+#searchButton {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-left-width: 0px;
+    border-color: hsl(210, 60%, 57%);
+    background-color: hsl(210, 60%, 45%);
+}
+
+/*******************************************************************************
+   SIGN UP
+********************************************************************************/
+
+.signUpInfo label {
+    color: #555555;
+    font-weight: normal;
+}
+
+.signUpOption {
+	font-size: 14px;
+}
+
+#signUpBox {
+	display: none;
+
+	top: 6em;
+	left: 50%;
+	position: fixed;
+	color: black;
+
+	height: 21em;
+	width: 20em;
+	z-index: 3;
+}
+
+#signUpContent {
+	color: black;
+	background-color: white;
+	height: auto;
+        left: calc(50% - 11em);
+	width: 20em;
+	position: fixed;
+	z-index: 3;
+        padding: 1em;
+}
+
+#signUpTitle {
+	color: #444444;
+}
+
+#linkedinBox {
+	height: 41px;
+	width: 215px;
+}
+
+#linkedinButton {
+	background-image: url("/images/linkedindefault.png");
+	height: 41px;
+	width: 215px;
+}
+
+input#signUpButton {
+        width: 100%;
+        font-size: 20px;
+}
+
+#signUpCloseButton {
+	top: 0.1em;
+	right: 0.1em;
+	position: absolute;
+	color: hsl(210, 60%, 50%);
+}
+
+#signUpCloseButton:hover {
+	color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+#signUpCloseButton:active {
+	color: hsl(210, 60%, 60%);
+}
+
+#linkedinButton:hover {
+	background-image: url("/images/linkedinhover.png");
+	cursor: pointer;
+}
+
+#linkedinButton:active {
+	background-image: url("/images/linkedinactive.png");
+
+}
+
+#switchToLogin:hover {
+	cursor: pointer;
+}
+
+/*******************************************************************************
+   LOG IN
+********************************************************************************/
+
+.checkbox label {
+    font-size: 14px;
+}
+
+.loginInfo label {
+    color: #555555;
+    font-weight: normal;
+}
+
+.loginOption {
+	font-size: 14px;
+}
+
+#loginTitle {
+	color: #444444;
+}
+
+#loginBox {
+	display: none;
+
+	position: absolute;
+        right: 0;
+	color: black;
+
+	height: 18em;
+	width: 15em;
+	z-index: 3;
+}
+
+#loginContent {
+	color: black;
+	background-color: white;
+	padding: 1em;
+	height: auto;
+	width: 15em;
+	position: fixed;
+	z-index: 3;
+}
+
+input#loginButton {
+        width: 100%;
+        font-size: 20px;
+}
+
+#loginCloseButton {
+	top: 0.1em;
+	right: 0.1em;
+	position: absolute;
+	color: hsl(210, 60%, 50%);
+}
+
+#loginCloseButton:hover {
+	color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+#loginCloseButton:active {
+	color: hsl(210, 60%, 60%);
+}
+
+#switchToSignUp:hover {
+	color: hsl(210, 60%, 55%);
+	cursor: pointer;
+}
+
+#switchToSignUp:active {
+	color: hsl(210, 60%, 60%);
+}
+
+#fbTest:hover {
+	cursor: pointer;
+}
+
+#logo {
+	width: 30px;
+}
+
+.logo {
+	font-size: 18px;
+	display: inline-block;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	vertical-align: middle;
+	transition: background-color 0.125s; 
+}
