@@ -112,30 +112,80 @@ class AdminController extends PagesController
           
           $setFields = [];
           // If a file has been uploaded:
-          if (count($update) != 1){
+          $newFile = (count($update) != 1);
+          if ($newFile){
             $dest = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $name;
             $queuedUpdates['filesystem'][] = [
-              $update['tmp_name'], $dest, $update['name']
+              'src' => $update['tmp_name'],
+              'dir' => $dest,
+              'name' => $update['name']
             ];
             $setFields['fileName'] = $update['name'];
             if (count($results) != 0){
               $queuedUpdates['orphans'][] = $results[0]['fileName'];
             }
           }
-          // If a new or changed entry:
-          if (count($results) == 0){
-            $setFields['question'] = $update['text'];
-            $queuedUpdates['database'][] = [$setFields];
-          } else if ($update['text'] != $results[0]['question']){
-            $setFields['question'] = $update['text'];
+          // Handle overwrites in query execution
+          $newQuestion = (count($results) == 0);
+          $changedQuestion = false;
+          // So many booleans, but all necessary
+          // TODO: Check/redo/clean up (string? enum?)
+          if (!$newQuestion){
+            if ($update['text'] != $results[0]['question']){
+              $setFields['question'] = $update['text'];
+              $changedQuestion = true;
+            }
+          }
+          if ($newQuestion || $changedQuestion|| $newFile){
             $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum,
             'person'=>$name, 'questionNum'=>$qNum];
-            $queuedUpdates['database'][] = [$setFields, $checkedFields];
+            $queuedUpdates['database'][] = [
+              'update'=>$setFields,
+              'check'=>$checkedFields,
+              'insert'=>$newQuestion];
           }
         }
       }
     }
-    debug($queuedUpdates);
-    // TODO: DECIDE WHAT TO DO WITH PAGE (AJAX/'upload complete')
+
+    foreach ($queuedUpdates['database'] as $stmt){
+      // Should be no duplicates, SELECT would have found
+      // New socs and ordering handled by client
+      // Single table, adding new soc same as adding new question
+      if ($stmt['insert']){
+        $fields = $stmt['update'] + $stmt['check'];
+        $insert = 'INSERT INTO Videos ' .
+          '(' . implode(', ', array_keys($fields)) . ') ' . 
+          'VALUES (' . implode(', ', array_map(function ($s){
+            return ':' . $s;
+          }, array_keys($fields))) . ')';
+        $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
+        $connection->execute($insert, $fields, $fieldTypes);
+      } else {
+        $update = 'UPDATE Videos SET ' . implode(', ', array_map(function ($s){
+          return $s . ' = :' . $s;}, array_keys($stmt['update']))) . 
+          ' WHERE ' . implode(' AND ', array_map(function ($s){
+          return $s . ' = :' . $s;}, array_keys($stmt['check'])));
+        $fields = $stmt['update'] + $stmt['check'];
+        $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
+        $connection->execute($update, $fields, $fieldTypes);
+      }
+    }
+
+    foreach ($queuedUpdates['filesystem'] as $move){
+      // Create folder if it does not exist
+      $folder = new Folder($move['dir'], true);
+      $dest = $folder->path . '/' . $move['name'];
+      if (file_exists($dest)){
+        rename($dest, $dest . '#');
+        $queuedUpdates['orphans'][] = $dest . '#';
+      }
+      move_uploaded_file($move['src'], $dest);
+    }
+
+    $this->set('changes', $queuedUpdates);
+    // TODO: Implement own file preservation + garbage collection
+    // Create multistage upload/confirm (add uploads to orphan directory?)
+    $this->display('upload');
   }
 }

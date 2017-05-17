@@ -41,10 +41,10 @@
                 <div class="col-md-6 col-md-offset-3">
                   <?php
                   // Helper function to avoid long strings
-                  // ENFORCES TAG CLOSURE
-                  $unclosed=[];
+                  // Tried to use HEREDOC, variable interpolation
+                  // Failed due to HEREDOC requiring EOT without indent
+                  // Failed due to {$var} syntax requiring " while HTML uses "
                   function tag($type = 'span', $attr = [], $content = null){
-                    global $unclosed;
                     $tag = '<' . $type;
                     foreach($attr as $k => $v){
                       $tag .= ' ' . $k . '="' . $v . '"';
@@ -61,11 +61,6 @@
                       return $tag . '>';
                     }
                   }
-                  function tagClose($type = 'span'){
-                    global $unclosed;
-                    $unclosed[$type] -= 1;
-                    return '</' . $type . '>';
-                  }
                   
                   foreach ($videoList as $soc => $career){
                     echo '<div class="careerVideos" id="' . $soc . '">';
@@ -75,9 +70,12 @@
                         'action' => 'displayCareerSingle', $soc, 'video'],
                       ['escape' => false, 'target' => '_blank']);
                     foreach($career['people'] as $pid => $p){
-                      echo tag('h4', [], $p['name']);
-                      echo tag('form', ['action'=>'upload', 'method'=>'post',
-                        'enctype'=>'multipart/form-data'], true);
+                      //echo tag('h4', [], $p['name']);
+                      echo "<h4>{$p['name']}</h4>";
+                      //echo tag('form', ['action'=>'upload', 'method'=>'post',
+                      //  'enctype'=>'multipart/form-data'], true);
+                      echo '<form action="upload" method="post"
+                        enctype="multipart/form-data">';
                       echo '<table class="uploadTable">';
                       foreach ($p['questions'] as $qid => $q){
                         $elemId = 'soc' . $soc . 'p' . $pid . 'q' . $qid . $p['name'];
@@ -99,13 +97,9 @@
                       }
                       echo '</table>';
                       echo '<input type="submit">';
-                      echo tagClose('form');
+                      echo '</form>';
                     }
                     echo '</div><br><br>';
-                  }
-                  // TODO: REMOVE 
-                  foreach ($unclosed as $type => $u){
-                    assert($u == 0);
                   }
                   ?>
                 </div>

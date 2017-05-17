@@ -226,7 +226,7 @@ class CareerController extends PagesController
       $videos[$r['personNum']]['videos'][$r['questionNum']] =
         ['question' => $r['question'],
         'fileName' => $r['soc'] . '_' . $r['personNum'] . '_' .
-          $r['person'] . '/' . $r['fileName']];
+          $r['person'] . '/' . rawurlencode($r['fileName'])];
     }
     $this->set('videos', $videos);
 

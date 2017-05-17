@@ -1,0 +1,15 @@
+.titleText {
+  color: #333333;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.socCode {
+  font-size: 16px;
+}
+
+.change {
+  color: #444444;
+  font-size: 12px;
+}
