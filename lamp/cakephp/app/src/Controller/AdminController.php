@@ -59,24 +59,82 @@ class AdminController extends PagesController
   }
   
   public function uploadVideos(){
-    if ($this->request->is('post')){
-      debug($this->request);
-      foreach ($this->request->data as $k => $v){
-        $matches = [];
-        preg_match('/soc(..-....)p(\d+)q(\d+)(.+)/', $k, $matches);
-        $soc = $matches[1];
-        $pNum = $matches[2];
-        $person = $matches[4];
-        $qNum = $matches[3];
-        // If the input is a file and has been changed
-        // TODO: type checking, disallow non-video upload (codecs?)
-        if (is_array($v) && $v['size'] != 0){
-          $dest = new Folder(WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $person);
-        } else {
+    if (!$this->request->is('post')){
+      // TODO: Error page, not uploading anything
+      die();
+    }
+    $connection = ConnectionManager::get($this->datasource);
+    $updates = [];
+    // Combine changes for question text and video file
+    foreach ($this->request->data as $k => $v){
+      $matches = [];
+      // Extracts data from both video and text fields
+      preg_match('/^soc(..-....)p(\d+)q(\d+)(.*?)(?:text)?$/', $k, $matches);
+      $soc = $matches[1];
+      $pNum = $matches[2];
+      $person = $matches[4];
+      $qNum = $matches[3];
+
+      // TODO: Only populate actual updates (identify unchanged questions)
+      // No check added for filesize here due to above
+      if (!array_key_exists($soc, $updates)){
+        $updates[$soc] = [];
+      }
+      if (!array_key_exists($pNum, $updates[$soc])){
+        $updates[$soc][$pNum] = ['name'=>$person, 'questions'=>[]];
+      }
+      if (!array_key_exists($qNum, $updates[$soc][$pNum]['questions'])){
+        $updates[$soc][$pNum]['questions'][$qNum] = [];
+      }
+      // If the input is a file and has been uploaded
+      // TODO: type checking, disallow non-video upload (codecs?)
+      //   $v['type'] is a MIME type (?), get list and check
+      if (is_array($v) && $v['size'] != 0 && $v['error'] == 0){
+        $updates[$soc][$pNum]['questions'][$qNum]
+          = array_replace($updates[$soc][$pNum]['questions'][$qNum], $v);
+      } elseif(is_string($v)) {
+        $updates[$soc][$pNum]['questions'][$qNum]
+          = array_replace($updates[$soc][$pNum]['questions'][$qNum], ['text'=>$v]);
+      }
+    }
+    // Validate and construct changes
+    // Allow confirmation of update, option to delete orphans
+    $queuedUpdates = ['database'=>[], 'filesystem'=>[], 'orphans'=>[]];
+    foreach ($updates as $soc => $people){
+      foreach ($people as $pNum => $person){
+        $name = $person['name'];
+        foreach ($person['questions'] as $qNum => $update){
+          // Find existing video file, get current question to see if update necessary
+          $query = 'SELECT fileName, question FROM Videos WHERE soc = :soc AND ' . 
+            'personNum = :pNum AND person = :person AND questionNum = :qNum';
+          $results = $connection->execute($query, ['soc'=>$soc, 'pNum'=>$pNum,
+            'person'=>$name, 'qNum'=>$qNum])->fetchAll('assoc');
           
+          $setFields = [];
+          // If a file has been uploaded:
+          if (count($update) != 1){
+            $dest = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $name;
+            $queuedUpdates['filesystem'][] = [
+              $update['tmp_name'], $dest, $update['name']
+            ];
+            $setFields['fileName'] = $update['name'];
+          }
+          // If a new or changed entry:
+          if (count($results) == 0){
+            $setFields['question'] = $update['text'];
+            $queuedUpdates['database'][] = [$setFields];
+          } else if ($update['text'] != $results[0]['question']){
+            $setFields['question'] = $update['text'];
+            $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum,
+            'person'=>$name, 'questionNum'=>$qNum];
+            $queuedUpdates['database'][] = [$setFields, $checkedFields];
+            // Will only be one row due to primary key
+            $queuedUpdates['orphans'][] = $results[0];
+          }
         }
       }
     }
-    die();
+  debug($queuedUpdates);
+  // TODO: DECIDE WHAT TO DO WITH PAGE (AJAX/'upload complete')
   }
 }
