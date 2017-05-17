@@ -41,16 +41,30 @@
                 <div class="col-md-6 col-md-offset-3">
                   <?php
                   // Helper function to avoid long strings
-                  function htmlTag($type = 'span', $attr = [], $content = null){
+                  // ENFORCES TAG CLOSURE
+                  $unclosed=[];
+                  function tag($type = 'span', $attr = [], $content = null){
+                    global $unclosed;
                     $tag = '<' . $type;
                     foreach($attr as $k => $v){
                       $tag .= ' ' . $k . '="' . $v . '"';
                     }
                     if (is_null($content)){
                       return $tag . ' />';
-                    } else {
+                    } elseif (is_string($content)) {
                       return $tag . '>' . $content . '</' . $type . '>';
+                    } elseif ($content === true){
+                      if (!isset($unclosed[$type])){
+                        $unclosed[$type] = 0;
+                      }
+                      $unclosed[$type] += 1;
+                      return $tag . '>';
                     }
+                  }
+                  function tagClose($type = 'span'){
+                    global $unclosed;
+                    $unclosed[$type] -= 1;
+                    return '</' . $type . '>';
                   }
                   
                   foreach ($videoList as $soc => $career){
@@ -61,31 +75,37 @@
                         'action' => 'displayCareerSingle', $soc, 'video'],
                       ['escape' => false, 'target' => '_blank']);
                     foreach($career['people'] as $pid => $p){
-                      echo '<h4>' . $p['name'] . '</h4>';
-                      echo '<form action="upload" method="post" ' . 
-                        'enctype="multipart/form-data">';
+                      echo tag('h4', [], $p['name']);
+                      echo tag('form', ['action'=>'upload', 'method'=>'post',
+                        'enctype'=>'multipart/form-data'], true);
                       echo '<table class="uploadTable">';
                       foreach ($p['questions'] as $qid => $q){
                         $elemId = 'soc' . $soc . 'p' . $pid . 'q' . $qid . $p['name'];
                         echo '<tr>';
-                        echo '<td><input class="questionText" value="' .
-                          $q[0] . '" type="text" name="' . $elemId . 'text"/></td>';
+                        echo tag('td', [],
+                          tag('input', ['class'=>'questionText', 'value'=>$q[0],
+                            'type'=>'text', 'name'=>$elemId . 'text'])
+                        );
                         echo '<td class="videoFile">';
-                        echo '<input type="file" name="' .
-                          $elemId . '" id="' . $elemId . 'file" ' . 
-                          'onchange="setUpload(\'' . $elemId . '\');"/>';
-                        echo '<label for="' . $elemId . '" id="' .
-                          $elemId . 'label">' . $q[1] . '</label>';
+                        echo tag('input', ['type'=>'file', 'id'=>$elemId . 'file',
+                          'onchange'=>'setUpload(\'' . $elemId . '\');', 'name'=>$elemId]);
+                        echo tag('label', ['for'=>$elemId, 'id'=>$elemId . 'label'], $q[1]);
                         echo '</td>';
-                        echo '<td><input type="button" value="Browse..." ' . 
-                          'onclick="document.getElementById(\'' . $elemId . 'file\').click();" /></td>';
+                        echo tag('td', [] , tag('input', [
+                          'type'=>'button', 'value'=>'Browse...',
+                          'onclick'=>'document.getElementById(\'' . $elemId . 'file\').click();']
+                        ));
                         echo '</tr>';
                       }
                       echo '</table>';
                       echo '<input type="submit">';
-                      echo '</form>';
+                      echo tagClose('form');
                     }
                     echo '</div><br><br>';
+                  }
+                  // TODO: REMOVE 
+                  foreach ($unclosed as $type => $u){
+                    assert($u == 0);
                   }
                   ?>
                 </div>
