@@ -63,17 +63,22 @@ class AdminController extends PagesController
       // TODO: Error page, not uploading anything
       die();
     }
+    // TODO: Delete debugging tool
+    $dryRun = true;
+    
     $connection = ConnectionManager::get($this->datasource);
     $updates = [];
     // Combine changes for question text and video file
     foreach ($this->request->data as $k => $v){
       $matches = [];
       // Extracts data from both video and text fields
-      preg_match('/^soc(..-....)p(\d+)q(\d+)(.*?)(?:text)?$/', $k, $matches);
+      preg_match('/^soc(..-....)p(\d+)q(\d+)(.*?)' . 
+        '(file|text|delete)?$/', $k, $matches);
       $soc = $matches[1];
       $pNum = $matches[2];
       $person = $matches[4];
       $qNum = $matches[3];
+      $inputType = $matches[5];
 
       // TODO: Only populate actual updates (identify unchanged questions)
       // No check added for filesize here due to above
@@ -125,29 +130,28 @@ class AdminController extends PagesController
               $queuedUpdates['orphans'][] = $results[0]['fileName'];
             }
           }
-          // Handle overwrites in query execution
-          $newQuestion = (count($results) == 0);
-          $changedQuestion = false;
-          // So many booleans, but all necessary
+          
+          // Conditional mess, but necessary
           // TODO: Check/redo/clean up (string? enum?)
-          if (!$newQuestion){
-            if ($update['text'] != $results[0]['question']){
-              $setFields['question'] = $update['text'];
-              $changedQuestion = true;
-            }
+          $isInsert = (count($results) == 0);
+          $isBlank = ($update['text'] == '');
+          $changedQuestion = false;
+          if ((!$isInsert && $update['text'] != $results[0]['question'])
+            || ($isInsert && !$isBlank)){
+            $setFields['question'] = $update['text'];
+            $changedQuestion = true;
           }
-          if ($newQuestion || $changedQuestion|| $newFile){
+          if (($isInsert && !$isBlank) || $changedQuestion|| $newFile){
             $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum,
             'person'=>$name, 'questionNum'=>$qNum];
             $queuedUpdates['database'][] = [
               'update'=>$setFields,
               'check'=>$checkedFields,
-              'insert'=>$newQuestion];
+              'insert'=>$isInsert];
           }
         }
       }
     }
-
     foreach ($queuedUpdates['database'] as $stmt){
       // Should be no duplicates, SELECT would have found
       // New socs and ordering handled by client
@@ -160,7 +164,9 @@ class AdminController extends PagesController
             return ':' . $s;
           }, array_keys($fields))) . ')';
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
-        $connection->execute($insert, $fields, $fieldTypes);
+        if (!$dryRun){
+          $connection->execute($insert, $fields, $fieldTypes);
+        }
       } else {
         $update = 'UPDATE Videos SET ' . implode(', ', array_map(function ($s){
           return $s . ' = :' . $s;}, array_keys($stmt['update']))) . 
@@ -168,7 +174,9 @@ class AdminController extends PagesController
           return $s . ' = :' . $s;}, array_keys($stmt['check'])));
         $fields = $stmt['update'] + $stmt['check'];
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
-        $connection->execute($update, $fields, $fieldTypes);
+        if (!$dryRun){
+          $connection->execute($update, $fields, $fieldTypes);
+        }
       }
     }
 
@@ -177,10 +185,19 @@ class AdminController extends PagesController
       $folder = new Folder($move['dir'], true);
       $dest = $folder->path . '/' . $move['name'];
       if (file_exists($dest)){
-        rename($dest, $dest . '#');
-        $queuedUpdates['orphans'][] = $dest . '#';
+        if (!$dryRun){
+          rename($dest, $dest . '#');
+          $queuedUpdates['orphans'][] = $dest . '#';
+        }
       }
-      move_uploaded_file($move['src'], $dest);
+      if (!$dryRun){
+        move_uploaded_file($move['src'], $dest);
+      }
+    }
+    if ($dryRun){
+      debug($this->request->data);
+      debug($updates);
+      debug($queuedUpdates);
     }
 
     $this->set('changes', $queuedUpdates);

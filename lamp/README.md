@@ -19,9 +19,10 @@
     * UNTESTED: execution from outside local directory
     * UNTESTED: nonstandard arguments (globbing, variables, ~, etc)
 * Set Apache documentroot or alias to app/webroot directory
-* Set PHP options (`/etc/php/apache*/php.ini`):
+* Set PHP options (`/etc/php/7.0/apache2/php.ini` on Ubuntu Server 16.04):
   * `upload_max_filesize`, `post_max_size`, `file_uploads`, `max_file_uploads`
   * Ensure `www-data` or webserver user has access to `upload_tmp_dir`
+  * Restart apache server for changes to take effect
 
 # Directory:
 * `cakephp`: Current working directory, contains the implementation of the website in CakePHP 3.x
