@@ -18,7 +18,7 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
-
+use Cake\Datasource\ConnectionManager;
 /**
  * Static content controller
  *
@@ -31,22 +31,30 @@ class UserController extends PagesController
     public function login()
     {	
     	//print("hello world");  
-    	$db = mysqli_connect("localhost", "root", "root", "p3_test"); 
+    	//$db = mysqli_connect("localhost", "root", "root", "p3_test"); 
    
-	//$connection = ConnectionManager::get($this->datasource);
-   
+	$db = ConnectionManager::get($this->datasource);
+  
 	if($_SERVER["REQUEST_METHOD"] == "POST")
     	{
 		$email = ($_POST['email']);
+		$password = ($_POST['password']);
 
-		$sql = sprintf("SELECT email FROM Users WHERE email = '%s'", mysqli_real_escape_string($db, $email));  //i changed id to email
-		$result = mysqli_query($db, $sql);
+		$userFields = ['email'];
 
-		$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+		//$sql = sprintf("SELECT email FROM Users WHERE email = '%s'", mysqli_real_escape_string($db, $email));  //i changed id to email
+		
+		$sql = 'SELECT ' . implode(',', $userFields) . ' FROM Users WHERE email = :email';
+	    	//$sql = 'SELECT email FROM Users WHERE email :email';
+		$result = $db->execute($sql, ['email' => $email])->fetchAll('assoc');
+		
+		//$result = mysqli_query($db, $sql);
+
+		//$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
  	      	//$active = $row['active'];
 		$count = mysqli_num_rows($result);
 		//$count = count($result);
-		$mypassword = mysqli_real_escape_string($db, $_POST['password']);
+		//$mypassword = mysqli_real_escape_string($db, $_POST['password']);
 
 		//for debugging purposes
 		/*
@@ -66,7 +74,7 @@ class UserController extends PagesController
 		*/
 		//end of debugging code
 
-		
+		//$count = 1;	
 		if ($count)
     		{
 			echo 'Username and Password Found';
