@@ -40,44 +40,31 @@ class UserController extends PagesController
 		$email = ($_POST['email']);
 		$password = ($_POST['password']);
 
-		$userFields = ['email'];
+		$userFields = ['email', 'id'];
 
 		//$sql = sprintf("SELECT email FROM Users WHERE email = '%s'", mysqli_real_escape_string($db, $email));  //i changed id to email
 		
 		$sql = 'SELECT ' . implode(',', $userFields) . ' FROM Users WHERE email = :email';
-	    	//$sql = 'SELECT email FROM Users WHERE email :email';
 		$result = $db->execute($sql, ['email' => $email])->fetchAll('assoc');
-		
-		//$result = mysqli_query($db, $sql);
 
-		//$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
- 	      	//$active = $row['active'];
-		$count = mysqli_num_rows($result);
-		//$count = count($result);
-		//$mypassword = mysqli_real_escape_string($db, $_POST['password']);
 
-		//for debugging purposes
-		/*
-		$query="SELECT * FROM Users";
-		$results = mysqli_query($db, $query);
-		while ($row = mysqli_fetch_array($results))
-		{
-			echo '<tr>';
-        		foreach($row as $field)
-			{
-				echo '<td>' . htmlspecialchars($field) . '</td>';
-				echo "\n";
-			}
-			echo "\n";
-			
-		}
-		*/
-		//end of debugging code
-
-		//$count = 1;	
-		if ($count)
+		if (count($result) > 0) //if you found a match of emails
     		{
-			echo 'Username and Password Found';
+			$email = $result['0']['email']; //email of user
+			$id = $result['0']['id']; 	//id of user
+			$passwordFields = ['hash', 'salt'];
+			
+			//query and execution to get the hash and salt for the user with the given id
+			$queryPassword = 'SELECT ' . implode(',', $passwordFields) . ' FROM UserPasswords WHERE id = :id';
+			$resultPassword = $db->execute($queryPassword, ['id' => $id])->fetchAll('assoc');
+			
+			//check if user id has hash and salt (it always should)
+			if(count($resultPassword) > 0){
+				$hashDB = $resultPassword['0']['hash']; //hash from database
+				$saltDB = $resultPassword['0']['salt']; //salt from database
+			}
+
+			//TODO: Display correct profile
 			$this->display("profile");
 		}
 		
@@ -102,6 +89,8 @@ class UserController extends PagesController
 		$lastName = ($_POST['lastName']);
 		$email = ($_POST['email']);
 		//insert the record into the database upon signup
+		//TODO: insert into password table
+		//$sqlPassword = "INSERT INTO UserPasswords (hash, salt) VALUES ($hash, $salt);
 		$sql = "INSERT INTO Users (firstName, lastName, email) VALUES ('$firstName', '$lastName', '$email')";
 
 		if(mysqli_query($db, $sql))
