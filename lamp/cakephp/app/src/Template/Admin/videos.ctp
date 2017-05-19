@@ -20,7 +20,7 @@
 
             <div class="container-fluid">
               <div class="row">
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12 col-md-offset-0">
                   <?php
                   // Helper function to avoid long strings
                   // Tried to use HEREDOC, variable interpolation
@@ -61,6 +61,7 @@
                       $tableId = 'soc' . $soc . 'p' . $pid;
                       echo '<table class="uploadTable" id="' . $tableId . '">';
                       // Rows populated by javascript
+                      echo '</table>';
                       echo '<script>';
                       foreach ($p['questions'] as $qid => $q){
                         echo "addQuestion(null, '" . $tableId . "', " .
@@ -68,7 +69,6 @@
                           addslashes($q[0]) . "', '" . addslashes($q[1]) . "');";
                       }
                       echo '</script>';
-                      echo '</table>';
                       echo '<table class="deleteTable" id="' . $tableId . 'dtable">';
                       echo '</table>';
                       

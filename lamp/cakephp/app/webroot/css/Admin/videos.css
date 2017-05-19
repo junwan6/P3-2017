@@ -18,7 +18,14 @@
   border-collapse: separate;
   border-spacing: 0px 5px;
 }
+.deleteTable {
+  width: 100%;
+}
+.questionRow:hover td{
+  background-color: rgb(220,220,220);
+}
 .questionRow > td{
+  padding: 0px 5px;
 }
 .questionText {
   width: 100%;
@@ -26,12 +33,26 @@
   margin-right: 5px;
   font-size: 12px;
 }
-.videoFile {
+.questionCell {
+}
+.videoCell {
   width: 25%;
   font-size: 8px;
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.uploadCell {
+  width: 2em;
+}
+.deleteCell {
+  width: 2em;
+}
+.dragCell {
+  width: 2em;
+}
+.draggedRow {
+  visibility:hidden;
 }
 
 input[type=file]{
