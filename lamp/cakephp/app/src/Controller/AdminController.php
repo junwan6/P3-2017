@@ -63,12 +63,13 @@ class AdminController extends PagesController
       // TODO: Error page, not uploading anything
       die();
     }
-    // TODO: Delete debugging tool
-    $dryRun = true;
+    // TODO: Delete all references to debugging tool
+    $dryRun = false;
     
     $connection = ConnectionManager::get($this->datasource);
     $updates = [];
     // Combine changes for question text and video file
+    // Ensure multiple changes (ex. delete) do not conflict
     foreach ($this->request->data as $k => $v){
       $matches = [];
       // Extracts data from both video and text fields
@@ -80,8 +81,7 @@ class AdminController extends PagesController
       $qNum = $matches[3];
       $inputType = $matches[5];
 
-      // TODO: Only populate actual updates (identify unchanged questions)
-      // No check added for filesize here due to above
+      // Create per-soc, per-person, questions
       if (!array_key_exists($soc, $updates)){
         $updates[$soc] = [];
       }
@@ -91,16 +91,21 @@ class AdminController extends PagesController
       if (!array_key_exists($qNum, $updates[$soc][$pNum]['questions'])){
         $updates[$soc][$pNum]['questions'][$qNum] = [];
       }
-      // If the input is a file and has been uploaded
-      // TODO: type checking, disallow non-video upload (codecs?)
-      //   $v['type'] is a MIME type (?), get list and check
-      if (is_array($v) && $v['size'] != 0 && $v['error'] == 0){
-        $updates[$soc][$pNum]['questions'][$qNum]
-          = array_replace($updates[$soc][$pNum]['questions'][$qNum], $v);
-      } elseif(is_string($v)) {
-        $updates[$soc][$pNum]['questions'][$qNum]
-          = array_replace($updates[$soc][$pNum]['questions'][$qNum], ['text'=>$v]);
+      
+      // If file upload occurred and succeeded:
+      if ($inputType == 'file' && $v['size'] != 0 && $v['error'] == 0){
+        // Add all upload information
+        $updates[$soc][$pNum]['questions'][$qNum] += $v;
+      // If text field (change check done later)
+      } else if ($inputType == 'text'){
+        // Add question text
+        $updates[$soc][$pNum]['questions'][$qNum]['text'] = $v;
+      // If delete (question, not file)
+      } else if ($inputType == 'delete'){
+        // Set delete field
+        $updates[$soc][$pNum]['questions'][$qNum]['delete'] = true;
       }
+      
     }
     // Validate and construct changes
     // Allow confirmation of update, option to delete orphans
@@ -110,14 +115,29 @@ class AdminController extends PagesController
         $name = $person['name'];
         foreach ($person['questions'] as $qNum => $update){
           // Find existing video file, get current question to see if update necessary
-          $query = 'SELECT fileName, question FROM Videos WHERE soc = :soc AND ' . 
+          $query = 'SELECT * FROM Videos WHERE soc = :soc AND ' . 
             'personNum = :pNum AND person = :person AND questionNum = :qNum';
           $results = $connection->execute($query, ['soc'=>$soc, 'pNum'=>$pNum,
             'person'=>$name, 'qNum'=>$qNum])->fetchAll('assoc');
           
           $setFields = [];
+          $rowExists = (count($results) != 0);
+          // If the row is to be deleted:
+          if (in_array('delete', array_keys($update)) && $rowExists){
+            $queuedUpdates['database'][] = [
+              'set'=>[],
+              // Only checks NOT NULL fields, issues when converting
+              'check'=>['soc'=>$soc, 'personNum'=>$pNum, 'questionNum'=>$qNum],
+              'action'=>'delete'];
+            if ($results[0]['fileName'] != null){
+              $queuedUpdates['orphans'][] = $results[0]['fileName'];
+            }
+            // If file was uploaded, PHP handles deletion of tmp
+            continue;
+          }
           // If a file has been uploaded:
-          $newFile = (count($update) != 1);
+          // Validity of file upload checked beforehand
+          $newFile = (in_array('name', array_keys($update)));
           if ($newFile){
             $dest = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $name;
             $queuedUpdates['filesystem'][] = [
@@ -126,28 +146,26 @@ class AdminController extends PagesController
               'name' => $update['name']
             ];
             $setFields['fileName'] = $update['name'];
-            if (count($results) != 0){
-              $queuedUpdates['orphans'][] = $results[0]['fileName'];
-            }
+            // Orphaned files handled on new file copy
           }
           
           // Conditional mess, but necessary
           // TODO: Check/redo/clean up (string? enum?)
-          $isInsert = (count($results) == 0);
           $isBlank = ($update['text'] == '');
           $changedQuestion = false;
-          if ((!$isInsert && $update['text'] != $results[0]['question'])
-            || ($isInsert && !$isBlank)){
+          if (($rowExists && $update['text'] != $results[0]['question'])
+            || (!$rowExists && !$isBlank)){
             $setFields['question'] = $update['text'];
             $changedQuestion = true;
           }
-          if (($isInsert && !$isBlank) || $changedQuestion|| $newFile){
+          if ((!$rowExists && !$isBlank) || $changedQuestion|| $newFile){
             $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum,
             'person'=>$name, 'questionNum'=>$qNum];
             $queuedUpdates['database'][] = [
-              'update'=>$setFields,
+              'set'=>$setFields,
               'check'=>$checkedFields,
-              'insert'=>$isInsert];
+              'action'=>($rowExists?'update':'insert')
+            ];
           }
         }
       }
@@ -156,26 +174,42 @@ class AdminController extends PagesController
       // Should be no duplicates, SELECT would have found
       // New socs and ordering handled by client
       // Single table, adding new soc same as adding new question
-      if ($stmt['insert']){
-        $fields = $stmt['update'] + $stmt['check'];
-        $insert = 'INSERT INTO Videos ' .
-          '(' . implode(', ', array_keys($fields)) . ') ' . 
-          'VALUES (' . implode(', ', array_map(function ($s){
+      if ($stmt['action'] == 'insert'){
+        $fields = $stmt['set'] + $stmt['check'];
+        $fieldNames = implode(', ', array_keys($fields));
+        $fieldSubs = implode(', ', array_map(function ($s){
             return ':' . $s;
-          }, array_keys($fields))) . ')';
+        }, array_keys($fields)));
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
-        if (!$dryRun){
+        $insert = 'INSERT INTO Videos ' .
+          "({$fieldNames}) VALUES ({$fieldSubs})";
+        if ($dryRun){
+          debug([$insert, $fields, $fieldTypes]);
+        } else {
           $connection->execute($insert, $fields, $fieldTypes);
         }
-      } else {
-        $update = 'UPDATE Videos SET ' . implode(', ', array_map(function ($s){
-          return $s . ' = :' . $s;}, array_keys($stmt['update']))) . 
-          ' WHERE ' . implode(' AND ', array_map(function ($s){
+      } else if ($stmt['action'] == 'update'){
+        $setFields = implode(', ', array_map(function ($s){
+          return $s . ' = :' . $s;}, array_keys($stmt['set'])));
+        $checkFields = implode(' AND ', array_map(function ($s){
           return $s . ' = :' . $s;}, array_keys($stmt['check'])));
-        $fields = $stmt['update'] + $stmt['check'];
+        $fields = $stmt['set'] + $stmt['check'];
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
-        if (!$dryRun){
+        $update = "UPDATE Videos SET {$setFields} WHERE {$checkFields}";
+        if ($dryRun){
+          debug([$update, $fields, $fieldTypes]);
+        } else {
           $connection->execute($update, $fields, $fieldTypes);
+        }
+      } else if ($stmt['action'] == 'delete'){
+        $conditions = implode(' AND ', array_map(function ($s){
+          return $s . ' = :' . $s;}, array_keys($stmt['check'])));
+        $fieldTypes = array_map(function ($s){return gettype($s);}, $stmt['check']);
+        $delete = 'DELETE FROM Videos WHERE ' . $conditions;
+        if ($dryRun){
+          debug([$delete, $stmt['check'], $fieldTypes]);
+        } else {
+          $connection->execute($delete, $stmt['check'], $fieldTypes);
         }
       }
     }
@@ -185,12 +219,16 @@ class AdminController extends PagesController
       $folder = new Folder($move['dir'], true);
       $dest = $folder->path . '/' . $move['name'];
       if (file_exists($dest)){
-        if (!$dryRun){
+        if ($dryRun){
+          debug([$dest, $dest . '#']);
+        } else {
           rename($dest, $dest . '#');
-          $queuedUpdates['orphans'][] = $dest . '#';
+          $queuedUpdates['orphans'][] = basename($dest) . '#';
         }
       }
-      if (!$dryRun){
+      if ($dryRun){
+        debug([$move['src'], $dest]);
+      } else {
         move_uploaded_file($move['src'], $dest);
       }
     }
