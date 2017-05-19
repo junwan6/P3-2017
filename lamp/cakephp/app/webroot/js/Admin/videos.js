@@ -1,8 +1,11 @@
-// TODO: Have javascript/jquery expert go over this
-//   No idea on best practices, language-specific bugs, etc.
-//   Params could be heavily simplified by caller.id instead of separate var
-//   Or rewrite the whole thing, this is a mess
-// - Andrew
+// TODO: Delete and redo this whole thing
+//    I had no idea how javascript or jQuery worked when I started
+// ideas: Instead of update depending on action taken, iterate through and update
+//    use consistent element passing (id vs object vs parent class etc.)
+//    avoid setAttribute+string in favor of existing methods
+//    use HTML as a storage mechanism, row order etc. instead of storing in ids
+
+// TODO: For current form, add rearrange for filename to be sent in POST
 
 // Taken from https://stackoverflow.com/questions/857618/javascript-how-to-extract-filename-from-a-file-input-control
 var extractFileName = function(fullPath){
@@ -20,43 +23,34 @@ var setUpload = function(id){
   var label = document.getElementById(id + 'label');
   label.innerHTML = extractFileName(fileName);
   label.style.color = "Red";
+  var namechange = document.getElementById(id + 'fnamechange');
+  namechange.value = extractFileName(fileName);
 };
 
-var addQuestion = function(caller, tableId, id, person,
+var addQuestion = function(caller, tableId, person,
   questionEntry='', fileName=''){
   var table = document.getElementById(tableId);
+  
+  var id = 1+shiftPrefixQid(table, tableId+'q',
+  function(q){
+    return true;
+  }, function(q){
+    return q;
+  });
+  var dtable = document.getElementById(tableId+'dtable');
+  if (dtable != null){
+    shiftPrefixQid(dtable, tableId+'q',
+    function(q){
+      return true;
+    }, function(q){
+      return q+1;
+    });
+  }
   var nextElemId = tableId + "q" + id + person;
-
+  
   var row = table.insertRow();
   row.className = 'questionRow';
   row.setAttribute('id', nextElemId);
-  
-
-  $(row).draggable({
-    containment: 'parent',
-    cursor: 'move',
-    snap: true,
-    
-    helper: 'clone',
-    start: jQueryDrag
-  });
-  $(row).droppable({
-    over: jQueryOver,
-    drop: jQueryDrop
-  });
-
-/*
-          $(ui.draggable).remove();
-          $(ui.helper).remove();
-*/
-  /*
-  row.setAttribute('ondragover', 'allowDrop(event)');
-  row.setAttribute('ondrop', 'drop(event)');
-  
-  row.setAttribute('draggable', 'true');
-  row.setAttribute('ondragstart', 'drag(event)');
-  */
-  row.style.backgroundColor = 'rgb(240,240,240)';
 
   var question = row.insertCell(0);
   question.className = 'questionCell';
@@ -78,6 +72,7 @@ var addQuestion = function(caller, tableId, id, person,
   fileInput.setAttribute('onchange',
     'setUpload(\'' + nextElemId + '\')');
   fileInput.setAttribute('name', nextElemId+'file');
+  fileInput.setAttribute('autocomplete', 'off');
   file.appendChild(fileInput);
   // If constructed by createElement, the label innerHtml is never set
   // TODO: Find out what's going on, low priority
@@ -85,6 +80,16 @@ var addQuestion = function(caller, tableId, id, person,
     '<label id="' + nextElemId+'label' +
     '" for="' + nextElemId+'file' + '">' +
     fileName + '</label>');
+  var fileNameChange = document.createElement('input');
+  fileNameChange.setAttribute('type', 'text');
+  // Possilble issue with regex matching "file" inside "filename"
+  // Changed to "fnamechange" anyways to be safe
+  fileNameChange.setAttribute('id', nextElemId+'fnamechange');
+  fileNameChange.setAttribute('name', nextElemId+'fnamechange');
+  fileNameChange.setAttribute('value', fileName);
+  fileNameChange.setAttribute('autocomplete', 'off');
+  fileNameChange.style.display = 'none';
+  file.appendChild(fileNameChange);
 
   var upload = row.insertCell(2);
   upload.className = 'uploadCell';
@@ -92,6 +97,7 @@ var addQuestion = function(caller, tableId, id, person,
   uploadButton.setAttribute('type', 'button');
   uploadButton.setAttribute('id', nextElemId+'button');
   uploadButton.setAttribute('value', 'Browse...');
+  uploadButton.setAttribute('autocomplete', 'off');
   uploadButton.setAttribute('onclick',
     'document.getElementById(\'' +
     nextElemId + 'file\').click();');
@@ -117,6 +123,7 @@ var addQuestion = function(caller, tableId, id, person,
   deleteBox.setAttribute('onclick', 'markRowForDelete(this, true, \'' +
     nextElemId + '\');');
   deleteBox.style.display = 'none';
+  deleteBox.setAttribute('autocomplete', 'off');
   deleteCell.appendChild(deleteBox);
   
   var dragCell = row.insertCell(4);
@@ -125,12 +132,6 @@ var addQuestion = function(caller, tableId, id, person,
   dragIcon.classList.add('fa-arrows');
   dragIcon.setAttribute('aria-hidden', 'true');
   dragCell.appendChild(dragIcon);
-
-  if (caller != null){
-    caller.setAttribute('onclick',
-      'addQuestion(this, \'' + tableId + '\', ' +
-      (parseInt(id)+1) + ', \'' + person + '\');');
-  }
 };
 
 var makeElemId = function(vars){
@@ -180,19 +181,22 @@ var markRowForDelete = function(caller, disable, elemId){
   caller.setAttribute('onclick', 'markRowForDelete(this, ' + !disable +
     ', \'' + elemId + '\');');
   var row = caller.parentNode.parentNode;
-  row.style.backgroundColor = 
-    (disable?'rgb(240,200,200)':'rgb(240,240,240)');
-    
-  // Weird behavior, tbody automatically created for uploadTable, not deleteTable
-  // personForm still gets correct child, but goes one level higher
-  var personForm = row.parentNode.parentNode.parentNode;
+
   if (disable){
-    var regex = new RegExp('^soc(..-....)p(\\d+)q(\\d+)(.*?)' + 
-      '(file|label|button|text|delete)?$');
-    var matches = elemId.match(regex);
-    var qId = parseInt(matches[3]);
+    row.classList.add('rowToDelete');
+  } else {
+    row.classList.remove('rowToDelete');
+  }
     
-    var prefix = 'soc' + matches[1] + 'p' + matches[2] + 'q';
+  var regex = new RegExp('^soc(..-....)p(\\d+)q(\\d+)(.*?)' + 
+    '(file|label|button|text|delete)?$');
+  var matches = elemId.match(regex);
+  var qId = parseInt(matches[3]);
+  
+  var prefix = 'soc' + matches[1] + 'p' + matches[2] + 'q';
+
+  if (disable){
+    var personForm = row.parentNode.parentNode.parentNode;
     var maxQid = shiftPrefixQid(personForm, prefix,
       function(teQid){
         return teQid > qId;
@@ -211,128 +215,75 @@ var markRowForDelete = function(caller, disable, elemId){
     personForm.getElementsByClassName('deleteTable')
       [0].appendChild(row);
   } else {
-    var maxQid = shiftPrefixQid(personForm, prefix, function(q){
+    var dtable = row.parentNode;
+    var table = dtable.parentNode
+      .getElementsByClassName('uploadTable')[0];
+    var maxQid = shiftPrefixQid(table, prefix, function(q){
       return true;
     }, function(q){
       return q;
     });
+    console.log(maxQid);
+    shiftPrefixQid(dtable, prefix, function(teQid){
+      return (teQid < qId);
+    }, function(teQid){
+      return teQid+1;
+    });
+// TODO: FIX THIS, delete 3, undelete middle, index off by 1
     shiftPrefixQid(row, prefix, function(teQid){
       return true;
     }, function(teQid){
-      return maxQid;
+      return maxQid+1;
     });
     // For some reason uploadTable has a tbody while deleteTable does not
-    personForm.getElementsByClassName('uploadTable')
-      [0].children[0].appendChild(row);
+    table.children[0].appendChild(row);
   }
 };
 
 // Drag and drop code taken from https://www.w3schools.com/html/html5_draganddrop.asp
 // jQuery drag and drop code from https://stackoverflow.com/questions/3591264/can-table-rows-be-made-draggable
+$(function(){
+  $('.uploadTable').children('tbody').sortable({
+    start: jQueryDrag,
+    stop: jQueryDrop
+  });
+});
 
 function jQueryDrag(event, ui){
-  $(this).data('tableId', $(this).closest('table')[0].id);
-  $(this).data('rowId', $(this)[0].id);
-  $(this).addClass('draggedRow');
+  ui.item.data('rowId', ui.item[0].id);
 }
-function jQueryOver(event, ui){
-  // TODO: do a makeshift Sortable by swapping row locations,
-  console.log(ui);
+function jQueryDragStop(event, ui){
+  $(this).removeClass('draggedRow');
 }
 function jQueryDrop(event, ui){
-  var remTableId = ui.draggable.data('tableId');
-  var dstTableId = $(this).closest('table')[0].id;
-  if (remTableId == dstTableId){
-    // Assumes tbody automatically added as only element of table
-    var table = document.getElementById(remTableId).children[0];
-    var rowId = ui.draggable.data('rowId');
-    var remRow = document.getElementById(rowId);
-    var dstRow = $(this).closest('tr')[0];
-    
-    var regex = new RegExp('^soc(..-....)p(\\d+)q(\\d+)(.*?)' + 
-      '(file|label|button|text|delete)?$');
-    var matches = rowId.match(regex);
-    var remQid = parseInt(matches[3]);
-    matches = dstRow.id.match(regex);
-    var dstQid = parseInt(matches[3]);
-    var prefix = 'soc' + matches[1] + 'p' + matches[2] + 'q';
-    
-    var moveForwards = (remQid < dstQid);
-    shiftPrefixQid(table, prefix, function(teQid){
-      return (moveForwards && (teQid > remQid && teQid <= dstQid))
-        || (!moveForwards && (teQid < remQid && teQid >= dstQid));
-    }, function(teQid){
-      return teQid + (moveForwards?-1:1);
-    });
-    shiftPrefixQid(remRow, prefix, function(teQid){
-      return true;
-    }, function(teQid){
-      return dstQid;
-    });
-    table.insertBefore(remRow, dstRow);
-    if (moveForwards){
-      table.insertBefore(dstRow, remRow);
-    }
-  }
-
-  $(ui.draggable).removeClass('draggedRow');
-  $(ui.helper).remove();
-}
-
-/* HTML 5 drag and drop implementation, abandoned due to inability to set opacity
-// Ported near-identically to jQueryUI above
-
-// Replaced with jQuery closest()
-function getClosestParent(elem, type){
-  while (elem = elem.parentNode){
-    if (elem.tagName.toLowerCase() === type) {
-      return elem;
-    }
+  // Assumes tbody automatically added as only element of table
+  var table = $(this)[0];
+  var rowId = ui.item.data('rowId');
+  var remRow = document.getElementById(rowId);
+  var dstRow = ui.item.prev()[0];
+  
+  var regex = new RegExp('^soc(..-....)p(\\d+)q(\\d+)(.*?)' + 
+    '(file|label|button|text|delete)?$');
+  var matches = rowId.match(regex);
+  var remQid = parseInt(matches[3]);
+  matches = dstRow.id.match(regex);
+  var dstQid = parseInt(matches[3]);
+  var prefix = 'soc' + matches[1] + 'p' + matches[2] + 'q';
+  
+  var moveForwards = (remQid < dstQid);
+  shiftPrefixQid(table, prefix, function(teQid){
+    return (moveForwards && (teQid > remQid && teQid <= dstQid))
+      || (!moveForwards && (teQid < remQid && teQid >= dstQid));
+  }, function(teQid){
+    return teQid + (moveForwards?-1:1);
+  });
+  shiftPrefixQid(remRow, prefix, function(teQid){
+    return true;
+  }, function(teQid){
+    return dstQid;
+  });
+  table.insertBefore(remRow, dstRow);
+  if (moveForwards){
+    table.insertBefore(dstRow, remRow);
   }
 }
-
-function allowDrop(ev){
-  ev.preventDefault();
-}
-function drag(ev) {
-  ev.dataTransfer.setData('tableId', getClosestParent(ev.target, 'table').id);
-  ev.dataTransfer.setData('rowId', ev.target.id);
-}
-function drop(ev) {
-  ev.preventDefault();
-  var remTableId = ev.dataTransfer.getData('tableId');
-  var dstTableId = getClosestParent(ev.target, 'table').id;
-  if (remTableId == dstTableId){
-    // Assumes tbody automatically added as only element of table
-    var table = document.getElementById(remTableId).children[0];
-    var rowId = ev.dataTransfer.getData('rowId');
-    var remRow = document.getElementById(rowId);
-    var dstRow = getClosestParent(ev.target, 'tr');
-    
-    var regex = new RegExp('^soc(..-....)p(\\d+)q(\\d+)(.*?)' + 
-      '(file|label|button|text|delete)?$');
-    var matches = rowId.match(regex);
-    var remQid = parseInt(matches[3]);
-    matches = dstRow.id.match(regex);
-    var dstQid = parseInt(matches[3]);
-    var prefix = 'soc' + matches[1] + 'p' + matches[2] + 'q';
-    
-    var moveForwards = (remQid < dstQid);
-    shiftPrefixQid(table, prefix, function(teQid){
-      return (moveForwards && (teQid > remQid && teQid <= dstQid))
-        || (!moveForwards && (teQid < remQid && teQid >= dstQid));
-    }, function(teQid){
-      return teQid + (moveForwards?-1:1);
-    });
-    shiftPrefixQid(remRow, prefix, function(teQid){
-      return true;
-    }, function(teQid){
-      return dstQid;
-    });
-    table.insertBefore(remRow, dstRow);
-    if (moveForwards){
-      table.insertBefore(dstRow, remRow);
-    }
-  }
-}
-*/

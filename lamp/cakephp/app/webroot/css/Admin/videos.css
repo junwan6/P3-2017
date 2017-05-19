@@ -21,11 +21,20 @@
 .deleteTable {
   width: 100%;
 }
+.questionRow{
+  background-color: rgb(240,240,240);
+}
 .questionRow:hover td{
   background-color: rgb(220,220,220);
 }
 .questionRow > td{
   padding: 0px 5px;
+}
+.rowToDelete {
+  background-color: rgb(240,200,200);
+}
+.rowToDelete:hover td{
+  background-color: rgb(240,200,200);
 }
 .questionText {
   width: 100%;

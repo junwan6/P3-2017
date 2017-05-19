@@ -57,16 +57,17 @@
                         enctype="multipart/form-data" autocomplete="off">';
                       // Every element has full data to allow multiple forms on one page
                       // TODO: Use relative JS ids/classes to allow reuse of ids
-                      //   WILL REQUIRE REWRITE OF AdminController:videoUpload()
+                      //   might require rewrite of AdminController:videoUpload()
+                      //   unless call update() on each DOM change to update ids
                       $tableId = 'soc' . $soc . 'p' . $pid;
                       echo '<table class="uploadTable" id="' . $tableId . '">';
                       // Rows populated by javascript
                       echo '</table>';
                       echo '<script>';
                       foreach ($p['questions'] as $qid => $q){
-                        echo "addQuestion(null, '" . $tableId . "', " .
-                          $qid . ", '" . addslashes($p['name']) . "', '" .
-                          addslashes($q[0]) . "', '" . addslashes($q[1]) . "');";
+                        echo "addQuestion(null, '" . $tableId . "', '" .
+                        addslashes($p['name']) . "', '" . addslashes($q[0]) .
+                        "', '" . addslashes($q[1]) . "');";
                       }
                       echo '</script>';
                       echo '<table class="deleteTable" id="' . $tableId . 'dtable">';
@@ -74,9 +75,8 @@
                       
                       echo tag('input', [
                         'type'=>'button', 'id'=>$tableId . 'add',
-                        'onclick'=>'addQuestion(this, \'' . $tableId . '\', ' .
-                          (max(array_keys($p['questions']))+1) .
-                          ', \'' . $p['name'] . '\');',
+                        'onclick'=>'addQuestion(this, \'' . $tableId .
+                          '\', \'' . $p['name'] . '\');',
                         'value'=>'Add Question'
                       ]);
                       echo '<input type="submit">';

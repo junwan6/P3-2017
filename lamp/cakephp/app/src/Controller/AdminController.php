@@ -74,7 +74,7 @@ class AdminController extends PagesController
       $matches = [];
       // Extracts data from both video and text fields
       preg_match('/^soc(..-....)p(\d+)q(\d+)(.*?)' . 
-        '(file|text|delete)?$/', $k, $matches);
+        '(file|text|delete|fnamechange)?$/', $k, $matches);
       $soc = $matches[1];
       $pNum = $matches[2];
       $person = $matches[4];
@@ -97,6 +97,8 @@ class AdminController extends PagesController
         // Add all upload information
         $updates[$soc][$pNum]['questions'][$qNum] += $v;
       // If text field (change check done later)
+      } else if ($inputType == 'fnamechange'){
+        $updates[$soc][$pNum]['questions'][$qNum]['fileName'] = $v;
       } else if ($inputType == 'text'){
         // Add question text
         $updates[$soc][$pNum]['questions'][$qNum]['text'] = $v;
@@ -147,6 +149,8 @@ class AdminController extends PagesController
             ];
             $setFields['fileName'] = $update['name'];
             // Orphaned files handled on new file copy
+          } else if (in_array('fileName', array_keys($update))){
+            $setFields['fileName'] = $update['fileName'];
           }
           
           // Conditional mess, but necessary
