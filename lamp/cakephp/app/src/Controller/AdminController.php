@@ -20,7 +20,6 @@ use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\Folder;
-use Cake\Filesystem\File;
 
 /**
  * Controller for admin control and overview
@@ -45,7 +44,6 @@ class AdminController extends PagesController
       $qNum = $r['questionNum'];
       $question = $r['question'];
       $fileName = $r['fileName'];
-      // TODO: Simplify if each career will only ever have one person
       if (!array_key_exists($soc, $videoList)){
         $videoList[$soc] = ['title' => $title, 'people' => []];
       }
@@ -64,7 +62,7 @@ class AdminController extends PagesController
       die();
     }
     // TODO: Delete all references to debugging tool
-    $dryRun = false;
+    $dryRun = true;
     
     $connection = ConnectionManager::get($this->datasource);
     $updates = [];
@@ -115,6 +113,8 @@ class AdminController extends PagesController
     foreach ($updates as $soc => $people){
       foreach ($people as $pNum => $person){
         $name = $person['name'];
+        // In case of blanks inbetween updates, assume intentional and add empty
+        $interstitialBlanks = [];
         foreach ($person['questions'] as $qNum => $update){
           // Find existing video file, get current question to see if update necessary
           $query = 'SELECT * FROM Videos WHERE soc = :soc AND ' . 
@@ -137,9 +137,19 @@ class AdminController extends PagesController
             // If file was uploaded, PHP handles deletion of tmp
             continue;
           }
+          if (!$rowExists && $update['text'] == '' && $update['fileName'] == ''){
+            $interstitialBlanks[] = $qNum;
+            continue;
+          }
+          // Conditional mess, but necessary
+          // TODO: Check/redo/clean up (string? enum?)
+          
           // If a file has been uploaded:
           // Validity of file upload checked beforehand
           $newFile = (in_array('name', array_keys($update)));
+          // If the filename has been changed
+          $changedFile = (in_array('fileName', array_keys($update))
+            && !($rowExists && $update['fileName'] == $results[0]['fileName']));
           if ($newFile){
             $dest = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $name;
             $queuedUpdates['filesystem'][] = [
@@ -149,20 +159,21 @@ class AdminController extends PagesController
             ];
             $setFields['fileName'] = $update['name'];
             // Orphaned files handled on new file copy
-          } else if (in_array('fileName', array_keys($update))){
+          } else if ($changedFile){
             $setFields['fileName'] = $update['fileName'];
           }
           
-          // Conditional mess, but necessary
-          // TODO: Check/redo/clean up (string? enum?)
           $isBlank = ($update['text'] == '');
           $changedQuestion = false;
           if (($rowExists && $update['text'] != $results[0]['question'])
             || (!$rowExists && !$isBlank)){
             $setFields['question'] = $update['text'];
             $changedQuestion = true;
+          } else if (!$rowExists){
+            $setFields['question'] = $update['text'];
           }
-          if ((!$rowExists && !$isBlank) || $changedQuestion|| $newFile){
+          if ((!$rowExists && !$isBlank) || $changedQuestion 
+            || $newFile || $changedFile){
             $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum,
             'person'=>$name, 'questionNum'=>$qNum];
             $queuedUpdates['database'][] = [
@@ -170,6 +181,15 @@ class AdminController extends PagesController
               'check'=>$checkedFields,
               'action'=>($rowExists?'update':'insert')
             ];
+            foreach ($interstitialBlanks as $ib){
+              $queuedUpdates['database'][] = [
+                'set'=>['fileName'=>'','question'=>'',
+                  'questionNum'=>$ib],
+                'check'=>array_diff_key($checkedFields, ['questionNum'=>0]),
+                'action'=>'insert'
+              ];
+            }
+            $interstitialBlanks = [];
           }
         }
       }

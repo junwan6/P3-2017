@@ -42,7 +42,13 @@
   margin-right: 5px;
   font-size: 12px;
 }
+.fileNameChange {
+  width: 100%;
+}
 .questionCell {
+}
+td.fileNameTypeCell {
+  padding-left: 1em;
 }
 .videoCell {
   width: 25%;

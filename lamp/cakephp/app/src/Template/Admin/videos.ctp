@@ -73,6 +73,8 @@
                       echo '<table class="deleteTable" id="' . $tableId . 'dtable">';
                       echo '</table>';
                       
+                      echo '<table class="controlsTable">';
+                      echo '<tr>';
                       echo tag('input', [
                         'type'=>'button', 'id'=>$tableId . 'add',
                         'onclick'=>'addQuestion(this, \'' . $tableId .
@@ -80,6 +82,8 @@
                         'value'=>'Add Question'
                       ]);
                       echo '<input type="submit">';
+                      echo '</tr>';
+                      echo '</table>';
                       echo '</form>';
                     }
                     echo '</div><br><br>';

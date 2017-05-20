@@ -4,8 +4,7 @@
 //    use consistent element passing (id vs object vs parent class etc.)
 //    avoid setAttribute+string in favor of existing methods
 //    use HTML as a storage mechanism, row order etc. instead of storing in ids
-
-// TODO: For current form, add rearrange for filename to be sent in POST
+//    If only one career will be displayed at one time, more simplifications
 
 // Taken from https://stackoverflow.com/questions/857618/javascript-how-to-extract-filename-from-a-file-input-control
 var extractFileName = function(fullPath){
@@ -26,6 +25,43 @@ var setUpload = function(id){
   var namechange = document.getElementById(id + 'fnamechange');
   namechange.value = extractFileName(fileName);
 };
+
+// Taken from https://stackoverflow.com/questions/829571/clearing-an-html-file-upload-field-via-javascript
+var clearFileInput = function(input){
+  $("#fileInput").replaceWith($("#fileInput").val('').clone(true));
+}
+
+var swapFileNameType = function(id){
+  var row = document.getElementById(id);
+  var rowUpload = document.getElementById(id+'file');
+  var rowButton = document.getElementById(id+'button');
+  var rowLabel = document.getElementById(id+'label');
+  var disable = rowButton.disabled;
+  rowUpload.disabled = !disable;
+  rowButton.disabled = !disable;
+  rowLabel.disabled = !disable;
+  rowButton.style.display = (!disable?'none':'initial');
+  rowLabel.style.display = (!disable?'none':'initial');
+
+  var fnamechange = document.getElementById(id+'fnamechange');
+  fnamechange.style.display = (disable?'none':'initial');
+  var swapIcon = document.getElementById(id+'fntype');
+  var leftCell = row.getElementsByClassName('videoCell')[0];
+  var rightCell = row.getElementsByClassName('uploadCell')[0];
+  if (disable){
+    fnamechange.value = rowLabel.innerHTML;
+    swapIcon.classList.add('fa-pencil-square-o');
+    swapIcon.classList.remove('fa-upload');
+    leftCell.setAttribute('colspan', '1');
+    // Setting colspan to 0 still takes space
+    rightCell.style.display = 'initial';
+  } else {
+    swapIcon.classList.remove('fa-pencil-square-o');
+    swapIcon.classList.add('fa-upload');
+    leftCell.setAttribute('colspan', '2');
+    rightCell.style.display = 'none';
+  }
+}
 
 var addQuestion = function(caller, tableId, person,
   questionEntry='', fileName=''){
@@ -52,7 +88,7 @@ var addQuestion = function(caller, tableId, person,
   row.className = 'questionRow';
   row.setAttribute('id', nextElemId);
 
-  var question = row.insertCell(0);
+  var question = row.insertCell(-1);
   question.className = 'questionCell';
   var questionText = document.createElement('input');
   questionText.setAttribute('type', 'text');
@@ -62,7 +98,18 @@ var addQuestion = function(caller, tableId, person,
   questionText.setAttribute('name', nextElemId+'text');
   question.appendChild(questionText);
   
-  var file = row.insertCell(1);
+  var fileEdit = row.insertCell(-1);
+  fileEdit.className = 'fileNameTypeCell';
+  var fileNameTypeIcon = document.createElement('i');
+  fileNameTypeIcon.classList.add('fa');
+  fileNameTypeIcon.classList.add('fa-pencil-square-o');
+  fileNameTypeIcon.setAttribute('aria-hidden', 'true');
+  fileNameTypeIcon.setAttribute('id', nextElemId+'fntype');
+  fileNameTypeIcon.setAttribute('onclick',
+    'swapFileNameType("' + nextElemId + '");');
+  fileEdit.appendChild(fileNameTypeIcon);
+
+  var file = row.insertCell(-1);
   file.className = 'videoCell';
   var fileInput = document.createElement('input');
   fileInput.setAttribute('type', 'file');
@@ -84,6 +131,7 @@ var addQuestion = function(caller, tableId, person,
   fileNameChange.setAttribute('type', 'text');
   // Possilble issue with regex matching "file" inside "filename"
   // Changed to "fnamechange" anyways to be safe
+  fileNameChange.classList.add('fileNameChange');
   fileNameChange.setAttribute('id', nextElemId+'fnamechange');
   fileNameChange.setAttribute('name', nextElemId+'fnamechange');
   fileNameChange.setAttribute('value', fileName);
@@ -91,7 +139,7 @@ var addQuestion = function(caller, tableId, person,
   fileNameChange.style.display = 'none';
   file.appendChild(fileNameChange);
 
-  var upload = row.insertCell(2);
+  var upload = row.insertCell(-1);
   upload.className = 'uploadCell';
   var uploadButton = document.createElement('input');
   uploadButton.setAttribute('type', 'button');
@@ -103,7 +151,7 @@ var addQuestion = function(caller, tableId, person,
     nextElemId + 'file\').click();');
   upload.appendChild(uploadButton);
   
-  var deleteCell = row.insertCell(3);
+  var deleteCell = row.insertCell(-1);
   deleteCell.className = 'deleteCell';
   var deleteIcon = document.createElement('i');
   deleteIcon.classList.add('fa');
@@ -126,11 +174,12 @@ var addQuestion = function(caller, tableId, person,
   deleteBox.setAttribute('autocomplete', 'off');
   deleteCell.appendChild(deleteBox);
   
-  var dragCell = row.insertCell(4);
+  var dragCell = row.insertCell(-1);
   var dragIcon = document.createElement('i');
   dragIcon.classList.add('fa');
   dragIcon.classList.add('fa-arrows');
   dragIcon.setAttribute('aria-hidden', 'true');
+  dragIcon.setAttribute('id', nextElemId+'drag');
   dragCell.appendChild(dragIcon);
 };
 
@@ -178,14 +227,24 @@ var shiftPrefixQid = function(elem, prefix, cond, op){
 var markRowForDelete = function(caller, disable, elemId){
   document.getElementById(elemId+'text').disabled = disable;
   document.getElementById(elemId+'button').disabled = disable;
+  document.getElementById(elemId+'file').disabled = disable;
+  document.getElementById(elemId+'fntype').style.visibility
+    = (disable?'hidden':'initial');
+  document.getElementById(elemId+"drag").style.visibility
+    = (disable?'hidden':'initial');
   caller.setAttribute('onclick', 'markRowForDelete(this, ' + !disable +
     ', \'' + elemId + '\');');
   var row = caller.parentNode.parentNode;
 
+  var rowDeleteIcon = document.getElementById(elemId+"dicon");
   if (disable){
     row.classList.add('rowToDelete');
+    rowDeleteIcon.classList.remove("fa-trash-o");
+    rowDeleteIcon.classList.add("fa-trash");
   } else {
     row.classList.remove('rowToDelete');
+    rowDeleteIcon.classList.remove("fa-trash");
+    rowDeleteIcon.classList.add("fa-trash-o");
   }
     
   var regex = new RegExp('^soc(..-....)p(\\d+)q(\\d+)(.*?)' + 
@@ -223,7 +282,6 @@ var markRowForDelete = function(caller, disable, elemId){
     }, function(q){
       return q;
     });
-    console.log(maxQid);
     shiftPrefixQid(dtable, prefix, function(teQid){
       return (teQid < qId);
     }, function(teQid){
@@ -249,13 +307,10 @@ $(function(){
   });
 });
 
-function jQueryDrag(event, ui){
+var jQueryDrag = function (event, ui){
   ui.item.data('rowId', ui.item[0].id);
 }
-function jQueryDragStop(event, ui){
-  $(this).removeClass('draggedRow');
-}
-function jQueryDrop(event, ui){
+var jQueryDrop = function (event, ui){
   // Assumes tbody automatically added as only element of table
   var table = $(this)[0];
   var rowId = ui.item.data('rowId');
