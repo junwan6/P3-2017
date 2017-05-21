@@ -36,6 +36,9 @@
   width: 1px;
   white-space: nowrap;
 }
+.tableToDelete{
+  background-color: rgb(240,210,210);
+}
 
 .personTable, .unpersonTable {
   width: 100%;

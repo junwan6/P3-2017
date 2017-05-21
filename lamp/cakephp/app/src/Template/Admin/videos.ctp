@@ -23,7 +23,8 @@
                 <div class="col-md-12 col-md-offset-0">
                   <?php
                   foreach ($videoList as $soc => $career){
-                    echo '<form action="upload" method="post" ' .
+                    $uploadForm = $this->Url->build(['controller'=>'Admin', 'action'=>'upload']);
+                    echo '<form action="' . $uploadForm . '" method="post" ' .
                       'enctype="multipart/form-data" autocomplete="off">';
                     
                     echo '<div class="careerVideos">';

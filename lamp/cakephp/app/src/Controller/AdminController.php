@@ -28,29 +28,66 @@ use Cake\Filesystem\Folder;
 // TODO: VERIFY USER ON ALL ACTIONS
 class AdminController extends PagesController
 {
-  public function displayVideos(){
+  public function displayVideos(...$careers){
     $connection = ConnectionManager::get($this->datasource);
-    $query = 'SELECT Occupation.title, Videos.* FROM ' . 
-      'Videos INNER JOIN Occupation ON Videos.soc = Occupation.soc';
-    
-    $results = $connection->execute($query)->fetchAll('assoc');
-    
     $videoList = [];
-    foreach($results as $r){
-      $soc = $r['soc'];
-      $title = $r['title'];
-      $pNum = $r['personNum'];
-      $person = $r['person'];
-      $qNum = $r['questionNum'];
-      $question = $r['question'];
-      $fileName = $r['fileName'];
-      if (!array_key_exists($soc, $videoList)){
-        $videoList[$soc] = ['title' => $title, 'people' => []];
+    // Routing enforces at least 1 argument
+    if (count($careers) == 1 && $careers[0] == 'all'){
+      $query = 'SELECT Occupation.title, Videos.* FROM ' . 
+        'Videos INNER JOIN Occupation ON Videos.soc = Occupation.soc';
+      
+      $results = $connection->execute($query)->fetchAll('assoc');
+      
+      foreach($results as $r){
+        $soc = $r['soc'];
+        $title = $r['title'];
+        $pNum = $r['personNum'];
+        $person = $r['person'];
+        $qNum = $r['questionNum'];
+        $question = $r['question'];
+        $fileName = $r['fileName'];
+        if (!array_key_exists($soc, $videoList)){
+          $videoList[$soc] = ['title' => $title, 'people' => []];
+        }
+        if (!array_key_exists($pNum, $videoList[$soc]['people'])){
+          $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
+        }
+        $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
       }
-      if (!array_key_exists($pNum, $videoList[$soc]['people'])){
-        $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
+    // Following allows multiple socs to be displayed on page access
+    } else {
+      foreach($careers as $c){
+        if (preg_match('/^[0-9]{2}-[0-9]{4}$/', $c) == 1){
+          $query = 'SELECT * FROM Videos WHERE soc = :soc';
+          $results = $connection->execute($query, ['soc'=>$c])->fetchAll('assoc');
+          $noVideos = true;
+          
+          $query = 'SELECT title FROM Occupation WHERE soc = :soc';
+          $occupation = $connection->execute($query, ['soc'=>$c])->fetchAll('assoc');
+          $title = (count($occupation) == 0?'No Career Data':$occupation[0]['title']);
+          foreach($results as $r){
+            $pNum = $r['personNum'];
+            $person = $r['person'];
+            $qNum = $r['questionNum'];
+            $question = $r['question'];
+            $fileName = $r['fileName'];
+            if (!array_key_exists($c, $videoList)){
+              $videoList[$c] = ['title' => $title, 'people' => []];
+            }
+            if (!array_key_exists($pNum, $videoList[$c]['people'])){
+              $videoList[$c]['people'][$pNum] = ['name' => $person, 'questions' => []];
+            }
+            $videoList[$c]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
+          }
+          if (count($results) == 0){
+            $videoList[$c] = ['title' => $title, 'people' => [
+              ['name' => '', 'questions' => [
+                ['', '']
+              ]]
+            ]];
+          }
+        }
       }
-      $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
     }
     $this->set('videoList', $videoList);
     $this->display('videos');

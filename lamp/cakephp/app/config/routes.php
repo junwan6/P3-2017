@@ -158,9 +158,13 @@ Router::scope('/', function (RouteBuilder $routes) {
      * Connect administrator actions to AdminController
      * TODO: Implement AdminController
      */
-    // Display list of videos currently present, with ability to replace and add
-    $routes->connect('/admin/videos', ['controller' => 'admin',
-      'action' => 'displayVideos']);
+    // Above, for a specific soc code (no support planned for set of socs)
+    $routes->connect('/admin/videos',
+      ['controller' => 'admin', 'action' => 'displayVideos', 'all']);
+    // Above, for a specific soc code or set of socs
+    // Cannot enforce regex on multiple args, processing done in controller
+    $routes->connect('/admin/videos/*',
+      ['controller' => 'admin', 'action' => 'displayVideos']);
     // Back-end page/AJAX to receive a file, create a folder, and update rows
     $routes->connect('/admin/upload', ['controller' => 'admin',
       'action' => 'uploadVideos']);

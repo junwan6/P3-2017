@@ -1,0 +1,43 @@
+Empty set and set of eps
+	L = {a,b,c}
+	L^2 = {aa,ab,ac,ba,bb,bc,ca,cb,cc}
+		Second power
+	LxL = {(a,a),(a,b),(a,c),(b,a)...}
+		Cartesian product
+	{}x{} = {}
+	{}*L = {}
+	{}xL = {}
+		No elements, nothing performs *
+	L*{eps} = L = {eps}*L
+		single element, eps * all in L
+	Lx{eps} = {(a,eps),(b,eps),(c,eps)}
+	P(A): Power set of A
+		All subsets of A
+		P({a,b,c}) = {{}, {a}, {b}, {c}, {a,b}, {a,c}, {b,c}, {a,b,c}}
+		
+Complement: in relation to other set
+	B is subset of A
+	Complement of B = B^_ = A\B = A-B
+	A = {a,b}
+	B = {a,c}
+	A intersect B = {a}
+	A untion B = {a,b,c}
+	
+Kleene Starr Closure
+	L* = union of all L^i where i is a member of natural numbers
+		natural numbers: nonnegative numbers
+	{}* = {eps}
+		L^0 always {eps}
+	L+ = union of all L^i without L^0
+	Unary operators, takes one argument
+	
+Grading: length
+	A polynomial is graded by number of degrees
+	
+L: All strings that end in 0
+	(Sigma*)0
+
+L: All strings that contain 01 or 10
+	Sigma = {0, 1}
+	(Sigma*)(01)(Sigma*) union (Sigma*)(10)(Sigma*)
+	Sigma* \ (0* union 1*)
