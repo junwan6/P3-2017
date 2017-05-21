@@ -22,71 +22,49 @@
               <div class="row">
                 <div class="col-md-12 col-md-offset-0">
                   <?php
-                  // Helper function to avoid long strings
-                  // Tried to use HEREDOC, variable interpolation
-                  // Failed due to HEREDOC requiring EOT without indent
-                  // Failed due to {$var} syntax requiring " while HTML uses "
-                  function tag($type = 'span', $attr = [], $content = null){
-                    $tag = '<' . $type;
-                    foreach($attr as $k => $v){
-                      $tag .= ' ' . $k . '="' . $v . '"';
-                    }
-                    if (is_null($content)){
-                      return $tag . ' />' . "\n";
-                    } elseif (is_string($content)) {
-                      return $tag . '>' . $content . '</' . $type . '>' . "\n";
-                    } elseif ($content === true){
-                      if (!isset($unclosed[$type])){
-                        $unclosed[$type] = 0;
-                      }
-                      $unclosed[$type] += 1;
-                      return $tag . '>' . "\n";
-                    }
-                  }
-                  
                   foreach ($videoList as $soc => $career){
-                    echo '<div class="careerVideos" id="' . $soc . '">';
+                    echo '<form action="upload" method="post" ' .
+                      'enctype="multipart/form-data" autocomplete="off">';
+                    
+                    echo '<div class="careerVideos">';
                     echo $this->Html->link(
                       $career['title'] . '<p class="socCode">' . $soc . '</p>',
                       ['controller' => 'career',
                         'action' => 'displayCareerSingle', $soc, 'video'],
                       ['escape' => false, 'target' => '_blank']);
+                    // Person table folded into javascript addPerson
+                    // Question row folded into javascript addQuestion
+                    // For creation of new row and new table
+                    echo '<table class="personTable" id="' . $soc . '">';
+                    echo '</table>';
                     foreach($career['people'] as $pid => $p){
-                      echo "<h4>{$p['name']}</h4>";
-                      echo '<form action="upload" method="post"
-                        enctype="multipart/form-data" autocomplete="off">';
-                      // Every element has full data to allow multiple forms on one page
-                      // TODO: Use relative JS ids/classes to allow reuse of ids
-                      //   might require rewrite of AdminController:videoUpload()
-                      //   unless call update() on each DOM change to update ids
-                      $tableId = 'soc' . $soc . 'p' . $pid;
-                      echo '<table class="uploadTable" id="' . $tableId . '">';
-                      // Rows populated by javascript
-                      echo '</table>';
                       echo '<script>';
-                      foreach ($p['questions'] as $qid => $q){
-                        echo "addQuestion(null, '" . $tableId . "', '" .
-                        addslashes($p['name']) . "', '" . addslashes($q[0]) .
-                        "', '" . addslashes($q[1]) . "');";
-                      }
+                        echo "addPerson('" . $soc . "', '" . addslashes($p['name']) .
+                        "', '" . addslashes(json_encode($p['questions'])) . "');";
                       echo '</script>';
-                      echo '<table class="deleteTable" id="' . $tableId . 'dtable">';
-                      echo '</table>';
-                      
-                      echo '<table class="controlsTable">';
-                      echo '<tr>';
-                      echo tag('input', [
-                        'type'=>'button', 'id'=>$tableId . 'add',
-                        'onclick'=>'addQuestion(this, \'' . $tableId .
-                          '\', \'' . $p['name'] . '\');',
-                        'value'=>'Add Question'
-                      ]);
-                      echo '<input type="submit">';
-                      echo '</tr>';
-                      echo '</table>';
-                      echo '</form>';
                     }
-                    echo '</div><br><br>';
+                    
+                    echo '<table class="unpersonTable" id="soc'
+                      . $soc . 'untable"></table>';
+                      
+                    echo '<table class="headerTable">';
+                    echo '<tr>';
+                    echo '<td class="addPersonCell">' . 
+                      '<span style="width:100%" class="cellspan">' . 
+                      '<input type="text" class="addPersonText" ' .
+                      'id="' . $soc . 'add" />' . 
+                      '</span>';
+                      
+                    echo '<span class="cellspan"><input type="button" ' .
+                      'value="Add Person" id="addPersonButton" onclick="' .
+                      'addPersonFromBox(\'' . $soc . '\');"' .
+                      '"/></span></td>';
+                    echo '<td id="submitAllCell"><input type="submit"/></td>';
+                    echo '</tr>';
+                    echo '</table>';
+                    echo '</div>';
+                    echo '</form>';
+                    echo '<br><br>';
                   }
                   ?>
                 </div>

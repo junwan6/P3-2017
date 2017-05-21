@@ -62,22 +62,38 @@ class AdminController extends PagesController
       die();
     }
     // TODO: Delete all references to debugging tool
-    $dryRun = true;
+    $dryRun = false;
     
     $connection = ConnectionManager::get($this->datasource);
     $updates = [];
+    $nameUpdates = [];
     // Combine changes for question text and video file
     // Ensure multiple changes (ex. delete) do not conflict
     foreach ($this->request->data as $k => $v){
       $matches = [];
       // Extracts data from both video and text fields
-      preg_match('/^soc(..-....)p(\d+)q(\d+)(.*?)' . 
+      preg_match('/^soc(..-....)p(\d+)(?:q(\d+)(.*?)|(pnamechange))' . 
         '(file|text|delete|fnamechange)?$/', $k, $matches);
       $soc = $matches[1];
       $pNum = $matches[2];
-      $person = $matches[4];
-      $qNum = $matches[3];
-      $inputType = $matches[5];
+      $person = null;
+      $qNum = null;
+      $inputType = null;
+      if ($matches[5] == 'pnamechange'){
+        if ($v != 'UNEDITED'){
+          // All other updates are name-independent, change should not affect
+          $nameUpdates[] = [
+            'set'=>['person'=>$v],
+            'check'=>['soc'=>$soc, 'personNum'=>$pNum],
+            'action'=>'update',
+          ];
+        }
+        continue;
+      } else {
+        $person = $matches[4];
+        $qNum = $matches[3];
+        $inputType = $matches[6];
+      }
 
       // Create per-soc, per-person, questions
       if (!array_key_exists($soc, $updates)){
@@ -105,7 +121,6 @@ class AdminController extends PagesController
         // Set delete field
         $updates[$soc][$pNum]['questions'][$qNum]['delete'] = true;
       }
-      
     }
     // Validate and construct changes
     // Allow confirmation of update, option to delete orphans
@@ -117,13 +132,16 @@ class AdminController extends PagesController
         $interstitialBlanks = [];
         foreach ($person['questions'] as $qNum => $update){
           // Find existing video file, get current question to see if update necessary
-          $query = 'SELECT * FROM Videos WHERE soc = :soc AND ' . 
-            'personNum = :pNum AND person = :person AND questionNum = :qNum';
-          $results = $connection->execute($query, ['soc'=>$soc, 'pNum'=>$pNum,
-            'person'=>$name, 'qNum'=>$qNum])->fetchAll('assoc');
-          
+		  // If pNum not in table, return 2 rows
+		  // Primary key enforces all others return 1 or 0
+          $query = 'SELECT * FROM Videos WHERE (soc = :soc AND ' . 
+            'personNum = :pNum AND questionNum = :qNum) ' .
+			'OR :pNum NOT IN (SELECT personNum FROM Videos WHERE soc = :soc) LIMIT 2';
+          $results = $connection->execute($query, ['soc'=>$soc,
+            'pNum'=>$pNum, 'qNum'=>$qNum])->fetchAll('assoc');
           $setFields = [];
-          $rowExists = (count($results) != 0);
+          $rowExists = (count($results) == 1);
+          $newPerson = (count($results) == 2);
           // If the row is to be deleted:
           if (in_array('delete', array_keys($update)) && $rowExists){
             $queuedUpdates['database'][] = [
@@ -137,7 +155,8 @@ class AdminController extends PagesController
             // If file was uploaded, PHP handles deletion of tmp
             continue;
           }
-          if (!$rowExists && $update['text'] == '' && $update['fileName'] == ''){
+          if (!$rowExists && $update['text'] == ''
+            && $update['fileName'] == '' && !($newPerson && $qNum == 0)){
             $interstitialBlanks[] = $qNum;
             continue;
           }
@@ -159,7 +178,7 @@ class AdminController extends PagesController
             ];
             $setFields['fileName'] = $update['name'];
             // Orphaned files handled on new file copy
-          } else if ($changedFile){
+          } else if ($changedFile || $newPerson){
             $setFields['fileName'] = $update['fileName'];
           }
           
@@ -169,13 +188,12 @@ class AdminController extends PagesController
             || (!$rowExists && !$isBlank)){
             $setFields['question'] = $update['text'];
             $changedQuestion = true;
-          } else if (!$rowExists){
+          } else if (!$rowExists || $newPerson){
             $setFields['question'] = $update['text'];
           }
           if ((!$rowExists && !$isBlank) || $changedQuestion 
-            || $newFile || $changedFile){
-            $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum,
-            'person'=>$name, 'questionNum'=>$qNum];
+            || $newFile || $changedFile || $newPerson){
+            $checkedFields = ['soc'=>$soc, 'personNum'=>$pNum, 'questionNum'=>$qNum];
             $queuedUpdates['database'][] = [
               'set'=>$setFields,
               'check'=>$checkedFields,
@@ -194,6 +212,9 @@ class AdminController extends PagesController
         }
       }
     }
+    
+    // Appends name updates to end
+    $queuedUpdates['database'] = array_merge($queuedUpdates['database'], $nameUpdates);
     foreach ($queuedUpdates['database'] as $stmt){
       // Should be no duplicates, SELECT would have found
       // New socs and ordering handled by client

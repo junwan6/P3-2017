@@ -13,14 +13,39 @@
 .socCode {
   font-size: 12px;
 }
+.headerTable{
+  width: 100%;
+  text-align: right;
+}
+.cellspan {
+  display: table-cell;
+}
+.addPersonCell {
+  width: 50%;
+  text-align: left;
+}
+.addPersonText {
+  width: 100%;
+}
+.addPersonButton {
+}
+.submitAllCell {
+  width: 50%;
+}
+.orderCell{
+  width: 1px;
+  white-space: nowrap;
+}
+
+.personTable, .unpersonTable {
+  width: 100%;
+}
 .uploadTable {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0px 5px;
 }
-.deleteTable {
-  width: 100%;
-}
+
 .questionRow{
   background-color: rgb(240,240,240);
 }
@@ -47,11 +72,10 @@
 }
 .questionCell {
 }
-td.fileNameTypeCell {
+.fileNameTypeCell {
   padding-left: 1em;
 }
 .videoCell {
-  width: 25%;
   font-size: 8px;
   text-align: right;
   overflow: hidden;
@@ -60,14 +84,33 @@ td.fileNameTypeCell {
 .uploadCell {
   width: 2em;
 }
+
+.deleteTable {
+  width: 100%;
+}
 .deleteCell {
   width: 2em;
 }
+
 .dragCell {
   width: 2em;
 }
 .draggedRow {
   visibility:hidden;
+}
+
+.controlsTable {
+  text-align: left;
+  width: 100%;
+}
+.questionAddCell {
+  font-size: 12px;
+  padding-left: 1em;
+  text-align: left;
+}
+.submitCell {
+  padding-right: 2em;
+  text-align: right;
 }
 
 input[type=file]{
