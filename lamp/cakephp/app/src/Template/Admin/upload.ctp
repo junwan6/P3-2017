@@ -19,7 +19,7 @@
 
             <div class="container-fluid">
               <div class="row">
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12 col-md-offset-0">
                   <h1 style="color:black">TODO: Changes overview</h1>
                   <?php
                     if ($dryRun){

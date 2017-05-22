@@ -58,6 +58,9 @@
   overflow-y: auto;
   height: 200px;
 }
-.videoRow {
+.videosRow {
   font-size: 12px;
+}
+.videosRow:hover {
+  background-color: rgb(240, 240, 240);
 }

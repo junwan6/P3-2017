@@ -28,7 +28,8 @@
                         <tr><td colspan="4">
                           <span style="width:100%" class="cellspan">
                             <input type="text" id="inputSOC"
-                              placeholder="or navigate by search bar">
+                              placeholder="enter a SOC or list of SOCs">
+                              <!-- placeholder="or navigate by search bar"> -->
                           </span>
                           <?php
                             echo '<span class="cellspan">' .
@@ -48,7 +49,7 @@
                             $videoSum = array_sum(array_map(function($p){
                               return count($p['questions']);
                             }, $career['people']));
-                            echo '<tr class="videoRow">';
+                            echo '<tr class="videosRow" onclick="addSOC(\'' . $soc . '\');">';
                             echo "<td>{$soc}</td><td>{$career['title']}</td>" . 
                               "<td>{$peopleString}</td><td>{$videoSum}</td>";
                             echo '</tr>';

@@ -207,7 +207,10 @@ class AdminController extends PagesController
           $rowExists = (count($results) == 1);
           $newPerson = (count($results) == 2);
           // If the row is to be deleted:
-          if (in_array('delete', array_keys($update)) && $rowExists){
+          if (in_array('delete', array_keys($update))){
+            if ($rowExists){
+              continue;
+            }
             $queuedUpdates['database'][] = [
               'set'=>[],
               // Only checks NOT NULL fields, issues when converting
