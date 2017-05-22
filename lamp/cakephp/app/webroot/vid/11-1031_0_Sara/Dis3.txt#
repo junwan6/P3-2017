@@ -1,8 +1,0 @@
-NFA to DFA
-	DFA states: Power set of NFA
-	Starting state: Set of epsilon closure of starting state
-	Accepting states: All sets containing an accepting state
-	Transitions:
-		To set of states reachable by symbol
-		Transitions out of set, union reachable
-	Remove unreachacle states (trace from starting state)

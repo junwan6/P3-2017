@@ -58,6 +58,8 @@ class AdminController extends PagesController
   public function displayVideos(...$careers){
     $connection = ConnectionManager::get($this->datasource);
     $videoList = [];
+    $orphans = [];
+    $deadLinks = [];
     // Routing enforces at least 1 argument
     if (count($careers) == 1 && $careers[0] == 'all'){
       $query = 'SELECT Occupation.title, Videos.* FROM ' . 
@@ -80,8 +82,42 @@ class AdminController extends PagesController
           $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
         }
         $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
+        
+        // Check to see if file exists
+        $path = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $person;
+        $folder = new Folder($path, true);
+        $dest = $folder->path . '/' . $fileName;
+        if (!file_exists($dest)){
+          if (!array_key_exists($soc, $deadLinks)){
+            $deadLinks[$soc] = ['title' => $title, 'people' => []];
+          }
+          if (!array_key_exists($pNum, $deadLinks[$soc]['people'])){
+            $deadLinks[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
+          }
+          $deadLinks[$soc]['people'][$pNum]['files'][$qNum] = $fileName;
+        }
+        // Populate files in directory if nonexistant, remove all matching files
+        
+        if (!array_key_exists($soc, $orphans)){
+          $orphans[$soc] = ['title' => $title, 'people' => []];
+        }
+        if (!array_key_exists($pNum, $orphans[$soc]['people'])){
+          $orphans[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
+          $orphans[$soc]['people'][$pNum]['files'] = scandir($folder->path);
+          $orphans[$soc]['people'][$pNum]['files'] = 
+            array_diff($orphans[$soc]['people'][$pNum]['files'], ['.', '..']);
+        }
+        $orphans[$soc]['people'][$pNum]['files'] = 
+          array_diff($orphans[$soc]['people'][$pNum]['files'], [$fileName]);
+        if (count($orphans[$soc]['people'][$pNum]['files']) == 0){
+          unset($orphans[$soc]['people'][$pNum]);
+        }
+        if (count($orphans[$soc]['people']) == 0){
+          unset($orphans[$soc]);
+        }
       }
     // Following allows multiple socs to be displayed on page access
+    // If soc with no videos is requested, initialize blank info for UI fill-in
     } else {
       foreach($careers as $c){
         if (preg_match('/^[0-9]{2}-[0-9]{4}$/', $c) == 1){
@@ -105,6 +141,20 @@ class AdminController extends PagesController
               $videoList[$c]['people'][$pNum] = ['name' => $person, 'questions' => []];
             }
             $videoList[$c]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
+        
+            // Check to see if file exists
+            $path = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $person;
+            $folder = new Folder($path, true);
+            $dest = $folder->path . '/' . $fileName;
+            if (!file_exists($dest)){
+              if (!array_key_exists($soc, $deadLinks)){
+                $deadLinks[$soc] = ['title' => $title, 'people' => []];
+              }
+              if (!array_key_exists($pNum, $deadLinks[$soc]['people'])){
+                $deadLinks[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
+              }
+              $deadLinks[$soc]['people'][$pNum]['questions'][] = $fileName;
+            }
           }
           if (count($results) == 0){
             $videoList[$c] = ['title' => $title, 'people' => [
@@ -116,10 +166,11 @@ class AdminController extends PagesController
         }
       }
     }
+    $this->set('orphans', $orphans);
+    $this->set('deadLinks', $deadLinks);
     $this->set('videoList', $videoList);
     $this->display('videos');
   }
-  
   public function uploadVideos(){
     if (!$this->request->is('post')){
       // TODO: Error page, not uploading anything
@@ -131,12 +182,14 @@ class AdminController extends PagesController
     $connection = ConnectionManager::get($this->datasource);
     $updates = [];
     $nameUpdates = [];
+    $deleteFiles = [];
+    $orphans = [];
     // Combine changes for question text and video file
     // Ensure multiple changes (ex. delete) do not conflict
     foreach ($this->request->data as $k => $v){
       $matches = [];
       // Extracts data from both video and text fields
-      preg_match('/^soc(..-....)p(\d+)(?:q(\d+)(.*?)|(pnamechange))' . 
+      preg_match('/^soc(..-....)p(\d+)(?:q(\d+)(.*?)|(pnamechange)|(orphan)\d+(.*?))' . 
         '(file|text|delete|fnamechange)?$/', $k, $matches);
       $soc = $matches[1];
       $pNum = $matches[2];
@@ -153,10 +206,15 @@ class AdminController extends PagesController
           ];
         }
         continue;
+      } else if ($matches[6] == 'orphan'){
+        $person = $matches[7];
+        $deleteFiles[] = implode('_', [$soc, $pNum, $person]) .
+          '/' . $v;
+        continue;
       } else {
         $person = $matches[4];
         $qNum = $matches[3];
-        $inputType = $matches[6];
+        $inputType = $matches[8];
       }
 
       // Create per-soc, per-person, questions
@@ -187,8 +245,7 @@ class AdminController extends PagesController
       }
     }
     // Validate and construct changes
-    // Allow confirmation of update, option to delete orphans
-    $queuedUpdates = ['database'=>[], 'filesystem'=>[], 'orphans'=>[]];
+    $queuedUpdates = ['database'=>[], 'filesystem'=>[]];
     foreach ($updates as $soc => $people){
       foreach ($people as $pNum => $person){
         $name = $person['name'];
@@ -200,7 +257,8 @@ class AdminController extends PagesController
 		  // Primary key enforces all others return 1 or 0
           $query = 'SELECT * FROM Videos WHERE (soc = :soc AND ' . 
             'personNum = :pNum AND questionNum = :qNum) ' .
-			'OR :pNum NOT IN (SELECT personNum FROM Videos WHERE soc = :soc) LIMIT 2';
+            'OR :pNum NOT IN (SELECT personNum FROM ' .
+            'Videos WHERE soc = :soc) LIMIT 2';
           $results = $connection->execute($query, ['soc'=>$soc,
             'pNum'=>$pNum, 'qNum'=>$qNum])->fetchAll('assoc');
           $setFields = [];
@@ -208,7 +266,7 @@ class AdminController extends PagesController
           $newPerson = (count($results) == 2);
           // If the row is to be deleted:
           if (in_array('delete', array_keys($update))){
-            if ($rowExists){
+            if (!$rowExists){
               continue;
             }
             $queuedUpdates['database'][] = [
@@ -216,10 +274,8 @@ class AdminController extends PagesController
               // Only checks NOT NULL fields, issues when converting
               'check'=>['soc'=>$soc, 'personNum'=>$pNum, 'questionNum'=>$qNum],
               'action'=>'delete'];
-            if ($results[0]['fileName'] != null){
-              $queuedUpdates['orphans'][] = $results[0]['fileName'];
-            }
             // If file was uploaded, PHP handles deletion of tmp
+            // Orphaned files checked against other video usage
             continue;
           }
           if (!$rowExists && $update['text'] == ''
@@ -283,6 +339,9 @@ class AdminController extends PagesController
     // Appends name updates to end
     $queuedUpdates['database'] = array_merge($queuedUpdates['database'], $nameUpdates);
     foreach ($queuedUpdates['database'] as $stmt){
+      // checkFields reused after update and delete, to check for orphans
+      $orphanCheck = null;
+      $fieldType = null;
       // Should be no duplicates, SELECT would have found
       // New socs and ordering handled by client
       // Single table, adding new soc same as adding new question
@@ -293,12 +352,8 @@ class AdminController extends PagesController
             return ':' . $s;
         }, array_keys($fields)));
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
-        $insert = 'INSERT INTO Videos ' .
+        $query = 'INSERT INTO Videos ' .
           "({$fieldNames}) VALUES ({$fieldSubs})";
-        if (!$dryRun){
-          $connection->execute($insert, $fields, $fieldTypes);
-        }
-        $actionsTaken[] = ([$insert, $fields, $fieldTypes]);
       } else if ($stmt['action'] == 'update'){
         $setFields = implode(', ', array_map(function ($s){
           return $s . ' = :' . $s;}, array_keys($stmt['set'])));
@@ -306,21 +361,39 @@ class AdminController extends PagesController
           return $s . ' = :' . $s;}, array_keys($stmt['check'])));
         $fields = $stmt['set'] + $stmt['check'];
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
-        $update = "UPDATE Videos SET {$setFields} WHERE {$checkFields}";
-        if (!$dryRun){
-          $connection->execute($update, $fields, $fieldTypes);
-        }
-        $actionsTaken[] = ([$update, $fields, $fieldTypes]);
+        $query = "UPDATE Videos SET {$setFields} WHERE {$checkFields}";
+        $orphanCheck = $fields;
       } else if ($stmt['action'] == 'delete'){
-        $conditions = implode(' AND ', array_map(function ($s){
+        $checkFields = implode(' AND ', array_map(function ($s){
           return $s . ' = :' . $s;}, array_keys($stmt['check'])));
-        $fieldTypes = array_map(function ($s){return gettype($s);}, $stmt['check']);
-        $delete = 'DELETE FROM Videos WHERE ' . $conditions;
-        if (!$dryRun){
-          $connection->execute($delete, $stmt['check'], $fieldTypes);
-        }
-        $actionsTaken[] = ([$delete, $stmt['check'], $fieldTypes]);
+        $fields = $stmt['check'];
+        $fieldTypes = array_map(function ($s){return gettype($s);}, $stmt['check']); 
+        $query = 'DELETE FROM Videos WHERE ' . $checkFields;
+        $orphanCheck = $stmt['check'];
       }
+      if (!is_null($orphanCheck)){
+        // TODO: Rearrange this+above so no repetition of code
+        // Check to see if an update will orphan a file
+        if (array_key_exists('fileName', $stmt['set'])
+          || $stmt['action'] == 'delete'){
+          $query = 'SELECT fileName, person FROM Videos WHERE ' .
+            'soc = :soc AND personNum = :personNum AND ' .
+            'fileName IN (SELECT fileName FROM Videos WHERE ' . 
+            'soc = :soc AND personNum = :personNum ' .
+            'AND questionNum = :questionNum)';
+          $results = $connection->execute($query,
+            $orphanCheck, $fieldTypes)->fetchAll('assoc');
+          if (count($results) == 1){
+            $orphans[] = $orphanCheck
+              + ['fileName' => $results[0]['fileName'],
+              'person' => $results[0]['person']];
+          }
+        }
+      }
+      if (!$dryRun){
+        $connection->execute($query, $fields, $fieldTypes);
+      }
+      $actionsTaken[] = ([$query, $fields, $fieldTypes]);
     }
 
     foreach ($queuedUpdates['filesystem'] as $move){
@@ -330,7 +403,7 @@ class AdminController extends PagesController
       if (file_exists($dest)){
         if (!$dryRun){
           rename($dest, $dest . '#');
-          $queuedUpdates['orphans'][] = basename($dest) . '#';
+          // Orphans handled by database update, required for upload
         }
         $actionsTaken[] = ([$dest, $dest . '#']);
       }
@@ -339,8 +412,20 @@ class AdminController extends PagesController
       }
       $actionsTaken[] = ([$move['src'], $dest]);
     }
+    
+    foreach ($deleteFiles as $path){
+      $vidPath = WWW_ROOT . 'vid/' ;
+      $fileToDelete = $vidPath . $path;
+      if (file_exists($fileToDelete)){
+        if (!$dryRun){
+          unlink($fileToDelete);
+        }
+        $actionsTaken[] = (['delete', $fileToDelete]);
+      }
+    }
 
     $this->set('dryRun', $dryRun);
+    $this->set('orphans', $orphans);
     $this->set('request', $this->request->data);
     $this->set('changes', $updates);
     $this->set('actions', $queuedUpdates);

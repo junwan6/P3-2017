@@ -119,3 +119,11 @@
 input[type=file]{
   display: none;
 }
+
+.fileErrors {
+  width: 100%;
+  font-size: 12px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

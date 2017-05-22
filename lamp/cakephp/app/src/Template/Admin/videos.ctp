@@ -38,15 +38,43 @@
                     // For creation of new row and new table
                     echo '<table class="personTable" id="' . $soc . '">';
                     echo '</table>';
-                    foreach($career['people'] as $pid => $p){
+                    echo '<table class="unpersonTable" id="soc'
+                      . $soc . 'untable"></table>';
+                    foreach($career['people'] as $pNum => $p){
                       echo '<script>';
                         echo "addPerson('" . $soc . "', '" . addslashes($p['name']) .
                         "', '" . addslashes(json_encode($p['questions'])) . "');";
                       echo '</script>';
+                        
+                      echo '<table class="fileErrors">';
+                      echo '<thead><th>Unlinked Files</th><th>Nonexistant Files</th></thead>';
+                      echo '<td class="orphanCell"><table>';
+                      if (array_key_exists($soc, $orphans)
+                        && array_key_exists($pNum, $orphans[$soc]['people'])){
+                        foreach ($orphans[$soc]['people'][$pNum]['files'] as $oNum => $o){
+                          echo '<tr class="orphan">';
+                          echo '<td>"' . $o . '"</td>';
+                          echo '<td>';
+                          echo   '<input type="checkbox" name="soc' .
+                            $soc . 'p' . $pNum . 'orphan' . $oNum . addslashes($p['name']) . '" ' .
+                            'value="' . addslashes($o) . '"/>';
+                          echo   '';
+                          echo '</td>';
+                          echo '</tr>';
+                        }
+                      }
+                      echo '</table></td><td class="deadLinkCell"><table>';
+                      if (array_key_exists($soc, $deadLinks)
+                        && array_key_exists($pNum, $deadLinks[$soc]['people'])){
+                        foreach ($deadLinks[$soc]['people'][$pNum]['files'] as $qNum => $dl){
+                          echo '<tr class="deadLink"><td>Question&nbsp;' . $qNum . ':</td>';
+                          echo '<td>"' . $dl . '"</td></tr>';
+                        }
+                      }
+                      echo '</table></td>';
+                      echo '</table>';
                     }
                     
-                    echo '<table class="unpersonTable" id="soc'
-                      . $soc . 'untable"></table>';
                       
                     echo '<table class="headerTable">';
                     echo '<tr>';
