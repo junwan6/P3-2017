@@ -127,7 +127,8 @@ CREATE TABLE LIUsers(liId VARCHAR(20) NOT NULL PRIMARY KEY,
                      userId INT UNSIGNED NOT NULL);
 
 /* Video History and Ratings */
-/* CHANGE MADE: added person, fileName fields*/
+/* CHANGE MADE: added person, fileName fields to Videos */
+/* CHANGE MADE: added timestamp for ViewHistory */
 CREATE TABLE Videos(soc CHAR(7),
                     personNum INT UNSIGNED,
                     person VARCHAR(255),
@@ -139,6 +140,7 @@ CREATE TABLE Videos(soc CHAR(7),
 CREATE TABLE ViewHistory(id INT UNSIGNED NOT NULL,
                     soc CHAR(7),
                     rating INT,
+                    time DATETIME,
                     PRIMARY KEY (id, soc));
 
 CREATE TABLE RememberMeTokens(

@@ -647,6 +647,7 @@ $(function(){
 
 let jQueryDrag = function (event, ui){
   ui.item.data('rowId', ui.item[0].id);
+  ui.item.data('origIndex', ui.item.index());
 }
 let jQueryDrop = function (event, ui){
   // Assumes tbody automatically added as only element of table
@@ -654,7 +655,9 @@ let jQueryDrop = function (event, ui){
   let rowId = ui.item.data('rowId');
   let remRow = document.getElementById(rowId);
   let dstRow = ui.item.prev()[0];
-  
+  if (ui.item.index() < ui.item.data('origIndex')){
+    dstRow = ui.item.next()[0];
+  }
   let regex = new RegExp('^soc(..-....)p([-\\d]+)q([-\\d]+)(.*?)' + 
     '(file|label|button|text|delete)?$');
   let matches = rowId.match(regex);
@@ -675,8 +678,4 @@ let jQueryDrop = function (event, ui){
   }, function(teQid){
     return dstQid;
   });
-  table.insertBefore(remRow, dstRow);
-  if (moveForwards){
-    table.insertBefore(dstRow, remRow);
-  }
 }

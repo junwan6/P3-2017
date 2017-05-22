@@ -28,6 +28,33 @@ use Cake\Filesystem\Folder;
 // TODO: VERIFY USER ON ALL ACTIONS
 class AdminController extends PagesController
 {
+  public function displaySummary(){
+    $connection = ConnectionManager::get($this->datasource);
+  
+    $query = 'SELECT Occupation.title, Videos.* FROM ' . 
+      'Videos INNER JOIN Occupation ON Videos.soc = Occupation.soc';
+    $results = $connection->execute($query)->fetchAll('assoc');
+    $videoList = [];
+    foreach($results as $r){
+      $soc = $r['soc'];
+      $title = $r['title'];
+      $pNum = $r['personNum'];
+      $person = $r['person'];
+      $qNum = $r['questionNum'];
+      $question = $r['question'];
+      $fileName = $r['fileName'];
+      if (!array_key_exists($soc, $videoList)){
+        $videoList[$soc] = ['title' => $title, 'people' => []];
+      }
+      if (!array_key_exists($pNum, $videoList[$soc]['people'])){
+        $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
+      }
+      $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
+    }
+    
+    $this->set('videoList', $videoList);
+    $this->display('summary');
+  }
   public function displayVideos(...$careers){
     $connection = ConnectionManager::get($this->datasource);
     $videoList = [];
@@ -249,7 +276,7 @@ class AdminController extends PagesController
         }
       }
     }
-    
+    $actionsTaken = [];
     // Appends name updates to end
     $queuedUpdates['database'] = array_merge($queuedUpdates['database'], $nameUpdates);
     foreach ($queuedUpdates['database'] as $stmt){
@@ -265,11 +292,10 @@ class AdminController extends PagesController
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
         $insert = 'INSERT INTO Videos ' .
           "({$fieldNames}) VALUES ({$fieldSubs})";
-        if ($dryRun){
-          debug([$insert, $fields, $fieldTypes]);
-        } else {
+        if (!$dryRun){
           $connection->execute($insert, $fields, $fieldTypes);
         }
+        $actionsTaken[] = ([$insert, $fields, $fieldTypes]);
       } else if ($stmt['action'] == 'update'){
         $setFields = implode(', ', array_map(function ($s){
           return $s . ' = :' . $s;}, array_keys($stmt['set'])));
@@ -278,21 +304,19 @@ class AdminController extends PagesController
         $fields = $stmt['set'] + $stmt['check'];
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
         $update = "UPDATE Videos SET {$setFields} WHERE {$checkFields}";
-        if ($dryRun){
-          debug([$update, $fields, $fieldTypes]);
-        } else {
+        if (!$dryRun){
           $connection->execute($update, $fields, $fieldTypes);
         }
+        $actionsTaken[] = ([$update, $fields, $fieldTypes]);
       } else if ($stmt['action'] == 'delete'){
         $conditions = implode(' AND ', array_map(function ($s){
           return $s . ' = :' . $s;}, array_keys($stmt['check'])));
         $fieldTypes = array_map(function ($s){return gettype($s);}, $stmt['check']);
         $delete = 'DELETE FROM Videos WHERE ' . $conditions;
-        if ($dryRun){
-          debug([$delete, $stmt['check'], $fieldTypes]);
-        } else {
+        if (!$dryRun){
           $connection->execute($delete, $stmt['check'], $fieldTypes);
         }
+        $actionsTaken[] = ([$delete, $stmt['check'], $fieldTypes]);
       }
     }
 
@@ -301,26 +325,23 @@ class AdminController extends PagesController
       $folder = new Folder($move['dir'], true);
       $dest = $folder->path . '/' . $move['name'];
       if (file_exists($dest)){
-        if ($dryRun){
-          debug([$dest, $dest . '#']);
-        } else {
+        if (!$dryRun){
           rename($dest, $dest . '#');
           $queuedUpdates['orphans'][] = basename($dest) . '#';
         }
+        $actionsTaken[] = ([$dest, $dest . '#']);
       }
-      if ($dryRun){
-        debug([$move['src'], $dest]);
-      } else {
+      if (!$dryRun){
         move_uploaded_file($move['src'], $dest);
       }
-    }
-    if ($dryRun){
-      debug($this->request->data);
-      debug($updates);
-      debug($queuedUpdates);
+      $actionsTaken[] = ([$move['src'], $dest]);
     }
 
-    $this->set('changes', $queuedUpdates);
+    $this->set('dryRun', $dryRun);
+    $this->set('request', $this->request->data);
+    $this->set('changes', $updates);
+    $this->set('actions', $queuedUpdates);
+    $this->set('statements', $actionsTaken);
     // TODO: Implement own file preservation + garbage collection
     // Create multistage upload/confirm (add uploads to orphan directory?)
     $this->display('upload');

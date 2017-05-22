@@ -1,0 +1,63 @@
+.titleText {
+  color: #333333;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.bodyContents {
+  color: #444444;
+}
+
+.cellspan {
+  display: table-cell;
+}
+#inputSOC {
+  width: 100%;
+}
+.videosTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0px 5px;
+}
+
+// Scrollable table taken from https://stackoverflow.com/questions/11891065/css-only-scrollable-table-with-fixed-headers
+.videosTable {
+  border: 0;
+  border-collapse: collapse;
+}
+
+.videosTable tr {
+  display: flex;
+}
+
+.videosTable td {
+  padding: 3px;
+  flex: 1 auto;
+  border: 1px solid #eee;
+  width: 1px;
+  word-wrap: break;
+}
+
+.videosTable thead tr:after {
+  content: '';
+  overflow-y: scroll;
+  visibility: hidden;
+  height: 0;
+}
+
+.videosTable thead th {
+  flex: 1 auto;
+  display: block;
+  border: 1px solid #000;
+}
+
+.videosTable tbody {
+  display: block;
+  width: 100%;
+  overflow-y: auto;
+  height: 200px;
+}
+.videoRow {
+  font-size: 12px;
+}

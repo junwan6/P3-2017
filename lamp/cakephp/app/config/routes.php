@@ -169,10 +169,10 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/admin/upload', ['controller' => 'admin',
       'action' => 'uploadVideos']);
     // TODO: Summary page of traffic, etc. Entry point for admin portal
-    //$routes->connect('/admin/', ['controller' => 'admin',
-    //  'action' => 'displaySummary']);
-    //$routes->connect('/admin/summary', ['controller' => 'admin',
-    //  'action' => 'displaySummary']);
+    $routes->connect('/admin/', ['controller' => 'admin',
+      'action' => 'displaySummary']);
+    $routes->connect('/admin/summary', ['controller' => 'admin',
+      'action' => 'displaySummary']);
     // TODO: Display user data (list of users, option to download data?)
     //$routes->connect('/admin/users', ['controller' => 'admin',
     //  'action' => 'displayUsers']);

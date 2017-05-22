@@ -22,7 +22,13 @@
                 <div class="col-md-6 col-md-offset-3">
                   <h1 style="color:black">TODO: Changes overview</h1>
                   <?php
+                    if ($dryRun){
+                      echo '<h1 style="color: red">No action taken, disable \'dryRun\' in AdminController</h1>';
+                    }
+                    debug($request, true);
                     debug($changes, true);
+                    debug($actions, true);
+                    debug($statements, true);
                   ?>
                 </div>
               </div>
