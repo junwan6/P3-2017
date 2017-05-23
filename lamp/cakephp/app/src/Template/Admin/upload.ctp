@@ -25,6 +25,8 @@
                     if ($dryRun){
                       echo '<h1 style="color: red">No action taken, disable \'dryRun\' in AdminController</h1>';
                     } else {
+                      // Not as accurate, lists orphans generated during updates
+                      // List on videos page scans directory and compares to database
                       echo '<h4>Delete files without questions:</h4>';
                       $uploadForm = $this->Url->build(['controller'=>'Admin', 'action'=>'upload']);
                       echo '<form action="' . $uploadForm . '" method="post" ' .

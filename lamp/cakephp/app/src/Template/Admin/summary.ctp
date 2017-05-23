@@ -26,17 +26,19 @@
                       <table class="videosTable">
                         <thead>
                         <tr><td colspan="4">
-                          <span style="width:100%" class="cellspan">
-                            <input type="text" id="inputSOC"
-                              placeholder="enter a SOC or list of SOCs">
-                              <!-- placeholder="or navigate by search bar"> -->
-                          </span>
                           <?php
+                            $videosLink = $this->Url->build(['controller'=>'Admin',
+                              'action'=>'videos']);
+                            echo '<span style="width:100%" class="cellspan">' .
+                              '<input type="text" id="inputSOC" ' .
+                                'placeholder="enter a SOC or list of SOCs" '. 
+                                'onchange="updateSOCLink(\'' . $videosLink . '\');"' . '>';
+                            // placeholder="or navigate by search bar">
+                            echo '</span>';
                             echo '<span class="cellspan">' .
-                              '<input type="button" value="Go To" onclick="' .
-                              'goToSOCVideos(\'' . $this->Url->build(['controller'=>'Admin',
-                              'action'=>'videos']) . '\');' .
-                              '"><span>';
+                              '<a id="gotoButton" href="' . $videosLink . '">' .
+                              '<input type="button" value="Go To"></a>' .
+                              '<span>';
                           ?>
                         </td></tr>
                           <tr><td>SOC</td><td>Occupation</td><td>People</td><td>Videos</td></tr>

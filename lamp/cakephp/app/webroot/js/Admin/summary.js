@@ -1,8 +1,12 @@
-let goToSOCVideos = function (url){
-  let soc = document.getElementById('inputSOC').value;
-  let socs = soc.match(/\d{2}-\d{4}/g);
-  if (socs != null){
-    window.open(url + '/' + socs.join('/'), '_blank');
+// Does not use redirect, to allow ctrl-click to open in new tab
+let updateSOCLink = function (url){
+  let input = document.getElementById('inputSOC').value;
+  let socs = input.match(/\d{2}-\d{4}/g);
+  if (socs == null){
+    document.getElementById('gotoButton').setAttribute('href', url);
+  } else {
+    document.getElementById('gotoButton').setAttribute('href',
+      url + '/' + socs.join('/'));
   }
 }
 
@@ -20,4 +24,5 @@ let addSOC = function(soc){
     uniqueSOC[soc] = true;
   }
   input.value = Object.keys(uniqueSOC).join(', ');
+  input.onchange();
 }

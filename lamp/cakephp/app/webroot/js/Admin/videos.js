@@ -679,3 +679,9 @@ let jQueryDrop = function (event, ui){
     return dstQid;
   });
 }
+
+let toggleWarnings = function (soc){
+  let warningsDiv = document.getElementById(soc+'warnings');
+  let isVisible = (warningsDiv.style.display != 'none');
+  warningsDiv.style.display = (isVisible?'none':'initial');
+}

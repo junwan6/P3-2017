@@ -119,14 +119,14 @@ class AdminController extends PagesController
     // Following allows multiple socs to be displayed on page access
     // If soc with no videos is requested, initialize blank info for UI fill-in
     } else {
-      foreach($careers as $c){
-        if (preg_match('/^[0-9]{2}-[0-9]{4}$/', $c) == 1){
+      foreach($careers as $soc){
+        if (preg_match('/^[0-9]{2}-[0-9]{4}$/', $soc) == 1){
           $query = 'SELECT * FROM Videos WHERE soc = :soc';
-          $results = $connection->execute($query, ['soc'=>$c])->fetchAll('assoc');
+          $results = $connection->execute($query, ['soc'=>$soc])->fetchAll('assoc');
           $noVideos = true;
           
           $query = 'SELECT title FROM Occupation WHERE soc = :soc';
-          $occupation = $connection->execute($query, ['soc'=>$c])->fetchAll('assoc');
+          $occupation = $connection->execute($query, ['soc'=>$soc])->fetchAll('assoc');
           $title = (count($occupation) == 0?'No Career Data':$occupation[0]['title']);
           foreach($results as $r){
             $pNum = $r['personNum'];
@@ -134,15 +134,16 @@ class AdminController extends PagesController
             $qNum = $r['questionNum'];
             $question = $r['question'];
             $fileName = $r['fileName'];
-            if (!array_key_exists($c, $videoList)){
-              $videoList[$c] = ['title' => $title, 'people' => []];
+            if (!array_key_exists($soc, $videoList)){
+              $videoList[$soc] = ['title' => $title, 'people' => []];
             }
-            if (!array_key_exists($pNum, $videoList[$c]['people'])){
-              $videoList[$c]['people'][$pNum] = ['name' => $person, 'questions' => []];
+            if (!array_key_exists($pNum, $videoList[$soc]['people'])){
+              $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
             }
-            $videoList[$c]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
+            $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
         
             // Check to see if file exists
+            // TODO: Rearrange file to remove repeated code below
             $path = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $person;
             $folder = new Folder($path, true);
             $dest = $folder->path . '/' . $fileName;
@@ -151,13 +152,32 @@ class AdminController extends PagesController
                 $deadLinks[$soc] = ['title' => $title, 'people' => []];
               }
               if (!array_key_exists($pNum, $deadLinks[$soc]['people'])){
-                $deadLinks[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
+                $deadLinks[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
               }
-              $deadLinks[$soc]['people'][$pNum]['questions'][] = $fileName;
+              $deadLinks[$soc]['people'][$pNum]['files'][$qNum] = $fileName;
+            }
+            // Populate files in directory if nonexistant, remove all matching files
+            
+            if (!array_key_exists($soc, $orphans)){
+              $orphans[$soc] = ['title' => $title, 'people' => []];
+            }
+            if (!array_key_exists($pNum, $orphans[$soc]['people'])){
+              $orphans[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
+              $orphans[$soc]['people'][$pNum]['files'] = scandir($folder->path);
+              $orphans[$soc]['people'][$pNum]['files'] = 
+                array_diff($orphans[$soc]['people'][$pNum]['files'], ['.', '..']);
+            }
+            $orphans[$soc]['people'][$pNum]['files'] = 
+              array_diff($orphans[$soc]['people'][$pNum]['files'], [$fileName]);
+            if (count($orphans[$soc]['people'][$pNum]['files']) == 0){
+              unset($orphans[$soc]['people'][$pNum]);
+            }
+            if (count($orphans[$soc]['people']) == 0){
+              unset($orphans[$soc]);
             }
           }
           if (count($results) == 0){
-            $videoList[$c] = ['title' => $title, 'people' => [
+            $videoList[$soc] = ['title' => $title, 'people' => [
               ['name' => '', 'questions' => [
                 ['', '']
               ]]
@@ -376,12 +396,12 @@ class AdminController extends PagesController
         // Check to see if an update will orphan a file
         if (array_key_exists('fileName', $stmt['set'])
           || $stmt['action'] == 'delete'){
-          $query = 'SELECT fileName, person FROM Videos WHERE ' .
+          $select = 'SELECT fileName, person FROM Videos WHERE ' .
             'soc = :soc AND personNum = :personNum AND ' .
             'fileName IN (SELECT fileName FROM Videos WHERE ' . 
             'soc = :soc AND personNum = :personNum ' .
             'AND questionNum = :questionNum)';
-          $results = $connection->execute($query,
+          $results = $connection->execute($select,
             $orphanCheck, $fieldTypes)->fetchAll('assoc');
           if (count($results) == 1){
             $orphans[] = $orphanCheck
