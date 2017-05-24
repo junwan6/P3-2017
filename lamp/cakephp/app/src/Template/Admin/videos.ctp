@@ -42,7 +42,7 @@
                       . $soc . 'untable"></table>';
                     foreach($career['people'] as $pNum => $p){
                       echo '<script>';
-                        echo "addPerson('" . $soc . "', '" . addslashes($p['name']) .
+                        echo "addPerson('" . $soc . "', '" . addSlashes($p['name']) .
                         "', '" . addslashes(json_encode($p['questions'])) . "');";
                       echo '</script>';
                     }
@@ -64,51 +64,6 @@
                     echo '</table>';
                     echo '</div>';
                     echo '</form>';
-                        
-                    if (array_key_exists($soc, $orphans) || array_key_exists($soc, $deadLinks)){
-                      echo '<a style="text-align:left" ' . 
-                        'onclick="toggleWarnings(\'' . $soc . '\');">' .
-                        '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' . 
-                        'Warnings for ' . $soc . '</a>';
-                      echo '<div id="' . $soc . 'warnings" style="color:black; display:none">';
-                    }
-                    foreach($career['people'] as $pNum => $p){
-                      $orphansExist = array_key_exists($soc, $orphans)
-                        && array_key_exists($pNum, $orphans[$soc]['people']);
-                      $deadLinksExist = array_key_exists($soc, $deadLinks)
-                        && array_key_exists($pNum, $deadLinks[$soc]['people']);
-                      if ($orphansExist || $deadLinksExist){
-                        echo '<h4>' . $p['name'] . '</h4>';
-                        echo '<table class="fileErrors">';
-                        echo '<thead><th>Unlinked Files</th><th>Nonexistant Files</th></thead>';
-                        echo '<td class="orphanCell"><table>';
-                        if ($orphansExist){
-                          foreach ($orphans[$soc]['people'][$pNum]['files'] as $oNum => $o){
-                            echo '<tr class="orphan">';
-                            echo '<td>"' . $o . '"</td>';
-                            echo '<td>';
-                            echo   '<input type="checkbox" name="soc' .
-                              $soc . 'p' . $pNum . 'orphan' . $oNum . addslashes($p['name']) . '" ' .
-                              'value="' . addslashes($o) . '"/>';
-                            echo   '';
-                            echo '</td>';
-                            echo '</tr>';
-                          }
-                        }
-                        echo '</table></td><td class="deadLinkCell"><table>';
-                        if ($deadLinksExist){
-                          foreach ($deadLinks[$soc]['people'][$pNum]['files'] as $qNum => $dl){
-                            echo '<tr class="deadLink"><td>Question&nbsp;' . $qNum . ':</td>';
-                            echo '<td>"' . $dl . '"</td></tr>';
-                          }
-                        }
-                        echo '</table></td>';
-                        echo '</table>';
-                      }
-                    }
-                    if (array_key_exists($soc, $orphans) || array_key_exists($soc, $deadLinks)){
-                      echo '</div>';
-                    }
                     echo '<br><br>';
                   }
                   ?>

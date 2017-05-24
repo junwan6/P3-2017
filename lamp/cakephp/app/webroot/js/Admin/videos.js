@@ -71,16 +71,22 @@ let swapFileNameType = function(id){
 let rename = function(caller, reveal, elemId){
   let nameHead = document.getElementById(elemId+'name');
   let nameChange = document.getElementById(elemId+'pnamechange');
+  let nameSwap = document.getElementById(elemId+'pnameswap');
+  let nameSwapLabel = document.getElementById(elemId+'pnameswaplabel');
   if (reveal){
     nameHead.style.display = 'none';
     nameChange.style.display = 'initial';
     nameChange.value = nameHead.innerHTML;
+    nameSwap.style.display = 'initial';
+    nameSwapLabel.style.display = 'initial';
     caller.classList.add('fa-pencil-square');
     caller.classList.remove('fa-pencil-square-o');
     nameChange.focus();
   } else {
     nameHead.style.display = 'initial';
     nameChange.style.display = 'none';
+    nameSwap.style.display = 'none';
+    nameSwapLabel.style.display = 'none';
     caller.classList.remove('fa-pencil-square');
     caller.classList.add('fa-pencil-square-o');
   }
@@ -496,10 +502,22 @@ let addPerson = function(soc, name, questionsJSON){
   nameHead.setAttribute('id', tableId+'name');
   nameHead.innerHTML = name;
   headerName.appendChild(nameHead);
+  let nameSwap = document.createElement('input');
+  nameSwap.setAttribute('type', 'checkbox');
+  nameSwap.setAttribute('id', tableId+'pnameswap');
+  nameSwap.setAttribute('name', tableId+'pnameswap'+name);
+  nameSwap.style.display = 'none';
+  headerName.appendChild(nameSwap);
+  let nameSwapLabel = document.createElement('label');
+  nameSwapLabel.setAttribute('for', tableId+'pnameswap');
+  nameSwapLabel.setAttribute('id', tableId+'pnameswaplabel');
+  nameSwapLabel.style.display = 'none';
+  nameSwapLabel.innerHTML = 'Only change database name';
+  headerName.appendChild(nameSwapLabel);
   let nameChange = document.createElement('input');
   nameChange.setAttribute('type', 'text');
   nameChange.setAttribute('id', tableId+'pnamechange');
-  nameChange.setAttribute('name', tableId+'pnamechange');
+  nameChange.setAttribute('name', tableId+'pnamechange'+name);
   nameChange.setAttribute('value', 'UNEDITED');
   nameChange.setAttribute('onChange',
     'updateNameHead(this, \'' + tableId + '\');');

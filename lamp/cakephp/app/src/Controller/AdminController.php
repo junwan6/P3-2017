@@ -28,6 +28,24 @@ use Cake\Filesystem\Folder;
 // TODO: VERIFY USER ON ALL ACTIONS
 class AdminController extends PagesController
 {
+  /* Helper function to initialize an array of form soc->pNum->qNum/file
+   * Takes title and person name for labels
+   * Returns whether the field existed, for additional specific initialization
+   */
+  private function initializeSOCPerson(&$arr, $soc, $title, $pNum, $person, $field){
+    if (!array_key_exists($soc, $arr)){
+      $arr[$soc] = ['title' => $title, 'people' => []];
+    }
+    if (!array_key_exists($pNum, $arr[$soc]['people'])){
+      $arr[$soc]['people'][$pNum] = ['name' => $person, $field => []];
+      return true;
+    }
+    return false;
+  }
+  
+  /* Gets list of to populate SOC scrollable
+   * More features to be added (User view history, etc.)
+   */
   public function displaySummary(){
     $connection = ConnectionManager::get($this->datasource);
   
@@ -43,23 +61,23 @@ class AdminController extends PagesController
       $qNum = $r['questionNum'];
       $question = $r['question'];
       $fileName = $r['fileName'];
-      if (!array_key_exists($soc, $videoList)){
-        $videoList[$soc] = ['title' => $title, 'people' => []];
-      }
-      if (!array_key_exists($pNum, $videoList[$soc]['people'])){
-        $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
-      }
+      $this->initializeSOCPerson($videoList,
+        $soc, $title, $pNum, $person, 'questions');
       $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
     }
     
     $this->set('videoList', $videoList);
     $this->display('summary');
   }
+  
+  /* Gets list of videos to initialize videos editing page
+   * Takes list of SOCs from URL, to show list or initialize new SOCs
+   */
   public function displayVideos(...$careers){
     $connection = ConnectionManager::get($this->datasource);
     $videoList = [];
-    $orphans = [];
-    $deadLinks = [];
+    // Orphan and dead-link checking handled by separate page
+    // TODO: add dynamic checker, alert user when change will cause issue
     // Routing enforces at least 1 argument
     if (count($careers) == 1 && $careers[0] == 'all'){
       $query = 'SELECT Occupation.title, Videos.* FROM ' . 
@@ -75,46 +93,9 @@ class AdminController extends PagesController
         $qNum = $r['questionNum'];
         $question = $r['question'];
         $fileName = $r['fileName'];
-        if (!array_key_exists($soc, $videoList)){
-          $videoList[$soc] = ['title' => $title, 'people' => []];
-        }
-        if (!array_key_exists($pNum, $videoList[$soc]['people'])){
-          $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
-        }
+        $this->initializeSOCPerson($videoList,
+          $soc, $title, $pNum, $person, 'questions');
         $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
-        
-        // Check to see if file exists
-        $path = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $person;
-        $folder = new Folder($path, true);
-        $dest = $folder->path . '/' . $fileName;
-        if (!file_exists($dest)){
-          if (!array_key_exists($soc, $deadLinks)){
-            $deadLinks[$soc] = ['title' => $title, 'people' => []];
-          }
-          if (!array_key_exists($pNum, $deadLinks[$soc]['people'])){
-            $deadLinks[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
-          }
-          $deadLinks[$soc]['people'][$pNum]['files'][$qNum] = $fileName;
-        }
-        // Populate files in directory if nonexistant, remove all matching files
-        
-        if (!array_key_exists($soc, $orphans)){
-          $orphans[$soc] = ['title' => $title, 'people' => []];
-        }
-        if (!array_key_exists($pNum, $orphans[$soc]['people'])){
-          $orphans[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
-          $orphans[$soc]['people'][$pNum]['files'] = scandir($folder->path);
-          $orphans[$soc]['people'][$pNum]['files'] = 
-            array_diff($orphans[$soc]['people'][$pNum]['files'], ['.', '..']);
-        }
-        $orphans[$soc]['people'][$pNum]['files'] = 
-          array_diff($orphans[$soc]['people'][$pNum]['files'], [$fileName]);
-        if (count($orphans[$soc]['people'][$pNum]['files']) == 0){
-          unset($orphans[$soc]['people'][$pNum]);
-        }
-        if (count($orphans[$soc]['people']) == 0){
-          unset($orphans[$soc]);
-        }
       }
     // Following allows multiple socs to be displayed on page access
     // If soc with no videos is requested, initialize blank info for UI fill-in
@@ -141,40 +122,6 @@ class AdminController extends PagesController
               $videoList[$soc]['people'][$pNum] = ['name' => $person, 'questions' => []];
             }
             $videoList[$soc]['people'][$pNum]['questions'][$qNum] = [$question, $fileName];
-        
-            // Check to see if file exists
-            // TODO: Rearrange file to remove repeated code below
-            $path = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $person;
-            $folder = new Folder($path, true);
-            $dest = $folder->path . '/' . $fileName;
-            if (!file_exists($dest)){
-              if (!array_key_exists($soc, $deadLinks)){
-                $deadLinks[$soc] = ['title' => $title, 'people' => []];
-              }
-              if (!array_key_exists($pNum, $deadLinks[$soc]['people'])){
-                $deadLinks[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
-              }
-              $deadLinks[$soc]['people'][$pNum]['files'][$qNum] = $fileName;
-            }
-            // Populate files in directory if nonexistant, remove all matching files
-            
-            if (!array_key_exists($soc, $orphans)){
-              $orphans[$soc] = ['title' => $title, 'people' => []];
-            }
-            if (!array_key_exists($pNum, $orphans[$soc]['people'])){
-              $orphans[$soc]['people'][$pNum] = ['name' => $person, 'files' => []];
-              $orphans[$soc]['people'][$pNum]['files'] = scandir($folder->path);
-              $orphans[$soc]['people'][$pNum]['files'] = 
-                array_diff($orphans[$soc]['people'][$pNum]['files'], ['.', '..']);
-            }
-            $orphans[$soc]['people'][$pNum]['files'] = 
-              array_diff($orphans[$soc]['people'][$pNum]['files'], [$fileName]);
-            if (count($orphans[$soc]['people'][$pNum]['files']) == 0){
-              unset($orphans[$soc]['people'][$pNum]);
-            }
-            if (count($orphans[$soc]['people']) == 0){
-              unset($orphans[$soc]);
-            }
           }
           if (count($results) == 0){
             $videoList[$soc] = ['title' => $title, 'people' => [
@@ -186,55 +133,65 @@ class AdminController extends PagesController
         }
       }
     }
-    $this->set('orphans', $orphans);
-    $this->set('deadLinks', $deadLinks);
     $this->set('videoList', $videoList);
     $this->display('videos');
   }
+  
+  /* Applies changes made on videos page to the database/filesystem
+   * Parses request parameters into updates
+   * Updates checked for necessity into queuedUpdates
+   * Executes queuedUpdates for files,
+   */
   public function uploadVideos(){
     if (!$this->request->is('post')){
       // TODO: Error page, not uploading anything
-      die();
+      $this->display('upload');
+      return;
     }
     // TODO: Delete all references to debugging tool
     $dryRun = false;
     
     $connection = ConnectionManager::get($this->datasource);
+    $folderPath = WWW_ROOT . 'vid/';
     $updates = [];
+    // TODO: Integrate into existing data structure
+    //   Request parsing -> validity checking -> execution
+    //   request->data      updates              queuedUpdates
     $nameUpdates = [];
-    $deleteFiles = [];
-    $orphans = [];
     // Combine changes for question text and video file
     // Ensure multiple changes (ex. delete) do not conflict
     foreach ($this->request->data as $k => $v){
       $matches = [];
       // Extracts data from both video and text fields
-      preg_match('/^soc(..-....)p(\d+)(?:q(\d+)(.*?)|(pnamechange)|(orphan)\d+(.*?))' . 
+      preg_match('/^soc(..-....)p(\d+)(q\d+|pnamechange|pnameswap)(.*?)' . 
         '(file|text|delete|fnamechange)?$/', $k, $matches);
       $soc = $matches[1];
       $pNum = $matches[2];
-      $person = null;
+      $person = $matches[4];
       $qNum = null;
       $inputType = null;
-      if ($matches[5] == 'pnamechange'){
+      if ($matches[3] == 'pnamechange'){
         if ($v != 'UNEDITED'){
           // All other updates are name-independent, change should not affect
           $nameUpdates[] = [
             'set'=>['person'=>$v],
             'check'=>['soc'=>$soc, 'personNum'=>$pNum],
             'action'=>'update',
+            
+            'swapOnly'=>(array_key_exists("soc{$soc}p{$pNum}pnameswap{$person}",
+              $this->request->data)),
+            
+            'src' => $folderPath . "{$soc}_{$pNum}_{$person}",
+            'dir' => rtrim($folderPath, '/') ,
+            'name' => "{$soc}_{$pNum}_{$v}"
           ];
         }
         continue;
-      } else if ($matches[6] == 'orphan'){
-        $person = $matches[7];
-        $deleteFiles[] = implode('_', [$soc, $pNum, $person]) .
-          '/' . $v;
+      } else if ($matches[3] == 'pnameswap') {
         continue;
       } else {
-        $person = $matches[4];
-        $qNum = $matches[3];
-        $inputType = $matches[8];
+        $qNum = substr($matches[3],1);
+        $inputType = $matches[5];
       }
 
       // Create per-soc, per-person, questions
@@ -313,7 +270,7 @@ class AdminController extends PagesController
           $changedFile = (in_array('fileName', array_keys($update))
             && !($rowExists && $update['fileName'] == $results[0]['fileName']));
           if ($newFile){
-            $dest = WWW_ROOT . 'vid/' . $soc . '_' . $pNum . '_' . $name;
+            $dest = $folderPath . $soc . '_' . $pNum . '_' . $name;
             $queuedUpdates['filesystem'][] = [
               'src' => $update['tmp_name'],
               'dir' => $dest,
@@ -359,9 +316,9 @@ class AdminController extends PagesController
     // Appends name updates to end
     $queuedUpdates['database'] = array_merge($queuedUpdates['database'], $nameUpdates);
     foreach ($queuedUpdates['database'] as $stmt){
-      // checkFields reused after update and delete, to check for orphans
-      $orphanCheck = null;
-      $fieldType = null;
+      $query = '';
+      $fields = [];
+      $fieldTypes = [];
       // Should be no duplicates, SELECT would have found
       // New socs and ordering handled by client
       // Single table, adding new soc same as adding new question
@@ -382,33 +339,12 @@ class AdminController extends PagesController
         $fields = $stmt['set'] + $stmt['check'];
         $fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
         $query = "UPDATE Videos SET {$setFields} WHERE {$checkFields}";
-        $orphanCheck = $fields;
       } else if ($stmt['action'] == 'delete'){
         $checkFields = implode(' AND ', array_map(function ($s){
           return $s . ' = :' . $s;}, array_keys($stmt['check'])));
         $fields = $stmt['check'];
         $fieldTypes = array_map(function ($s){return gettype($s);}, $stmt['check']); 
         $query = 'DELETE FROM Videos WHERE ' . $checkFields;
-        $orphanCheck = $stmt['check'];
-      }
-      if (!is_null($orphanCheck)){
-        // TODO: Rearrange this+above so no repetition of code
-        // Check to see if an update will orphan a file
-        if (array_key_exists('fileName', $stmt['set'])
-          || $stmt['action'] == 'delete'){
-          $select = 'SELECT fileName, person FROM Videos WHERE ' .
-            'soc = :soc AND personNum = :personNum AND ' .
-            'fileName IN (SELECT fileName FROM Videos WHERE ' . 
-            'soc = :soc AND personNum = :personNum ' .
-            'AND questionNum = :questionNum)';
-          $results = $connection->execute($select,
-            $orphanCheck, $fieldTypes)->fetchAll('assoc');
-          if (count($results) == 1){
-            $orphans[] = $orphanCheck
-              + ['fileName' => $results[0]['fileName'],
-              'person' => $results[0]['person']];
-          }
-        }
       }
       if (!$dryRun){
         $connection->execute($query, $fields, $fieldTypes);
@@ -416,36 +352,36 @@ class AdminController extends PagesController
       $actionsTaken[] = ([$query, $fields, $fieldTypes]);
     }
 
+    // Appends folder move to end
+    $queuedUpdates['filesystem'] = array_merge($queuedUpdates['filesystem'], $nameUpdates);
     foreach ($queuedUpdates['filesystem'] as $move){
       // Create folder if it does not exist
       $folder = new Folder($move['dir'], true);
       $dest = $folder->path . '/' . $move['name'];
+      
+      $nameChange = array_key_exists('swapOnly', $move);
+      if ($nameChange && $move['swapOnly']){
+        continue;
+      }
       if (file_exists($dest)){
         if (!$dryRun){
           rename($dest, $dest . '#');
-          // Orphans handled by database update, required for upload
         }
         $actionsTaken[] = ([$dest, $dest . '#']);
       }
-      if (!$dryRun){
-        move_uploaded_file($move['src'], $dest);
+      if ($nameChange){
+        if (!$dryRun){
+          rename($move['src'], $dest);
+        }
+      } else {
+        if (!$dryRun){
+          move_uploaded_file($move['src'], $dest);
+        }
       }
       $actionsTaken[] = ([$move['src'], $dest]);
     }
     
-    foreach ($deleteFiles as $path){
-      $vidPath = WWW_ROOT . 'vid/' ;
-      $fileToDelete = $vidPath . $path;
-      if (file_exists($fileToDelete)){
-        if (!$dryRun){
-          unlink($fileToDelete);
-        }
-        $actionsTaken[] = (['delete', $fileToDelete]);
-      }
-    }
-
     $this->set('dryRun', $dryRun);
-    $this->set('orphans', $orphans);
     $this->set('request', $this->request->data);
     $this->set('changes', $updates);
     $this->set('actions', $queuedUpdates);
@@ -453,5 +389,214 @@ class AdminController extends PagesController
     // TODO: Implement own file preservation + garbage collection
     // Create multistage upload/confirm (add uploads to orphan directory?)
     $this->display('upload');
+  }
+  
+  // From http://jeffreysambells.com/2012/10/25/human-readable-filesize-php
+  private function human_filesize($bytes, $decimals = 2) {
+    $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+    $factor = floor((strlen($bytes) - 1) / 3);
+    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+  }
+
+  /* Extracts relevant information from stat() of path
+   * Directory, creation time, size (converted from bytes)
+   */
+  private function getPathInfo($path){
+    $stat = stat($path);
+    if (!$stat){
+      return [];
+    }
+    $humanInfo = [];
+    $humanInfo['dir'] = is_dir($path);
+    // Date format from https://secure.php.net/manual/en/function.filemtime.php
+    $humanInfo['ctime'] = date ("F d Y H:i:s", $stat['ctime']);
+    $humanInfo['size'] = $this->human_filesize($stat['size']);
+    return $humanInfo;
+  }
+  
+  /* Gets list of files from the video folder, and removes all that are used by a row
+   * Also detects invalid folders in the base directory, and reused person numbers
+   * In finding unused files, also finds references to nonexistant files
+   * In proper usage, most unnecessary, but allows fixing of malformed folders
+   */
+  public function displayOrphans(){
+    $connection = ConnectionManager::get($this->datasource);
+    // TODO: Refactor 'orphans' to 'errors', update comments
+    // Combined with deadlinks to handle 'empty' arrays
+    $orphans = [];
+    $folderPath = WWW_ROOT . 'vid/';
+    $folders = array_diff(scandir($folderPath), ['.', '..']);
+    foreach ($folders as $f) {
+      $path = $folderPath . $f;
+      $matches = [];
+      $regex = '/^(\d{2}-\d{4})_(\d+)_(.*)$/';
+      // Nonmatch returns 0, error returns false, type-independent check
+      // as both mean the folder has issues
+      $regexFound = (preg_match($regex, $f, $matches) == 1);
+      if (!$regexFound || !is_dir($path)){
+        $orphans['root'][] = ['path' => $path,
+          'info' => $this->getPathInfo($path)];
+      } else {
+        $soc = $matches[1];
+        $pNum = $matches[2];
+        $person = $matches[3];
+        $files = array_diff(scandir($path), ['.', '..']);
+        $newPerson = $this->initializeSOCPerson($orphans,
+          $soc, '', $pNum, $person, 'files');
+        if ($newPerson){
+          $orphans[$soc]['people'][$pNum]['files'] = $files;
+        // Two people for the same pNum, manual error
+        } else {
+          // Uses name as key as no two folders can have same name
+          if (!array_key_exists('conflict', $orphans[$soc]['people'][$pNum])){
+            $orphans[$soc]['people'][$pNum]['conflict'] = [];
+          }
+          $orphans[$soc]['people'][$pNum]['conflict'][$person] = $files;
+        }
+      }
+    }
+    
+    $query = 'SELECT * FROM Videos';
+    $results = $connection->execute($query)->fetchAll('assoc');
+    foreach ($results as $r){
+      $soc = $r['soc'];
+      $pNum = $r['personNum'];
+      $person = $r['person'];
+      $qNum = $r['questionNum'];
+      $fileName = $r['fileName'];
+      // Opposite of orphan exists, rows have no matching file/folder
+      // Possibly caused by manual database update w/o upload/copy
+      // TODO: Clean up conditional mess, avoiding index access on null
+      $nameInConflict = (array_key_exists('conflict', $orphans[$soc]['people'][$pNum])
+          && array_key_exists($person, $orphans[$soc]['people'][$pNum]['conflict']));;
+      $nameMismatch = ($person != $orphans[$soc]['people'][$pNum]['name']
+        && !$nameInConflict);
+      if (!array_key_exists($soc, $orphans)
+        || !array_key_exists($pNum, $orphans[$soc]['people'])
+        || $nameMismatch){
+        $this->initializeSOCPerson($orphans,
+          $soc, '', $pNum, $person, 'deadLinks');
+        $orphans[$soc]['people'][$pNum]['deadLinks'][$qNum] = $fileName;
+        continue;
+      }
+      // Above conditions ensure:
+      //   soc in orphans
+      //   pNum in orphans[soc]
+      $personRef = &$orphans[$soc]['people'][$pNum];
+      // Multiple folders exist for same pNum
+      // Possibly caused by copying error, error in upload code
+      if ($nameInConflict){
+        // Swap with main entry in orphans (mark others as probably invalid)
+        // If table enforces pNum-person equivalence, 100% correct behavior
+        // Otherwise, last row to reference conflict will set that as main
+        $tmpName = $personRef['name'];
+        $tmpFiles = $personRef['files'];
+        $personRef['name'] = $person;
+        $personRef['files'] = $personRef['conflict'][$person];
+        $personRef['conflict'][$tmpName] = $tmpFiles;
+        unset($personRef['conflict'][$person]);
+      }
+      // Remove non-orphans from orphans list
+      // Above conditions ensure:
+      //   soc in orphans
+      //   pNum in orphans[soc]
+      //   name equals orphans[soc][..][pnum][name]
+      // if filename does not match, dead link
+      $fileIndex = array_search($fileName, $personRef['files']);
+      // If not found, returns boolean false, != index 0
+      if ($fileIndex === false){
+        $personRef['deadLinks'][$qNum] = $fileName;
+      } else {
+        unset($personRef['files'][$fileIndex]);
+        // Trim all arrays whose files are all accounted for
+        // Conflicts not trimmed as they should not exist
+        if (count($personRef['files']) == 0
+          && !array_key_exists('conflict', $personRef)){
+          unset($orphans[$soc]['people'][$pNum]);
+        }
+        if (count($orphans[$soc]['people']) == 0){
+          unset($orphans[$soc]);
+        }
+      }
+    }
+    
+    foreach ($orphans as $soc => $career){
+      if ($soc == 'root'){
+        continue;
+      }
+      // Trimming done during query, remaining empty started empty
+      foreach ($career['people'] as $pNum => $person){
+        foreach ($person['files'] as $fNum => $f){
+          $filePath = $folderPath . implode('_',
+            [$soc, $pNum, $person['name']]) . '/' . $f;
+          $fileInfo = $this->getPathInfo($filePath);
+          $orphans[$soc]['people'][$pNum]['files'][$fNum]
+            = ['path' => $filePath, 'info' => $fileInfo];
+        }
+        if (array_key_exists('conflict', $person)){
+          foreach($person['conflict'] as $cname => $cfiles){
+            foreach($cfiles as $cfNum => $cf){
+            $filePath = $folderPath . implode('_',
+              [$soc, $pNum, $cname]) . '/' . $cf;
+            $fileInfo = $this->getPathInfo($filePath);
+            $orphans[$soc]['people'][$pNum]['conflict'][$cname][$cfNum]
+              = ['path' => $filePath, 'info' => $fileInfo];
+            }
+          }
+        }
+      }
+    }
+    
+    $this->set('orphans', $orphans);
+    $this->display('orphans');
+  }
+  
+  // taken from https://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it
+  // Recursive delete of a folder with files or folders in it
+  private function deleteDir($dirPath) {
+    if (! is_dir($dirPath)) {
+//      throw new InvalidArgumentException("$dirPath must be a directory");
+      unlink($dirPath);
+    }
+    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+      $dirPath .= '/';
+    }
+    $files = glob($dirPath . '*', GLOB_MARK);
+    foreach ($files as $file) {
+      if (is_dir($file)) {
+        self::deleteDir($file);
+      } else {
+        unlink($file);
+      }
+    }
+    rmdir($dirPath);
+  }
+  
+  /* Executes deletes created on the orphans page
+   * Filepathes encoded and decoded by urlencode due to issues with escapes
+   * Checks made for '' and '..' to prevent deformed POST from deleting more
+   */
+  public function cleanFilesystem(){
+    if (!$this->request->is('post')){
+      // TODO: Error page, not uploading anything
+      $this->display('delete');
+      return;
+    }
+    debug($this->request->data);
+    $path = WWW_ROOT . 'vid/';
+    $deletes = [];
+    $errors = [];
+    foreach($this->request->data as $deleteEncoded => $exists){
+      $delete = urldecode($deleteEncoded);
+      if (preg_match('/\.\.\/|\/\.\.|^\.\.$|^$/', $delete) !== false){
+        $this->deleteDir($path . $delete);
+        $deletes[] = $path . $delete;
+      } else {
+        $errors[] = $path . $delete;
+      }
+    }
+    $this->set('deletes', $deletes);
+    $this->set('errors', $errors);
+    $this->display('delete');
   }
 }

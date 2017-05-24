@@ -67,9 +67,11 @@
                       </div>
                       <div id="search-filters">
                         Only show occupations with:&nbsp;
-                        <input type="checkbox" name="video">videos&nbsp;
-                        <input type="checkbox" name="skills">skills&nbsp;
-                        <input type="checkbox" name="growth">positive career growth&nbsp;
+                        <input type="checkbox" id="videoCheckbox" name="video" />
+			<label for="videoCheckbox">videos</label>
+                        <input type="checkbox" id="skillsCheckbox" name="skills" />
+			<label for="skillsCheckbox">skills</label>
+<!--                        <input type="checkbox" name="growth">positive career growth&nbsp;-->
                       </div>
                     </form>
                   </div>

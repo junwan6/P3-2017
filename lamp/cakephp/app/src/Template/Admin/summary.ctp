@@ -28,10 +28,10 @@
                         <tr><td colspan="4">
                           <?php
                             $videosLink = $this->Url->build(['controller'=>'Admin',
-                              'action'=>'videos']);
+                              'action'=>'displayVideos']);
                             echo '<span style="width:100%" class="cellspan">' .
                               '<input type="text" id="inputSOC" ' .
-                                'placeholder="enter a SOC or list of SOCs" '. 
+                                'placeholder="enter a SOC, list of SOCs, or blank for all" '. 
                                 'onchange="updateSOCLink(\'' . $videosLink . '\');"' . '>';
                             // placeholder="or navigate by search bar">
                             echo '</span>';
@@ -58,6 +58,12 @@
                           }
                         ?>
                       </table>
+                    <?php
+                      
+                      $orphansLink = $this->Url->build(['controller'=>'Admin',
+                        'action'=>'displayOrphans']);
+                      echo "<a href=\"{$orphansLink}\"><h4>Unassigned Files</h4></a>";
+                    ?>
                     <h4>Users</h4>
                     <h4>View Trends</h4>
                   </div>

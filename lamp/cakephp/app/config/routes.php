@@ -168,6 +168,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     // Back-end page/AJAX to receive a file, create a folder, and update rows
     $routes->connect('/admin/upload', ['controller' => 'admin',
       'action' => 'uploadVideos']);
+    // Filesystem maintenance page, listing orphaned videos and folders
+    $routes->connect('/admin/orphans', ['controller' => 'admin',
+      'action' => 'displayOrphans']);
     // TODO: Summary page of traffic, etc. Entry point for admin portal
     $routes->connect('/admin/', ['controller' => 'admin',
       'action' => 'displaySummary']);
@@ -183,9 +186,10 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     // TODO: AJAX on button press, update ratings, return next video SOC
     // Takes filter parameters (updated clientside by JS)
-    //$routes->connect('/career/:vidrating', ['controller' => 'algorithm',
-    //  'action' => 'display', 'salary'], ['pass' => ['vidrating'],
-    //    'vidrating' => 'vidup|vidmid|viddown']);
+    //$routes->connect('/career', ['controller' => 'algorithm',
+      //'action' => 'getSoc']);
+     //'display', 'salary'], ['pass' => ['vidrating'],
+     //   'vidrating' => 'vidup|vidmid|viddown']);
 
     /**
      * Connect catchall routes for all controllers.

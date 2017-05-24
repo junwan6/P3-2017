@@ -1,0 +1,49 @@
+.titleText {
+  color: #333333;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.socCode {
+  font-size: 16px;
+}
+
+.change {
+  color: #444444;
+  font-size: 12px;
+}
+
+.deleted {
+  background-color: rgb(240, 200, 200);
+}
+
+.deleteRow:hover {
+  background-color: rgb(220, 200, 200);
+}
+
+.deleteTable {
+  width: 100%;
+  color: black;
+  border: 1px solid black;
+}
+
+.conflictRow {
+}
+.conflictTable {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.fileErrorRow {
+}
+
+.orphanTable {
+  width: 100%;
+  border: 1px solid black;
+}
+.deadLinkTable {
+  width: 100%;
+  font-size: 8pt;
+  border: 1px solid black;
+}
