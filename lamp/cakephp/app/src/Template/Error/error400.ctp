@@ -1,38 +1,36 @@
-<?php
-use Cake\Core\Configure;
-use Cake\Error\Debugger;
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <!-- {{> global_header }} -->
+    <?php echo $this->Html->css('404.css'); ?>
+    <title>
+      PPP
+    </title>
+  </head>
+  <body>
+    <!-- {{> navbar}} -->
+    <?php echo $this->element('navbar'); ?>
 
-$this->layout = 'error';
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="box">
+            <p class="titleText">
+              Uh-oh!
+            </p>
 
-if (Configure::read('debug')):
-    $this->layout = 'dev_error';
-
-    $this->assign('title', $message);
-    $this->assign('templateName', 'error400.ctp');
-
-    $this->start('file');
-?>
-<?php if (!empty($error->queryString)) : ?>
-    <p class="notice">
-        <strong>SQL Query: </strong>
-        <?= h($error->queryString) ?>
-    </p>
-<?php endif; ?>
-<?php if (!empty($error->params)) : ?>
-        <strong>SQL Query Params: </strong>
-        <?php Debugger::dump($error->params) ?>
-<?php endif; ?>
-<?= $this->element('auto_table_warning') ?>
-<?php
-    if (extension_loaded('xdebug')):
-        xdebug_print_function_stack();
-    endif;
-
-    $this->end();
-endif;
-?>
-<h2><?= h($message) ?></h2>
-<p class="error">
-    <strong><?= __d('cake', 'Error') ?>: </strong>
-    <?= __d('cake', 'The requested address {0} was not found on this server.', "<strong>'{$url}'</strong>") ?>
-</p>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                  <p class="normalText">
+                    We couldn't find the page you're looking for.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
