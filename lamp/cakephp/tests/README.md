@@ -13,3 +13,13 @@
 * Selenium server: `wget https://goo.gl/s4o9Vx --content-disposition`
   * Run with command `nohup java -Dwebdriver.chrome.driver="<path>" -jar <selenium server jar>`
     * Requires Java (`sudo apt-get install default-jre`)
+  * Added `start_selenium.sh` script (no checks for already running, etc.)
+
+#Directory
+* `run_tests.php`: Single page to start running of tests defined in `classes\`
+* `start_selenium.sh`: Basic startup script for selenium server, on machine with no display
+* `selenium-server-standalong-*.jar`: Standalong Selenium server used to emulate user interaction with a browser
+* `server.log`: Redirected output of selenium server
+* `classes/`: PHP classes, containing tests grouped together by Controller, etc.
+* `downloads/`: Files downloaded to set up testing environment, such as chromium binary, chrome webdriver binary
+* `composer.*`, `vendor/`: Composer files created on installing php-webdriver

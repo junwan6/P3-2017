@@ -1,5 +1,6 @@
   <div id="fader"></div>
   <?php
+
     //TODO: Fill in following variables from the NodeJS serverside scripts:
     //  controllers/browse-controller.js
     //  controllers/temp-controller.js

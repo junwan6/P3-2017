@@ -3,3 +3,4 @@
 * `data`: Excel spreadsheet directory, for processing into the database.
 * `database`: Database scripts.
 * `tests`: Tests separate from CakePHP, using facebook/php-webdriver
+  * Separated due to additional dependencies, php-curl and php-zip

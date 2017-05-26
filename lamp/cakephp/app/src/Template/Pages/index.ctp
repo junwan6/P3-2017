@@ -22,6 +22,26 @@
       $reason = "Not Implemented";
       $loginAttempt = false;
       $signUpAttempt = false;
+
+      /**
+       * Identical to navbar-defined baselink function
+       * Wrapper function for Url->build
+       * Parameters: [link] [prepend] [append]
+       *  link: Optional, defaults to '/'. Link to be made from base url
+       *  prepend: Optional. String to be prepended to path
+       *  append: Optional. String to be appended to path
+       */
+      function indexBaseLink(...$args){
+        $view = $args[0];
+        $str = $view->Url->build('/');
+        if (count($args) >= 2){
+          $str .= $args[1];
+        }
+        if (count($args) == 4){
+          $str = $args[2] . $str . $args[3];
+        }
+        return $str;
+      }
     ?>
   </head>
   <body>
@@ -39,15 +59,19 @@
           </div>
           <div class="row row-with-margins">
             <div class="col-md-6">
-	      <div id="goToProfileContent" class="landingPageButton">
-	        <a class="nostyle" href="profile">
+        <div id="goToProfileContent" class="landingPageButton">
+          <?php echo indexBaseLink($this, 'profile',
+            '<a class="nostyle" href="', '">'); ?>
+	        <!-- <a class="nostyle" href="profile"> -->
 	          View your profile
 	        </a>
               </div>
             </div>
             <div class="col-md-6">
 	      <div id="browseCareersContent" class="landingPageButton">
-	        <a class="nostyle" href="browse">
+          <?php echo indexBaseLink($this, 'browse',
+            '<a class="nostyle" href="', '">'); ?>
+	        <!-- <a class="nostyle" href="browse"> -->
 	          Browse careers now
 	        </a>
               </div>
@@ -70,7 +94,9 @@
           </div>
           <div class="col-md-6">
             <div id="browseCareersContent" class="landingPageButton">
-	      <a class="nostyle" href="browse">
+              <?php echo indexBaseLink($this, 'browse',
+                '<a class="nostyle" href="', '">'); ?>
+	      <!-- <a class="nostyle" href="browse"> -->
 	        Browse careers now
               </a>
             </div>
