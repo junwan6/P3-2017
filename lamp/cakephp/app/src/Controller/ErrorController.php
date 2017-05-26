@@ -31,6 +31,8 @@ class ErrorController extends PagesController
     public function initialize()
     {
         $this->loadComponent('RequestHandler');
+        
+        $this->viewBuilder()->setLayout('p3');
     }
 
     /**
@@ -52,7 +54,6 @@ class ErrorController extends PagesController
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
-
         $this->viewBuilder()->setTemplatePath('Error');
     }
 

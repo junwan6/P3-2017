@@ -164,6 +164,9 @@ class CareerController extends PagesController
       $this->set('futureEmployment', number_format(floatval($r['futureEmployment']) * 1000));
       $this->set('jobOpenings', number_format(floatval($r['jobOpenings']) * 1000));
     }
+    if (count($results) == 0){
+      throw new NotFoundException;
+    }
 
     // Get data from StateOccupation
     

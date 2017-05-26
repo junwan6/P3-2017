@@ -92,19 +92,23 @@ class WebDriverTest {
     $linkTags += $this->wd->findElements(WebDriverBy::tagName('link'));
     $linkTags += $this->wd->findElements(WebDriverBy::tagName('script'));
     // Filtering done on 
-    $hrefs = array_filter(array_map(function ($t){
-      return $t->getAttribute('href');
-    },$linkTags), function ($href){
+    $links = array_filter(array_map(function ($t){
+      return [
+        'text' => $t->getText(),
+        'href' => $t->getAttribute('href')
+      ];
+    },$linkTags), function ($link){
+      $href = $link['href'];
       // Remove javascript links, self links, and nonlinks (<a> w/o href)
       // TODO: Find other disqualifying conditions
       $isToSamePage = ($href == '' || $href == '#');
       $isJavaScript = (substr($href,0,11) === 'javascript:');
       return !($isToSamePage || $isJavaScript);
     });
-    foreach ($hrefs as $href){
-      $httpsResponseCode = $this->getstatus($href);
+    foreach ($links as $link){
+      $httpsResponseCode = $this->getstatus($link['href']);
       if (substr($httpsResponseCode,0,1) !== '2'){
-        $errStr = "URL \"{$href}\" returned response code {$httpsResponseCode}";
+        $errStr = "Link \"{$link['text']}\" -> \"{$link['href']}\" returned response code {$httpsResponseCode}";
         if ($warnOnly){
           echo $errStr . PHP_EOL;
         } else {

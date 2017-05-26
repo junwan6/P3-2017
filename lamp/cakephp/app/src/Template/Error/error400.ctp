@@ -1,16 +1,12 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <!-- {{> global_header }} -->
-    <?php echo $this->Html->css('404.css'); ?>
     <title>
       PPP
     </title>
+    <?php echo $this->Html->css('Error/404.css'); ?>
   </head>
   <body>
-    <!-- {{> navbar}} -->
-    <?php echo $this->element('navbar'); ?>
-
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">

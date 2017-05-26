@@ -103,6 +103,8 @@ class PagesTest extends WebDriverTest{
     $fullSearchBar = $this->wd->findElement(WebDriverBy::id('fullSearchBar'));
 
     $this->testPageImgs($this->allowBrokenLinks);
+    // Link text appears as "" as only visible text printed
+    // Cannot expand all categories as expanding one collapses others
     $this->testPageLinks($this->allowBrokenLinks);
 
     if ($returnHome){

@@ -12,74 +12,36 @@
  * @since         0.10.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <?= $this->Html->charset() ?>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
+        <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <?php
-      // Converted from partials/global_header.html
-      echo $this->Html->script(array(
-        'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',
-        '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js',
-        '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'
-      ));
-      echo $this->Html->css(array(
-        '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css',
-        // original had integrity="sha384-...", crossorigin="anonymous" for 2 following
-        'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
-        '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        'https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext'
-      ));
-      echo $this->Html->script(array(
-        'global.js',
-        // TODO: Figure out what is used from index.js, separate out
-        'Pages/index.js'
-      ));
-      echo $this->Html->css(array(
-        'global.css',
-        'Error/404.css'
-      ));
-    ?>
+    <?= $this->Html->css('base.css') ?>
+    <?= $this->Html->css('cake.css') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
 <body>
-    <?= $this->element('navbar'); ?>
-    <?= $this->Flash->render() ?>
-    <div class="cakephp-container clearfix">
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <div class="box">
-            <p class="titleText">
-              Uh-oh!
-            </p>
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                  <p class="normalText">
-                    We couldn't find the page you're looking for.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div id="container">
+        <div id="header">
+            <h1><?= __('Error') ?></h1>
         </div>
-      </div>
+        <div id="content">
+            <?= $this->Flash->render() ?>
+
+            <?= $this->fetch('content') ?>
+        </div>
+        <div id="footer">
+            <?= $this->Html->link(__('Back'), 'javascript:history.back()') ?>
+        </div>
     </div>
-    </div>
-    <footer>
-    </footer>
 </body>
 </html>

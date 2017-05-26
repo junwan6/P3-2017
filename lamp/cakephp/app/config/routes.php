@@ -131,8 +131,9 @@ Router::scope('/', function (RouteBuilder $routes) {
       'action' => 'displayCareerSingle'], ['pass' => ['soc'],
         'soc' => '[0-9]{2}-[0-9]{4}']);
     // If no soc given, go to random soc
-    $routes->connect('/career/*', ['controller' => 'career',
-      'action' => 'redirectRandom']);
+    // Disabled, instead goes to error page
+    //$routes->connect('/career/*', ['controller' => 'career',
+    //  'action' => 'redirectRandom']);
     // Special case of above, explicitly defined as link exists
     // May take x and y parameters for weighted randomness on World of Work graphic
     $routes->connect('/career/random', ['controller' => 'career',

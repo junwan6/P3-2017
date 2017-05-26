@@ -27,17 +27,19 @@
     </title>
       <table id="careerTable">
         <?php
-          foreach ($states as $st){
-            echo '<!-- ' . $st . ' --><tr>';
-            if (in_array($st, $sts)){
-              echo '<td>' . $avg[$st] . '</td>';
-              echo '<td>' . $lo[$st] . '</td>';
-              echo '<td>' . $med[$st] . '</td>';
-              echo '<td>' . $hi[$st] . '</td>';
-            } else {
-              echo '<td><td><td><td></td></td></td></td>';
+          if (isset($jobOpenings)){
+            foreach ($states as $st){
+              echo '<!-- ' . $st . ' --><tr>';
+              if (in_array($st, $sts)){
+                echo '<td>' . $avg[$st] . '</td>';
+                echo '<td>' . $lo[$st] . '</td>';
+                echo '<td>' . $med[$st] . '</td>';
+                echo '<td>' . $hi[$st] . '</td>';
+              } else {
+                echo '<td><td><td><td></td></td></td></td>';
+              }
+              echo '</tr>';
             }
-            echo '</tr>';
           }
           ?>
       </table>
