@@ -134,15 +134,25 @@ class UserController extends PagesController
 		$hash = md5($password . $salt);
 
 		//insert the record into the database upon signup
-		/*
 		$uf = ['firstName', 'lastName', 'email'];
 		$userField = implode(',', $uf);
-		$queryInsert = 'INSERT INTO Users ' . "({$userField}) VALUES ({$userField})";
+		//$queryInsert = 'INSERT INTO Users (' . implode(', ', $uf) . ') VALUES (firstName = :firstName, lastName = :lastName, email = :email)';
+ 	$queryInsert = 'INSERT INTO Users (firstName, lastName, email) VALUES (firstName = :firstName, lastName = :lastName, email = :email)';	
+
+		//$sql_1 = "INSERT INTO Users (firstName, lastName, email) VALUES ('$firstName', '$lastName', '$email')
+		$values = array(
+                        'firstName'=> gettype($firstName),
+                        'lastName'=> gettype($lastName),
+                        'email'=> gettype($email)
+                );
+		
+		$resultInsert = $db->execute($queryInsert, ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email], $values);	
+		
 		//'SELECT ' . implode(',', $SaltField) . ' FROM UserPasswords WHERE id = :id';
              	//$this->db->query($querySalt);
 	
-		
-		$fields = array('fieldname1'=>':value1', 'fieldname2'=>':value2', 'fieldname1'=>':value1');
+		/*
+		$fields = array('firstName'=>':value1', 'lastName'=>':value2', 'email'=>':value3');
 		$values = array(
   			'value1'=> $firstName,
   			'value2'=> $lastName,
@@ -155,32 +165,21 @@ class UserController extends PagesController
   			'values' => implode(', ', array_values($values))
 		); 
  
-		$resultInsert = $db->execute($queryInsert, array(), $values);
+		$resultInsert = $db->execute($queryInsert, $fields, $values);
 		*/
 		
-		$fields = ['firstName' , 'lastName' , 'email'];
- 	       	$fieldNames = implode(', ', array_keys($fields));
-       		$fieldSubs = implode(', ', array_map(function ($s){
-            		return ':' . $s;
-        	}, array_keys($fields)));
-        	$fieldTypes = array_map(function ($s){return gettype($s);}, $fields);
-        	$query = 'INSERT INTO Users ' . "({$fieldNames}) VALUES ({$fieldSubs})";
-
-		$db->execute($query, $fields, $fieldTypes);
-		
-		//$db->execute($querySalt, $uf,);
 		//$sql_1 = "INSERT INTO Users (firstName, lastName, email) VALUES ('$firstName', '$lastName', '$email')";
-		
 		
 		//grab the id
 		$idField = ['id'];
-		$queryID = 'SELECT ' . implode(',', $idField) . ' FROM Users WHERE firstName = :firstName AND lastName = :lastName AND email = :email';
+		$queryID = 'SELECT id FROM Users WHERE firstName = :firstName AND lastName= :lastName AND email = :email';
                 $resultID = $db->execute($queryID, ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email])->fetchAll('assoc');
-		
+
 		//$query = "SELECT id FROM Users WHERE firstName = '$firstName' AND lastName = '$lastName' AND email = '$email'"; 
-		//$UserID = mysqli_query($db, $query);
+		//yUserID = mysqli_query($db, $query);
 		//$row = mysqli_fetch_array($UserID);
-		if(count($resultID) > 0){
+		if($resultID){echo "bruh";}
+		if($resultID){
 			echo "good";
 			$ID = $resultID['0']['id'];
 			$intID = (int)$ID;
@@ -188,23 +187,16 @@ class UserController extends PagesController
 		
 			$pf = ['hash', 'salt', 'id'];
                 	$passField = implode(',', $pf);
-                	$queryPass = 'INSERT INTO UserPasswords (hash, salt, id) VALUES ' . "({$passField})";
                 	//'SELECT ' . implode(',', $SaltField) . ' FROM UserPasswords WHERE id = :id';
-
-                	$fields2 = array('fieldname1'=>':value1', 'fieldname2'=>':value2', 'fieldname1'=>':value1');
-                	$values2 = array(
-                	        'value1'=> $hash,
-                	        'value2'=> $salt,
-                	        'value3'=> $intID
-                	);
-	
-	                $queryData2 = array(
-	                        'table2' => '',
-	                        'fields2' => implode(', ', array_keys($fields2)),
-	                        'values2' => implode(', ', array_values($values2))
-	                );
-
-	                $resultPass = $db->execute($queryPass, array(), $values2);
+                	$queryPass = 'INSERT INTO UserPasswords (' . implode(', ', $pf) .
+                        	') VALUES (hash = :hash, salt = :salt, id = :id)';
+			$values2 = array(
+				'hash'=> gettype($hash),
+				'salt'=> gettype($salt),
+				'id'=> gettype($id)
+			);
+                
+			$resultPass = $db->execute($queryPass, ['hash' => $hash, 'salt' => $salt, 'id' => $id], $values2);
 	
 			//$sql_2 = "INSERT INTO UserPasswords (hash, salt, id) VALUES ('$hash', '$salt', '$intID')";
 	
