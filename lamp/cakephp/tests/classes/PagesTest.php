@@ -7,23 +7,33 @@ class PagesTest extends WebDriverTest{
   protected $url;
   protected $wd;
   protected $allowBrokenLinks;
+  protected $suppressWarnings;
+  protected $screenshotDir;
+  protected $driverDetached;
 
   public static function getstatus($url)
   protected function testPageImgs($warnOnly=false)
   protected function testPageLinks($warnOnly=false)
    */
   /* Default variables for constructor
-  function __construct($binPath='downloads/chrome-linux/chrome',
-      $selServPath='http://localhost:4444/wd/hub', $timeout=5000,
-      $pageURL='https://localhost/cake/', $warnLinks=false){
-   */
+    $defaultArgs = [
+      'binPath' => 'downloads/chrome-linux/chrome',
+      'selServPath' => 'http://localhost:4444/wd/hub',
+      'timeout' => 5000,
+      'pageURL' => 'https://localhost/cake/',
+      'warnLinks' => false,
+      'suppressWarnings' => false,
+      'ssDir' => 'screenshot/',
+      'reuseDriver' => null,
+    ];
+  */
 
   /* Starting point for all stepthrough tests
    * Checks for static elements, dynamic checks will be part of respective
    * tests for each controller (i.e. UserController tests "Welcome back, etc.")
    * Ends with webdriver at index page
    */
-  public function testHomePage(){
+  public function testHomePage($ssFile='home.png'){
     // Loads the homepage, assumes this is run on same 
     $this->wd->get($this->url);
 
@@ -38,39 +48,45 @@ class PagesTest extends WebDriverTest{
     $bgCssURL = $background->getCSSValue('background-image');
     $matches = [];
     preg_match('/^url\("(.*)"\)$/', $bgCssURL, $matches);
-    $this->wd->get($matches[1]);
-    $this->wd->get($this->url);
+    $httpsReturn = $this->getStatus($matches[1]);
+    if (substr($httpsReturn, 0, 1) !== '2'){
+      throw new Exception('Background image does not exist');
+    }
+
+    if (!is_null($ssFile)){
+      $this->wd->takeScreenShot($this->screenshotDir . $ssFile);
+    }
+
     // Test image sources of all img tags (only the logo on this page)
+    // First run, test navbar links as well
     $this->testPageImgs($this->allowBrokenLinks);
-    $this->testPageLinks($this->allowBrokenLinks);
+    $this->testPageLinks($this->allowBrokenLinks, false);
   }
 
   /* Test donors page, optionally fom the homepage by clicking the Donors button
    * Not much to test here, static page with minimal content
    * Checks for title, may break if title changed
    */
-  public function testDonorsPage($fromHomePage=false, $returnHome=true){
-    if ($fromHomePage){
-      $donorsButton = $this->wd->findElement(WebDriverBy::partialLinkText('Donors'));
-      $this->wd->getMouse()->mouseMove($donorsButton->getCoordinates());
-      $donorsButton->click();
-    } else {
-      $this->wd->get($this->pageURL . 'donors');
-    }
+  public function testDonorsPage($ssFile='donors.png'){
+    $donorsButton = $this->wd->findElement(WebDriverBy::partialLinkText('Donors'));
+    $this->wd->getMouse()->mouseMove($donorsButton->getCoordinates());
+    $donorsButton->click();
 
     $title = $this->wd->findElement(WebDriverBy::cssSelector('.box > .titleText'));
     if ($title->getText() !== 'Thanks to our donors!'){
       throw new Exception('Donor title not found');
     }
+    
+    if (!is_null($ssFile)){
+      $this->wd->takeScreenShot($this->screenshotDir . $ssFile);
+    }
 
     $this->testPageImgs($this->allowBrokenLinks);
     $this->testPageLinks($this->allowBrokenLinks);
 
-    if ($returnHome){
-      $homeButton = $this->wd->findElement(WebDriverBy::id('home'));
-      $this->wd->getMouse()->mouseMove($homeButton->getCoordinates());
-      $homeButton->click();
-    }
+    $homeButton = $this->wd->findElement(WebDriverBy::id('home'));
+    $this->wd->getMouse()->mouseMove($homeButton->getCoordinates());
+    $homeButton->click();
   }
 
   /* Test browse page, optionally fom the homepage by clicking the Browse button
@@ -79,14 +95,10 @@ class PagesTest extends WebDriverTest{
    * Checks for static content with ids defined in the .ctp
    * Checks imported element major_group.ctp
    */
-  public function testBrowsePage($fromHomePage=false, $returnHome=true){
-    if ($fromHomePage){
-      $browseButton = $this->wd->findElement(WebDriverBy::id('browse'));
-      $this->wd->getMouse()->mouseMove($browseButton->getCoordinates());
-      $browseButton->click();
-    } else {
-      $this->wd->get($this->pageURL . 'browse');
-    }
+  public function testBrowsePage($ssFile='browse.png'){
+    $browseButton = $this->wd->findElement(WebDriverBy::id('browse'));
+    $this->wd->getMouse()->mouseMove($browseButton->getCoordinates());
+    $browseButton->click();
 
     $browseContainer = $this->wd->findElement(WebDriverBy::id('browseContainer'));
     $categories = $this->wd->findElement(WebDriverBy::partialLinktext('By Category'));
@@ -97,21 +109,23 @@ class PagesTest extends WebDriverTest{
     $this->wd->getMouse()->mouseMove($categories->getCoordinates());
     $categories->click();
     if (!$groupOptions->isDisplayed()){
-      throw new Exception('Categories not visible after buton press');
+      throw new Exception('Categories not visible after button press');
     }
 
     $fullSearchBar = $this->wd->findElement(WebDriverBy::id('fullSearchBar'));
+
+    if (!is_null($ssFile)){
+      $this->wd->takeScreenShot($this->screenshotDir . $ssFile);
+    }
 
     $this->testPageImgs($this->allowBrokenLinks);
     // Link text appears as "" as only visible text printed
     // Cannot expand all categories as expanding one collapses others
     $this->testPageLinks($this->allowBrokenLinks);
 
-    if ($returnHome){
-      $homeButton = $this->wd->findElement(WebDriverBy::id('home'));
-      $this->wd->getMouse()->mouseMove($homeButton->getCoordinates());
-      $homeButton->click();
-    }
+    $homeButton = $this->wd->findElement(WebDriverBy::id('home'));
+    $this->wd->getMouse()->mouseMove($homeButton->getCoordinates());
+    $homeButton->click();
   }
 }
 ?>

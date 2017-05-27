@@ -11,23 +11,40 @@ class WebDriverTest {
   protected $url;
   protected $wd;
   protected $allowBrokenLinks;
+  protected $suppressWarnings;
+  protected $screenshotDir;
+  protected $driverDetached;
 
-  function __construct($binPath='downloads/chrome-linux/chrome',
-      $selServPath='http://localhost:4444/wd/hub', $timeout=5000,
-      $pageURL='https://localhost/cake/', $warnLinks=false){
-    $options = new ChromeOptions();
-    // Driver path set by selenium server
-    $options->setBinary($binPath);
-    $capabilities = DesiredCapabilities::chrome();
-    $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
-
-    $this->wd = RemoteWebDriver::create($selServPath, $capabilities, $timeout);
-    $this->url = $pageURL;
-    $this->allowBrokenLinks = $warnLinks;
-  }
-
-  public function setBrokenLinksAllowed($setTo){
-    $this->allowBrokenLinks = $setTo;
+  function __construct($opts){
+    $defaultArgs = [
+      'binPath' => 'downloads/chrome-linux/chrome',
+      'selServPath' => 'http://localhost:4444/wd/hub',
+      'timeout' => 5000,
+      'pageURL' => 'https://localhost/cake/',
+      'warnLinks' => false,
+      'suppressWarnings' => false,
+      'ssDir' => 'screenshot/',
+      'reuseDriver' => null,
+    ];
+    $args = array_replace($defaultArgs, $opts);
+    
+    $this->url = $args['pageURL'];
+    $this->allowBrokenLinks = $args['warnLinks'];
+    $this->screenshotDir = $args['ssDir'];
+    $this->driverDetached = false;
+    
+    if (is_null($args['reuseDriver'])){
+      $options = new ChromeOptions();
+      // Driver path set by selenium server
+      $options->setBinary($args['binPath']);
+      $capabilities = DesiredCapabilities::chrome();
+      $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
+      $this->wd = RemoteWebDriver::create($args['selServPath'],
+        $capabilities, $args['timeout']);
+      $this->wd->get($this->url);
+    } else {
+      $this->wd = $args['reuseDriver'];
+    }
   }
 
   /* Taken from https://stackoverflow.com/questions/17832181/how-to-check-if-a-https-site-exists-in-php
@@ -72,7 +89,9 @@ class WebDriverTest {
       if (substr($httpsResponseCode,0,1) !== '2'){
         $errStr = "Image \"{$src}\" returned code {$httpsResponseCode}";
         if ($warnOnly){
-          echo $errStr . PHP_EOL;
+          if (!$this->suppressWarnings){
+            echo $errStr . PHP_EOL;
+          }
         } else {
           throw new Exception($errStr);
         }
@@ -86,16 +105,24 @@ class WebDriverTest {
    * Intentionally omits form and input tags
    * Currently only warns, due to incomplete modules
    */
-  protected function testPageLinks($warnOnly=false){
-    $linkTags = $this->wd->findElements(WebDriverBy::tagName('a'));
-    $linkTags += $this->wd->findElements(WebDriverBy::tagName('area'));
-    $linkTags += $this->wd->findElements(WebDriverBy::tagName('link'));
-    $linkTags += $this->wd->findElements(WebDriverBy::tagName('script'));
+  protected function testPageLinks($warnOnly=false, $ignoreNavbar=true){
+    $searchedElem = null;
+    if ($ignoreNavbar){
+      $searchedElem = $this->wd->findElement(WebDriverBy::cssSelector(
+        'body > div.cakephp-container'));
+    } else {
+      $searchedElem = $this->wd;
+    }
+    $linkTags = $searchedElem->findElements(WebDriverBy::tagName('a'));
+    $linkTags += $searchedElem->findElements(WebDriverBy::tagName('area'));
+    $linkTags += $searchedElem->findElements(WebDriverBy::tagName('link'));
+    $linkTags += $searchedElem->findElements(WebDriverBy::tagName('script'));
     // Filtering done on 
     $links = array_filter(array_map(function ($t){
       return [
         'text' => $t->getText(),
-        'href' => $t->getAttribute('href')
+        'href' => $t->getAttribute('href'),
+        'isDisplayed' => $t->isDisplayed()
       ];
     },$linkTags), function ($link){
       $href = $link['href'];
@@ -108,18 +135,29 @@ class WebDriverTest {
     foreach ($links as $link){
       $httpsResponseCode = $this->getstatus($link['href']);
       if (substr($httpsResponseCode,0,1) !== '2'){
-        $errStr = "Link \"{$link['text']}\" -> \"{$link['href']}\" returned response code {$httpsResponseCode}";
+        $errStr = ($link['isDisplayed']?
+          "Link \"{$link['text']}\" -> ":"Undisplayed link ");
+        $errStr .= "\"{$link['href']}\" returned {$httpsResponseCode}";
         if ($warnOnly){
-          echo $errStr . PHP_EOL;
+          if (!$this->suppressWarnings){
+            echo $errStr . PHP_EOL;
+          }
         } else {
           throw new Exception($errStr);
         }
       }
     }
   }
+  
+  public function detachDriver(){
+    $this->driverDetached = true;
+    return $this->wd;
+  }
 
   function __destruct(){
-    $this->wd->quit();
+    if (!$this->driverDetached){
+      $this->wd->quit();
+    }
   }
 }
 ?>

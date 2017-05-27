@@ -242,7 +242,7 @@ class CareerController extends PagesController
    * Support for additional filtering if desired
    * TODO: Implement better search algorithm besides AND ... AND ... AND
    */
-  public function search($query){
+  public function search(){
     $connection = ConnectionManager::get($this->datasource);
     $keywords = preg_split('/[,\s]+/', $this->request->getQuery('q'));
     if (count($this->request->query) == 1 && !is_null($this->request->getQuery('q'))
