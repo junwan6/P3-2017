@@ -1,7 +1,7 @@
               <div style="display:table; margin: 0 auto;">
                 <?php
                   if ($noData){
-                    echo 'Sorry, we don\'t have World of Work data for this occupation.';
+                    echo '<h2 class="errorMsg">Sorry, we don\'t have World of Work data for this occupation.</h2>';
                   } else {
                     echo '<canvas id="d" style="z-index: 1;"></canvas>';
                     echo '<div id="interestsTableDiv">';

@@ -276,3 +276,7 @@ span.downthumb:hover{
 
 .active-body { display: inline;}
 .inactive-body { display: none;}   
+
+.errorMsg {
+  color: hsl(0, 30%, 50%);
+}

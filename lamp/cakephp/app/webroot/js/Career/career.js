@@ -674,11 +674,17 @@ var salaryStateToCode = function(stateCode){
 }
 
 $(document).ready(function(){
+  try{
 	//--------------------------------------------WORLD_OF_WORK
-	createCanvas();
-	// tooltips 
-  // Disabled, does not appear to serve any purpose
-  // $('[data-toggle="tooltip"]').tooltip();
+	  createCanvas();
+    // tooltips 
+    // Disabled, does not appear to serve any purpose
+    // $('[data-toggle="tooltip"]').tooltip();
+  } catch(err){
+    console.log('World of Work failed to render');
+    console.log(err);
+  }
+  try{
 	//--------------------------------------------SKILLS
 	if($('#skillsArray').length) {
 		skillsArray = document.getElementById('skillsArray').innerHTML;
@@ -795,6 +801,11 @@ $(document).ready(function(){
         }]
     });
 	}
+  } catch(err){
+    console.log('Skills failed to render');
+    console.log(err);
+  }
+  try{
 	//--------------------------------------------SALARY
   salary_calculateData();
   salary_drawChart();
@@ -804,6 +815,11 @@ $(document).ready(function(){
     salary_calculateData();
     salary_drawChart();
   });
+  } catch(err){
+    console.log('Salary failed to render');
+    console.log(err);
+  }
+  try{
 	//--------------------------------------------EDUCATION
 	var i;
 	for (i = 0; i < initiallyHidden.length; i++) {
@@ -891,6 +907,10 @@ $(document).ready(function(){
 		edu_calculateData();
 		edu_drawChart();
 	});
+  } catch(err){
+    console.log('Education failed to render');
+    console.log(err);
+  }
 });
 
 
