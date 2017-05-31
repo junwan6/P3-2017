@@ -30,22 +30,6 @@ class UserController extends PagesController
 {
     public function login()
     {
-
-	/*
-    	$db = ConnectionManager::get($this->datasource);
-	$db = mysqli_connect("localhost", "root", "root", "p3_test");
-	$query = "SELECT * FROM UserPasswords";
-	$result = mysqli_query($db, $query);
-	//iterate over all the rows
-	while($row = mysqli_fetch_assoc($result))
-	{
-	    //iterate over all the fields
-	    foreach($row as $key => $val){
-	    //generate output
-	    echo $key . ": " . $val . "<BR />";
-	}
-    	*/
-
 	$db = ConnectionManager::get($this->datasource);
   
 	if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -116,10 +100,8 @@ class UserController extends PagesController
     }
 
 
-    //need to change this to make it work for any lamp server
     public function signup()
     {
-	//$db = mysqli_connect("localhost", "root", "root", "p3_test");
 	$db = ConnectionManager::get($this->datasource);
 	
 	if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -134,73 +116,32 @@ class UserController extends PagesController
 		$hash = md5($password . $salt);
 
 		//insert the record into the database upon signup
-		$uf = ['firstName', 'lastName', 'email'];
-		$userField = implode(',', $uf);
-		//$queryInsert = 'INSERT INTO Users (' . implode(', ', $uf) . ') VALUES (firstName = :firstName, lastName = :lastName, email = :email)';
- 	$queryInsert = 'INSERT INTO Users (firstName, lastName, email) VALUES (firstName = :firstName, lastName = :lastName, email = :email)';	
-
-		//$sql_1 = "INSERT INTO Users (firstName, lastName, email) VALUES ('$firstName', '$lastName', '$email')
 		$values = array(
                         'firstName'=> gettype($firstName),
                         'lastName'=> gettype($lastName),
                         'email'=> gettype($email)
                 );
 		
-		$resultInsert = $db->execute($queryInsert, ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email], $values);	
+		$resultInsert = $db->insert("Users", ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email], $values);
 		
-		//'SELECT ' . implode(',', $SaltField) . ' FROM UserPasswords WHERE id = :id';
-             	//$this->db->query($querySalt);
-	
-		/*
-		$fields = array('firstName'=>':value1', 'lastName'=>':value2', 'email'=>':value3');
-		$values = array(
-  			'value1'=> $firstName,
-  			'value2'=> $lastName,
-			'value3'=> $email
-  		);
- 
-		$queryData = array(
-  			'table' => '',
-  			'fields' => implode(', ', array_keys($fields)),
-  			'values' => implode(', ', array_values($values))
-		); 
- 
-		$resultInsert = $db->execute($queryInsert, $fields, $values);
-		*/
-		
-		//$sql_1 = "INSERT INTO Users (firstName, lastName, email) VALUES ('$firstName', '$lastName', '$email')";
 		
 		//grab the id
 		$idField = ['id'];
 		$queryID = 'SELECT id FROM Users WHERE firstName = :firstName AND lastName= :lastName AND email = :email';
                 $resultID = $db->execute($queryID, ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email])->fetchAll('assoc');
 
-		//$query = "SELECT id FROM Users WHERE firstName = '$firstName' AND lastName = '$lastName' AND email = '$email'"; 
-		//yUserID = mysqli_query($db, $query);
-		//$row = mysqli_fetch_array($UserID);
-		if($resultID){echo "bruh";}
 		if($resultID){
-			echo "good";
-			$ID = $resultID['0']['id'];
-			$intID = (int)$ID;
-			//$intID = 1;		
-		
-			$pf = ['hash', 'salt', 'id'];
-                	$passField = implode(',', $pf);
-                	//'SELECT ' . implode(',', $SaltField) . ' FROM UserPasswords WHERE id = :id';
-                	$queryPass = 'INSERT INTO UserPasswords (' . implode(', ', $pf) .
-                        	') VALUES (hash = :hash, salt = :salt, id = :id)';
+			$id = $resultID['0']['id'];
+			$intID = (int)$id;
+			
 			$values2 = array(
 				'hash'=> gettype($hash),
 				'salt'=> gettype($salt),
 				'id'=> gettype($id)
 			);
-                
-			$resultPass = $db->execute($queryPass, ['hash' => $hash, 'salt' => $salt, 'id' => $id], $values2);
-	
-			//$sql_2 = "INSERT INTO UserPasswords (hash, salt, id) VALUES ('$hash', '$salt', '$intID')";
-	
-			//$result = mysqli_query($db, $sql_2);
+			
+			$resultPass = $db->insert("UserPasswords", ['hash' => $hash, 'salt' => $salt, 'id' => $id], $values2);
+			
 			if(!($resultPass))
 			{
 				//this happens if firstname, lastname, and email are all
@@ -209,17 +150,12 @@ class UserController extends PagesController
 			}
 			else if ($resultPass) //means password was inserted correctly
 			{
-				echo "new record created successfully";
 				$this->display("profile");
 			}
 		}
-		else{echo "balls";}
-		//$this->display("profile");
 		
 		
 	}
-//	$this->display("profile");  //change this to display the homepage again bc user has not successfully logged in
-	 
     }
 }
 
