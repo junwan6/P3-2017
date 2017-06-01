@@ -1,0 +1,4 @@
+downloads/**
+vendor/**
+selenium-server-standalone-3.4.0.jar
+server.log

@@ -1,6 +1,7 @@
 <?php
 require_once('WebDriverTest.php');
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 
 class PagesTest extends WebDriverTest{
   /* Variables and methods inherited from parent
@@ -33,7 +34,7 @@ class PagesTest extends WebDriverTest{
    * tests for each controller (i.e. UserController tests "Welcome back, etc.")
    * Ends with webdriver at index page
    */
-  public function testHomePage($ssFile='home.png'){
+  public function testHomePage(){
     // Loads the homepage, assumes this is run on same 
     $this->wd->get($this->url);
 
@@ -53,8 +54,8 @@ class PagesTest extends WebDriverTest{
       throw new Exception('Background image does not exist');
     }
 
-    if (!is_null($ssFile)){
-      $this->wd->takeScreenShot($this->screenshotDir . $ssFile);
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'home.png');
     }
 
     // Test image sources of all img tags (only the logo on this page)
@@ -67,7 +68,7 @@ class PagesTest extends WebDriverTest{
    * Not much to test here, static page with minimal content
    * Checks for title, may break if title changed
    */
-  public function testDonorsPage($ssFile='donors.png'){
+  public function testDonorsPage(){
     $donorsButton = $this->wd->findElement(WebDriverBy::partialLinkText('Donors'));
     $this->wd->getMouse()->mouseMove($donorsButton->getCoordinates());
     $donorsButton->click();
@@ -77,8 +78,8 @@ class PagesTest extends WebDriverTest{
       throw new Exception('Donor title not found');
     }
     
-    if (!is_null($ssFile)){
-      $this->wd->takeScreenShot($this->screenshotDir . $ssFile);
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'donors.png');
     }
 
     $this->testPageImgs($this->allowBrokenLinks);
@@ -95,7 +96,7 @@ class PagesTest extends WebDriverTest{
    * Checks for static content with ids defined in the .ctp
    * Checks imported element major_group.ctp
    */
-  public function testBrowsePage($ssFile='browse.png'){
+  public function testBrowsePage(){
     $browseButton = $this->wd->findElement(WebDriverBy::id('browse'));
     $this->wd->getMouse()->mouseMove($browseButton->getCoordinates());
     $browseButton->click();
@@ -108,14 +109,18 @@ class PagesTest extends WebDriverTest{
     }
     $this->wd->getMouse()->mouseMove($categories->getCoordinates());
     $categories->click();
+    $this->wd->wait()->until(
+      WebDriverExpectedCondition::visibilityOfElementLocated(
+        WebDriverBy::id('broadCategoryOptions')
+    ));
     if (!$groupOptions->isDisplayed()){
       throw new Exception('Categories not visible after button press');
     }
 
     $fullSearchBar = $this->wd->findElement(WebDriverBy::id('fullSearchBar'));
 
-    if (!is_null($ssFile)){
-      $this->wd->takeScreenShot($this->screenshotDir . $ssFile);
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'browse.png');
     }
 
     $this->testPageImgs($this->allowBrokenLinks);

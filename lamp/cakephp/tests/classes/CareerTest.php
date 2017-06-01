@@ -1,6 +1,7 @@
 <?php
 require_once('WebDriverTest.php');
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 
 class CareerTest extends WebDriverTest{
   /* Variables and methods inherited from parent
@@ -15,7 +16,7 @@ class CareerTest extends WebDriverTest{
     protected function testPageImgs($warnOnly=false)
     protected function testPageLinks($warnOnly=false)
     public function detachDriver()
-   */
+  */
   /* Default variables for constructor
     $defaultArgs = [
       'binPath' => 'downloads/chrome-linux/chrome',
@@ -49,12 +50,16 @@ class CareerTest extends WebDriverTest{
   /* Tests a query with known matches, tests results to make sure all match
    * Tests that all results point to existing careers
    */
-  public function testKnownSearch($ssFile='search.png'){
+  public function testKnownSearch(){
     // Skip test on searchbar visibility, tested by PagesTest as static element
     $searchCategory = $this->wd->findElement(
       WebDriverBy::partialLinkText('By Search'));
     $this->wd->getMouse()->mouseMove($searchCategory->getCoordinates());
     $searchCategory->click();
+    $this->wd->wait()->until(
+      WebDriverExpectedCondition::visibilityOfElementLocated(
+        WebDriverBy::id('fullSearchBar')
+    ));
 
     $fullSearchBar = $this->wd->findElement(WebDriverBy::id('fullSearchBar'));
     $fullSearchBar->click();
@@ -77,8 +82,8 @@ class CareerTest extends WebDriverTest{
       }
     }
 
-    if (!is_null($ssFile)){
-      $this->wd->takeScreenShot($this->screenshotDir . $ssFile);
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'search.png');
     }
 
     $this->testPageImgs($this->allowBrokenLinks);
@@ -102,8 +107,11 @@ class CareerTest extends WebDriverTest{
       $searchStr = '';
       for ($i = 0; $i < 3; $i++){
         // q omitted, no careers contain q
-        $searchStr .= 'abcdefghijklmnoprstuvwxyz '[rand(0,25)];
+        $allowedChars = 'abcdefghijklmnoprstuvwxyz ';
+        $searchStr .= $allowedChars[rand(0,strlen($allowedChars))];
       }
+      // strpos returns notfound error on searching for '' created by lead/trail ' '
+      $searchStr = trim($searchStr);
 
       $fullSearchBar->sendKeys($searchStr);
 
@@ -130,11 +138,287 @@ class CareerTest extends WebDriverTest{
     }
   }
 
+  /* Tests for either content or an error message (class="errorMsg")
+   * TODO: standardize css selector references to same levels of parent
+   * May require one or the other by argument
+   *  Second argument is array of pages requiring a success/fail,
+   *  'video', 'skills', 'world-of-work'
+   *  'salary', 'education', and 'outlook' are tied to soc, failure means
+   *    that the entire page fails to load
+   * May navigate within the function or assume caller has already done so
+   *   String value as soc, otherwise no navigation
+   */
+  public function testCareerPage($requiredPages=[], $navigateTo=false){
+    if (is_string($navigateTo)){
+      $this->wd->get($this->url . 'career/' . $navigateTo);
+    }
+    $matches = [];
+    $urlResult = preg_match('/\/career\/([0-9]{2}-[0-9]{4})\/video/',
+      $this->wd->getCurrentURL(), $matches);
+    if ($urlResult == 0 || $urlResult === FALSE){
+      throw new Exception('Page not at career video page');
+    }
+    $soc = $matches[1];
+
+    // Icons
+    $videoIcon = $this->wd->findElement(WebDriverBy::id('videoSegment'));
+    $salaryIcon = $this->wd->findElement(WebDriverBy::id('salarySegment'));
+    $educationIcon = $this->wd->findElement(WebDriverBy::id('educationSegment'));
+    $skillsIcon = $this->wd->findElement(WebDriverBy::id('skillsSegment'));
+    $careerOutlookIcon = $this->wd->findElement(WebDriverBy::id('careerOutlookSegment'));
+    $worldOfWorkIcon = $this->wd->findElement(WebDriverBy::id('worldOfWorkSegment'));
+
+    echo $soc . ': Testing Video Page' . PHP_EOL;
+    // Video page
+    $videoPageSuccess = null;
+    $videoPageFailure = null;
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'video.png');
+    }
+    try {
+      $videoPageSuccess = $this->wd->findElement(WebDriverBy::id('video-wrapper'));
+    } catch (Exception $e){
+      if (array_key_exists('video', $requiredPages) && $requiredPages['video']){
+        throw new Exception($soc . ': No videos, specified to have videos.');
+      }
+    }
+    try {
+      $videoPageFailure = $this->wd->findElement(WebDriverBy::cssSelector(
+        '#video .errorMsg'));
+    } catch (Exception $e){
+      if (array_key_exists('video', $requiredPages) && !$requiredPages['video']){
+        throw new Exception($soc . ': Videos found, specified to have no videos.');
+      }
+    }
+    // Should never both be null (ungraceful fail) or both non-null (both success, fail)
+    if (is_null($videoPageSuccess) == is_null($videoPageFailure)){
+      if (is_null($videoPageSuccess)){
+        throw new Exception($soc . ': Video player failed to load or gracefully fail');
+      } else {
+        throw new Exception($soc . ': Both video player and error message present');
+      }
+    }
+
+    echo $soc . ': Testing Salary Page' . PHP_EOL;
+    // Salary Page (should always have data)
+    // Check hover display
+    // TODO: Find way to reset mouse position so no possibility of starting on salary
+    $salaryDialog = $this->wd->findElement(WebDriverBy::id('salaryDialog'));
+    if ($salaryDialog->isDisplayed()){
+      throw new Exception($soc . ': Salary popup visible without mouse hover');
+    }
+    $this->wd->getMouse()->mouseMove($salaryIcon->getCoordinates());
+    if (!$salaryDialog->isDisplayed()){
+      throw new Exception($soc . ': Salary popup not visible on mouse hover');
+    }
+    $salaryIcon->click();
+    // Now at salary display page
+    // Check salary chart (chart hover label, etc. are 3rd party, assume tested)
+    $salaryContainer = $this->wd->findElement(WebDriverBy::id('salary-container'));
+    // Wait until chart has finished animating (also check for chart)
+    // Needs to use descendent selector since php-webdriver doesn't allow $elem->wait()
+    /* Commented out, TODO: find attribute that matches finished animation
+    $this->wd->wait(5, 500)->until(WebDriverExpectedCondition::presenceOfElementLocated(
+      WebDriverBy::cssSelector('#salary-continer g.highcharts-series[transform$="scale(1 1)"]')
+    ));
+     */
+    sleep(3);
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'salary.png');
+    }
+
+    // Find every state in list
+    // Check a random state, too time-consuming to check all
+    $stateSelect = $this->wd->findElement(WebDriverBy::id('salary-salaryStateInput'));
+    $stateOptions = $stateSelect->findElements(WebDriverBy::tagName('option'));
+
+    $stateToCheck = $stateOptions[array_rand($stateOptions)];
+    $stateSelect->click();
+    $stateToCheck->click();
+    // Should be at least 1 bar
+    $chartBars = $salaryContainer->findElements(WebDriverBy::cssSelector(
+      'g.highcharts-series'));
+    if (count($chartBars) == 0){
+      throw new Exception($soc . ': Empty salary chart for '
+        . $stateToCheck->getAttribute('value'));
+    }
+
+    /* Time consuming to check every state option
+     * May not even work, failed load may keep previous data on the chart
+    foreach ($stateOptions as $st){
+      $stateSelect->click();
+      $st->click();
+      // Should be 1 for bar, one for legend, 8 total
+      $chartPoints = $salaryContainer->findElements(WebDriverBy::cssSelector(
+        'rect.highcharts-point'));
+      if (count($chartPoints) == 0){
+        throw new Exception($soc . ': Empty salary chart for '
+          . $st->getAttribute('value'));
+      }
+    }
+     */
+
+    echo $soc . ': Testing Education Page' . PHP_EOL;
+    // Education Page (should always have data)
+    // Basic check for chart existence, too many options
+    $educationDialog = $this->wd->findElement(WebDriverBy::id('educationDialog'));
+    if ($educationDialog->isDisplayed()){
+      throw new Exception($soc . ': Education popup visible without mouse hover');
+    }
+    $this->wd->getMouse()->mouseMove($educationIcon->getCoordinates());
+    if (!$educationDialog->isDisplayed()){
+      throw new Exception($soc . ': Education popup not visible on mouse hover');
+    }
+    $educationIcon->click();
+    // Now at education display page
+    sleep(3);
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'education.png');
+    }
+    // TODO: Find attr that controls line position, wait for completion
+    $this->wd->wait()->until(WebDriverExpectedCondition::presenceOfElementLocated(
+      WebDriverBy::cssSelector('path.highcharts-tracker')
+    ));
+
+    // Skills Page
+    echo $soc . ': Testing Skills Page' . PHP_EOL;
+    // Skills Page (should always have data)
+    // Basic check for chart existence, too many options
+    $skillsDialog = $this->wd->findElement(WebDriverBy::id('skillsDialog'));
+    if ($skillsDialog->isDisplayed()){
+      throw new Exception($soc . ': Skills popup visible without mouse hover');
+    }
+    $this->wd->getMouse()->mouseMove($skillsIcon->getCoordinates());
+    if (!$skillsDialog->isDisplayed()){
+      throw new Exception($soc . ': Skills popup not visible on mouse hover');
+    }
+    $skillsIcon->click();
+
+    sleep(3);
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'skills.png');
+    }
+    $skillsPageSuccess = null;
+    $skillsPageFailure = null;
+    try {
+      $skillsPageSuccess = $this->wd->findElement(
+        WebDriverBy::cssSelector('#skills-contentContainer g.highcharts-pie-series')
+      );
+    } catch (Exception $e){
+      if (array_key_exists('skills', $requiredPages) && $requiredPages['skills']){
+        throw new Exception($soc . ': No skills, specified to have skills.');
+      }
+    }
+    try {
+      $skillsPageFailure = $this->wd->findElement(WebDriverBy::cssSelector(
+        '#skills-contentContainer .errorMsg'));
+    } catch (Exception $e){
+      if (array_key_exists('skills', $requiredPages) && !$requiredPages['skills']){
+        throw new Exception($soc . ': Skills found, specified to have no skills.');
+      }
+    }
+    // Should never both be null (ungraceful fail) or both non-null (both success, fail)
+    if (is_null($skillsPageSuccess) == is_null($skillsPageFailure)){
+      if (is_null($skillsPageSuccess)){
+        throw new Exception($soc . ': Skills chart failed to load or gracefully fail');
+      } else {
+        throw new Exception($soc . ': Both skills chart and error message present');
+      }
+    }
+    
+    echo $soc . ': Testing Outlook Page' . PHP_EOL;
+    // Outlook Page (should always have data)
+    // Basic check for chart existence, too many options
+    $careerOutlookDialog = $this->wd->findElement(WebDriverBy::id('careerOutlookDialog'));
+    if ($careerOutlookDialog->isDisplayed()){
+      throw new Exception($soc . ': Outlook popup visible without mouse hover');
+    }
+    $this->wd->getMouse()->mouseMove($careerOutlookIcon->getCoordinates());
+    if (!$careerOutlookDialog->isDisplayed()){
+      throw new Exception($soc . ': Outlook popup not visible on mouse hover');
+    }
+    $careerOutlookIcon->click();
+    // Now at careerOutlook display page
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'outlook.png');
+    }
+    $growthPercent = $this->wd->findElement(WebDriverBy::id('growthPercentText'));
+    // TODO: Find better page test, may be "null" or non "" gibberish
+    if ($growthPercent->getText() == ''){
+      throw new Exception($soc . ': Blank growth percent text');
+    }
+
+    // World-of-Work Page
+    echo $soc . ': Testing World-of-Work Page' . PHP_EOL;
+    $worldOfWorkDialog = $this->wd->findElement(WebDriverBy::id('worldOfWorkDialog'));
+    if ($worldOfWorkDialog->isDisplayed()){
+      throw new Exception($soc . ': World-of-Work popup visible without mouse hover');
+    }
+    $this->wd->getMouse()->mouseMove($worldOfWorkIcon->getCoordinates());
+    if (!$worldOfWorkDialog->isDisplayed()){
+      throw new Exception($soc . ': World-of-Work popup not visible on mouse hover');
+    }
+    $worldOfWorkIcon->click();
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'world-of-work.png');
+    }
+    $worldOfWorkPageSuccess = null;
+    $worldOfWorkPageFailure = null;
+    try {
+      $worldOfWorkPageSuccess = $this->wd->findElement(WebDriverBy::id('d'));
+    } catch (Exception $e){
+      if (array_key_exists('world-of-work', $requiredPages) && $requiredPages['world-of-work']){
+        throw new Exception($soc . ': No World-of-Work, specified to have World-of-Work.');
+      }
+    }
+    try {
+      $worldOfWorkPageFailure = $this->wd->findElement(WebDriverBy::cssSelector(
+        '#world-of-work-body .errorMsg'));
+    } catch (Exception $e){
+      if (array_key_exists('world-of-work', $requiredPages) && !$requiredPages['world-of-work']){
+        throw new Exception($soc . ': World-of-Work found, specified to have no World-of-Work.');
+      }
+    }
+    // Should never both be null (ungraceful fail) or both non-null (both success, fail)
+    if (is_null($worldOfWorkPageSuccess) == is_null($worldOfWorkPageFailure)){
+      if (is_null($worldOfWorkPageSuccess)){
+        throw new Exception($soc . ': World-of-Work chart failed to load or gracefully fail');
+      } else {
+        throw new Exception($soc . ': Both World-of-Work chart and error message present');
+      }
+    }
+  }
+
   /* TODO: Implement career page checking
    * 
    */
   public function testFilteredSearch(){
+    $this->enterBrowsePage();
+    
+    $searchCategory = $this->wd->findElement(
+      WebDriverBy::partialLinkText('By Search'));
+    $this->wd->getMouse()->mouseMove($searchCategory->getCoordinates());
+    $searchCategory->click();
+    $this->wd->wait()->until(
+      WebDriverExpectedCondition::visibilityOfElementLocated(
+        WebDriverBy::id('videoCheckbox')
+    ));
 
+    $videoCheckbox = $this->wd->findElement(WebDriverBy::id('videoCheckbox'));
+    $videoCheckbox->click();
+    $skillsCheckbox = $this->wd->findElement(WebDriverBy::id('skillsCheckbox'));
+    $skillsCheckbox->click();
+
+    $searchButton = $this->wd->findElement(WebDriverBy::cssSelector(
+      '#fullSearchBar ~ span.input-group-btn > button.btn'));
+    $searchButton->click();
+
+    // Now at search results page
+    $result = $this->wd->findElement(WebDriverBy::className('video-link'));
+    $result->click();
+
+    // Now at fully-specified career page
+    $this->testCareerPage(['video'=>true, 'skills'=>true, 'world-of-work'=>true]);
   }
 }
 ?>

@@ -4,7 +4,7 @@
                 <div onclick="updateTitle()">
                   <?php
                     if (empty($videos)) 
-                      echo '<h2>Sorry, no videos are currently available for this job.</h2>';
+                      echo '<h2 class="errorMsg">Sorry, no videos are currently available for this job.</h2>';
                     else {
                       echo '
                         <div id="video-wrapper" style="width:530px; height: 300px;">
