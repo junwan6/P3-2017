@@ -18,6 +18,7 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Static content controller
@@ -28,5 +29,44 @@ use Cake\View\Exception\MissingTemplateException;
  */
 class AlgorithmController extends PagesController
 {
+	//This function obtains all SOC codes from the database
+	public function nextCareer($rating = null) {
+		
+		$connection = ConnectionManager::get($this->datasource);
+		$query = 'SELECT soc FROM Occupation';
+		$results = $connection->execute($query)->fetchAll('assoc');
 
+		//echo 'Total results: ' . $results->num_rows;
+		/*
+		$found = FALSE;
+		foreach ($results as $r) {
+			if ($r['soc'] == "25-2022") {
+				$found = TRUE;
+				break;
+			}
+		}
+		
+		if ($found) {
+			$soc = '29-1066';
+		}
+		else {
+			$soc = '11-3111';
+		}
+		*/
+		
+		if ($rating == 'up') {
+			$soc = '25-4012';
+		}
+		else if ($rating == 'mid') {
+			$soc = '19-2012';
+		}
+		else if ($rating == 'down') {
+			$soc = '15-1111';
+		}
+		else {
+			$soc = '17-2031';
+		}
+	
+		$this->redirect(['controller' => 'career', 'action' => 'displayCareerSingle', $soc, 'video']);
+	}
 }

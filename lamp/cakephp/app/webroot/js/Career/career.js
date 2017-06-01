@@ -244,6 +244,9 @@ function showNextCareerButton(thumb) {
 		$('#midthumb').removeClass("midthumb-selected");
 		$('#downthumb').addClass("downthumb");
 		$('#downthumb').removeClass("downthumb-selected");
+		$('#next-career-up').show();
+		$('#next-career-mid').hide();
+		$('#next-career-down').hide();
 	} else if (thumb == "mid") {
 		$('#midthumb').addClass("midthumb-selected");
 		$('#midthumb').removeClass("midthumb");
@@ -251,16 +254,20 @@ function showNextCareerButton(thumb) {
 		$('#upthumb').removeClass("upthumb-selected");
 		$('#downthumb').addClass("downthumb");
 		$('#downthumb').removeClass("downthumb-selected");
+		$('#next-career-mid').show();
+		$('#next-career-up').hide();
+		$('#next-career-down').hide();
 	} else if (thumb == "down") {
 		$('#downthumb').addClass("downthumb-selected");
 		$('#downthumb').removeClass("downthumb");
 		$('#upthumb').addClass("upthumb");
-		$('#upthumb').removeClass("downthumb-selected");
+		$('#upthumb').removeClass("upthumb-selected");
 		$('#midthumb').addClass("midthumb");
 		$('#midthumb').removeClass("midthumb-selected");
+		$('#next-career-down').show();
+		$('#next-career-up').hide();
+		$('#next-career-mid').hide();
 	}
-  
-	$('#next-career').show("fast");
 }
 
 function updateRank(choice) {
@@ -674,17 +681,11 @@ var salaryStateToCode = function(stateCode){
 }
 
 $(document).ready(function(){
-  try{
 	//--------------------------------------------WORLD_OF_WORK
-	  createCanvas();
-    // tooltips 
-    // Disabled, does not appear to serve any purpose
-    // $('[data-toggle="tooltip"]').tooltip();
-  } catch(err){
-    console.log('World of Work failed to render');
-    console.log(err);
-  }
-  try{
+	createCanvas();
+	// tooltips 
+  // Disabled, does not appear to serve any purpose
+  // $('[data-toggle="tooltip"]').tooltip();
 	//--------------------------------------------SKILLS
 	if($('#skillsArray').length) {
 		skillsArray = document.getElementById('skillsArray').innerHTML;
@@ -801,11 +802,6 @@ $(document).ready(function(){
         }]
     });
 	}
-  } catch(err){
-    console.log('Skills failed to render');
-    console.log(err);
-  }
-  try{
 	//--------------------------------------------SALARY
   salary_calculateData();
   salary_drawChart();
@@ -815,11 +811,6 @@ $(document).ready(function(){
     salary_calculateData();
     salary_drawChart();
   });
-  } catch(err){
-    console.log('Salary failed to render');
-    console.log(err);
-  }
-  try{
 	//--------------------------------------------EDUCATION
 	var i;
 	for (i = 0; i < initiallyHidden.length; i++) {
@@ -907,10 +898,6 @@ $(document).ready(function(){
 		edu_calculateData();
 		edu_drawChart();
 	});
-  } catch(err){
-    console.log('Education failed to render');
-    console.log(err);
-  }
 });
 
 

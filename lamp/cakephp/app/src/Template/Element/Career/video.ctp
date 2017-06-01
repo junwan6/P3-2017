@@ -34,16 +34,24 @@
                     <a onclick="showNextCareerButton('up');updateRank('like')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
                     <a onclick="showNextCareerButton('mid');updateRank('neutral')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
                     <a onclick="showNextCareerButton('down');updateRank('dislike')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
-                    <div id="next-career">
+                    <div id="next-career-up">
 					<?php 
-						$url = $this->Url->build(null, true);
-						//$url_array = parse_url($url);
-						//$rating = $url_array["query"];
-						//$new_url = "/algorithm/nextcareer/" . $rating;
-						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career']);
+						$url = '/algorithm/nextcareer/up';
+						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-up']);
 						?>
 					</div>
-					<!-- <div id="next-career"><a href="/career/nextcareer"><span class="next-career">Next Career  >></span></a></div> -->
+					<div id="next-career-mid">
+					<?php 
+						$url = '/algorithm/nextcareer/mid';
+						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-mid']);
+						?>
+					</div>
+					<div id="next-career-down">
+					<?php 
+						$url = '/algorithm/nextcareer/down';
+						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-down']);
+						?>
+					</div>
                   </div>
                   <div style=" padding-bottom: 0px">
                     <p><font size="3" color = "blue">Filters</font></p>

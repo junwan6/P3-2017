@@ -94,7 +94,7 @@
 }
 
 span.upthumb {
-	background-image: url('../img/upthumbs.png');
+	background-image: url('../../img/upthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -107,7 +107,7 @@ span.upthumb:hover{
 
 .upthumb-selected {
 	background-position: 0 -61px;
-	background-image: url('../img/upthumbs.png');
+	background-image: url('../../img/upthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -116,7 +116,7 @@ span.upthumb:hover{
 
 .midthumb-selected {
 	background-position: 0 -61px;
-	background-image: url('../img/midthumbs.png');
+	background-image: url('../../img/midthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -125,7 +125,7 @@ span.upthumb:hover{
 
 .downthumb-selected {
 	background-position: 0 -61px;
-	background-image: url('../img/downthumbs.png');
+	background-image: url('../../img/downthumbs.png');
 	width: 30px;
 	height: 30px;
 	display: inline-block;
@@ -133,7 +133,7 @@ span.upthumb:hover{
 }
 
 span.midthumb {
-	background-image: url('../img/midthumbs.png');
+	background-image: url('../../img/midthumbs.png');
 	background-size: cover;
 	width: 30px;
 	height: 30px;
@@ -144,7 +144,7 @@ span.midthumb:hover{
 	background-position: 0 -31px;
 }
 span.downthumb {
-	background-image: url('../img/downthumbs.png');
+	background-image: url('../../img/downthumbs.png');
 	background-size: cover;
 	width: 30px;
 	height: 30px;
@@ -155,12 +155,10 @@ span.downthumb:hover{
 	background-position: 0 -31px;
 }
 
-#next-career {
+#next-career-up {
 	display: none;
 
-}
-
-.next-career {
+}.next-career-up {
 	display:inline-block;
 	text-align: center;
 	width: 100px;
@@ -169,7 +167,37 @@ span.downthumb:hover{
 	background-color: green;
 	border: 2px green solid;
 	font-size: 10px;
-}#pageTitle {
+}
+
+#next-career-mid {
+	display: none;
+
+}.next-career-mid {
+	display:inline-block;
+	text-align: center;
+	width: 100px;
+	padding: 1px;
+	color: white;
+	background-color: green;
+	border: 2px green solid;
+	font-size: 10px;
+}
+
+#next-career-down {
+	display: none;
+
+}.next-career-down {
+	display:inline-block;
+	text-align: center;
+	width: 100px;
+	padding: 1px;
+	color: white;
+	background-color: green;
+	border: 2px green solid;
+	font-size: 10px;
+}
+
+#pageTitle {
 	text-align: center;
 	color: hsl(210, 60%, 50%);
 	font-size: 30px;
