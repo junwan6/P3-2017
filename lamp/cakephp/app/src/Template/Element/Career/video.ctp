@@ -31,9 +31,20 @@
                     } 
                   ?>
                   <div style="margin-left:720px; margin-top: 10px">
-                    <a onclick="showNextCareerButton('up');updateRank('like')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
-                    <a onclick="showNextCareerButton('mid');updateRank('neutral')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
-                    <a onclick="showNextCareerButton('down');updateRank('dislike')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
+						<script>
+						  var addRating = function(rating){
+							  $.ajax({
+								url: 'algorithm/addrating/' + rating
+							  });
+						  };
+						</script>
+					<?php 
+						$current_url = $this->Url->build(null, true);
+						$path = parse_url($current_url, PHP_URL_PATH);
+					?>
+                    <a onclick="showNextCareerButton('up');updateRank('like'); addRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
+                    <a onclick="showNextCareerButton('mid');updateRank('neutral'); addRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
+                    <a onclick="showNextCareerButton('down');updateRank('dislike'); addRating('down')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
                     <div id="next-career-up">
 					<?php 
 						$url = '/algorithm/nextcareer/up';

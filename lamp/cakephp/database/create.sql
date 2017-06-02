@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS RememberMeTokens;
 DROP TABLE IF EXISTS PendingPasswordReset;
 DROP TABLE IF EXISTS UserFilters;
 DROP TABLE IF EXISTS AdminUsers;
+DROP TABLE IF EXISTS AlgorithmResults;
 
 /* Note: currentEmployment, futureEmployment, and jobOpenings are in thousands
    low wages represent the 10th percentile, high wages represent the 90th percentile */
@@ -143,6 +144,13 @@ CREATE TABLE ViewHistory(id INT UNSIGNED NOT NULL,
                     time DATETIME,
                     PRIMARY KEY (id, soc));
 
+CREATE TABLE AlgorithmResults(id INT UNSIGNED NOT NULL,
+					prevSoc CHAR(7),
+					nextSoc CHAR(7),
+					rating INT,
+					time DATETIME,
+					PRIMARY KEY (id));
+					
 CREATE TABLE RememberMeTokens(
                     token VARCHAR(64),
                     id INT UNSIGNED NOT NULL PRIMARY KEY);

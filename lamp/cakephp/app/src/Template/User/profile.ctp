@@ -17,9 +17,38 @@
     //  models/interfaceRatings.js
     
     // each is array with 'title', 'soc', 'x', 'y'
-    $likedCareers = null;
-    $dislikedCareers = null;
-    $neutralCareers = null;
+    $id = $this->request->session()->read('id');
+    $query = 'SELECT rating, soc FROM ViewHistory WHERE id = :id'   
+    $result = $db->execute($query, ['id' => $id])->fetchAll('assoc');
+    //$saltDB = $resultSalt['0']['salt'];
+    $likedCareers = [
+	'title' => 'value1',
+	'soc' => 'value2',
+	'x' => 'value3',
+	'y' => 'value4'
+    ];
+
+    $dislikedCareers = [
+        'title' => 'value1',
+        'soc' => 'value2',
+        'x' => 'value3',
+        'y' => 'value4'
+    ];
+
+    $neutralCareers = [
+        'title' => 'value1',
+        'soc' => 'value2',
+        'x' => 'value3',
+        'y' => 'value4'
+    ];
+
+    foreach ($result as $view){
+	
+    }
+
+    //$likedCareers = null;
+    //$dislikedCareers = null;
+    //$neutralCareers = null;
   ?>
 </head>
 <body>

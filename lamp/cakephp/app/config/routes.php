@@ -187,6 +187,8 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     // TODO: AJAX on button press, update ratings, return next video SOC
     // Takes filter parameters (updated clientside by JS)
+	$routes->connect('/algorithm/addrating/:rating', ['controller' => 'algorithm', 
+	  'action' => 'addRating'], ['pass' => ['rating'], 'rating' => 'up|mid|down']);
     $routes->connect('/algorithm/nextcareer/:rating', ['controller' => 'algorithm',
       'action' => 'nextCareer'], ['pass' => ['rating'], 'rating' => 'up|mid|down']);
 

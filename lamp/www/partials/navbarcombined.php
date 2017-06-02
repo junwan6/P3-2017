@@ -72,8 +72,9 @@
                                                 </div>
 						<input id="loginButton" type="submit" class="btn btn-default formButton" value="Log In"/>
                                                 <br>
-						<a href="auth/facebook.php" class="btn btn-default"><div id="fbTestBox"><div id="fbTest">Log in with Facebook</div></div></a>
-                                                <br>
+						<!--<a href="auth/facebook.php" class="btn btn-default"><div id="fbTestBox"><div id="fbTest">Log in with Facebook</div></div></a> -->
+							
+						<br>
 						<a href="recover-account.php" class="loginOption">Forgot password?</a>
                                                 <br>
 						<a id="switchToSignUp" class="loginOption">Create your free account</a>

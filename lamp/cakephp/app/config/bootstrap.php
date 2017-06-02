@@ -213,6 +213,12 @@ Type::build('timestamp')
  *
  */
 
+//For facebook login
+//app/Config/bootstrap.php
+// Commented out 5/31 4:30pm, was breaking the site and you were logged out. Didn't have signal, so couldn't SMS
+//CakePlugin::load('Facebook');
+
+
 /*
  * Only try to load DebugKit in development mode
  * Debug Kit should not be installed on a production system
@@ -220,3 +226,9 @@ Type::build('timestamp')
 if (Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
 }
+
+//For facebook login
+//app/Config/bootstrap.php
+// Commented out 5/31 4:30pm, was breaking the site and you were logged out. Didn't have signal, so couldn't SMS
+//Plugin::loadAll();
+Plugin::load('Facebook');
