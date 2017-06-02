@@ -28,7 +28,6 @@ use Cake\Datasource\ConnectionManager;
  */
 class UserController extends PagesController
 {
-<<<<<<< EAD
     public function fbLogin()
     {
 	session_start();
@@ -73,17 +72,11 @@ class UserController extends PagesController
 	}*/
     }
 
-    public function login()
-    {
-	$db = ConnectionManager::get($this->datasource);
-	$session = $this->request->session();
 
-=======
     public function login()
     {
 	$db = ConnectionManager::get($this->datasource);
-  
->>>>>>> parent of 7d559e8... preliminary algorithm working
+	$session = $this->request->session();  
 	if($_SERVER["REQUEST_METHOD"] == "POST")
     	{
 		$email = ($_POST['email']);
@@ -124,16 +117,13 @@ class UserController extends PagesController
 			
 				if(count($resultHash) > 0)
 				{
-<<<<<<< HEAD
 					$session->write('id', $id);				
    	                                $this->display("profile");
 
-=======
-					$this->display("profile");
->>>>>>> parent of 7d559e8... preliminary algorithm working
 				}
 				else
 				{
+					session_destroy();
 					echo "Incorrect Password";
 					$this->display("default");
 				}
