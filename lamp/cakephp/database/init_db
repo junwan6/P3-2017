@@ -71,6 +71,7 @@ fi;
 mysql_string=$("$script_dir/get_db_config.php" "$db_config");
 (
     cp "$script_dir/create.sql" "$tmp"
+    cp "$script_dir/init_values.sql" "$tmp"
     cp "$script_dir/load.sql" "$tmp"
     cp "$script_dir/videos.csv" "$tmp"
     cd "$tmp"
@@ -78,5 +79,6 @@ mysql_string=$("$script_dir/get_db_config.php" "$db_config");
     
 #    cat create.sql load.sql | mysql -u p3_admin -p --local-infile=1 p3_test
     $mysql_string < create.sql
+    $mysql_string < init_values.sql
     $mysql_string < load.sql
 )

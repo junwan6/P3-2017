@@ -12,6 +12,7 @@
 * `export_occupation_category_partial.py`, `export_regional_database.py`: Not called by `init_db`, may be called by other scripts
 * `get_db_config.php`: Reads a JSON `db_config.json` file for MySQL connection information.
 * `create.sql`: MySQL script to create database tables. WARNING: DROPS EXISTING TABLES
+* `init_values.sql`: MySQL script to add initial value. Currently only adds first user as admin
 * `load.sql`: MySQL script to load files created by .py scripts into the MySQL database
 * `test_db_config.json`: Connection data for test database
 * `videos.csv`: Initial data for videos
