@@ -41,6 +41,8 @@
 					<?php 
 						$current_url = $this->Url->build(null, true);
 						$path = parse_url($current_url, PHP_URL_PATH);
+						$url_parts = explode("/", $path);
+						$soc = $url_parts[3];
 					?>
                     <a onclick="showNextCareerButton('up');updateRank('like'); addRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
                     <a onclick="showNextCareerButton('mid');updateRank('neutral'); addRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>

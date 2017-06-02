@@ -28,7 +28,7 @@ use Cake\Datasource\ConnectionManager;
  */
 class UserController extends PagesController
 {
-<<<<<<< HEAD
+<<<<<<< EAD
     public function fbLogin()
     {
 	session_start();
