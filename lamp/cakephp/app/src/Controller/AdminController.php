@@ -42,11 +42,24 @@ class AdminController extends PagesController
     }
     return false;
   }
+
+  /* Shared function to throw error on non-admin access attempt
+   * Uses session isAdmin, assume database checking done
+   * TODO: As greater authentication overhaul, recheck (for revoked access mid-session)
+   */
+  public function requireAdmin(){
+    if (!$this->request->session()->read('isAdmin')){
+      // Same principle as "don't tell if user or pw failed", prevent scanners
+      throw new NotFoundException;
+      //throw new ForbiddenException;
+    }
+  }
   
   /* Gets list of to populate SOC scrollable
    * More features to be added (User view history, etc.)
    */
   public function displaySummary(){
+    $this->requireAdmin();
     $connection = ConnectionManager::get($this->datasource);
   
     $query = 'SELECT Occupation.title, Videos.* FROM ' . 
@@ -74,6 +87,7 @@ class AdminController extends PagesController
    * Takes list of SOCs from URL, to show list or initialize new SOCs
    */
   public function displayVideos(...$careers){
+    $this->requireAdmin();
     $connection = ConnectionManager::get($this->datasource);
     $videoList = [];
     // Orphan and dead-link checking handled by separate page
@@ -143,6 +157,7 @@ class AdminController extends PagesController
    * Executes queuedUpdates for files,
    */
   public function uploadVideos(){
+    $this->requireAdmin();
     if (!$this->request->is('post')){
       // TODO: Error page, not uploading anything
       $this->display('upload');
@@ -420,6 +435,7 @@ class AdminController extends PagesController
    * In proper usage, most unnecessary, but allows fixing of malformed folders
    */
   public function displayOrphans(){
+    $this->requireAdmin();
     $connection = ConnectionManager::get($this->datasource);
     // TODO: Refactor 'orphans' to 'errors', update comments
     // Combined with deadlinks to handle 'empty' arrays
@@ -577,6 +593,7 @@ class AdminController extends PagesController
    * Checks made for '' and '..' to prevent deformed POST from deleting more
    */
   public function cleanFilesystem(){
+    $this->requireAdmin();
     if (!$this->request->is('post')){
       // TODO: Error page, not uploading anything
       $this->display('delete');
