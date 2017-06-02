@@ -13,7 +13,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 namespace App\Controller;
-
+//
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
@@ -30,7 +30,6 @@ class UserController extends PagesController
 {
     public function fbLogin()
     {
-	session_start();
 	$name = 'Users';
   	$components = array('Facebook.Connect','Auth'); //1
     	$helpers    = array('Facebook.Facebook');       //2
@@ -52,7 +51,7 @@ class UserController extends PagesController
        		$this->Session->destroy();
        		$this->redirect($this->Auth->logout());
     	}
-	/*
+	
 	$db = ConnectionManager::get($this->datasource);
 
 	if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -69,15 +68,13 @@ class UserController extends PagesController
 			//dont have a facebook user with that fbId yet
 			//facebook signup
 		}
-	}*/
+	}
     }
 
     public function login()
     {
 	$db = ConnectionManager::get($this->datasource);
-  	session_start();
-
-
+  
 	if($_SERVER["REQUEST_METHOD"] == "POST")
     	{
 		$email = ($_POST['email']);
@@ -118,13 +115,11 @@ class UserController extends PagesController
 			
 				if(count($resultHash) > 0)
 				{
-					$_SESSION['id'] = $id;
 					$this->display("profile");
 				}
 				else
 				{
 					echo "Incorrect Password";
-					session_destroy();
 					$this->display("default");
 				}
 			}
