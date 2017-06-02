@@ -49,7 +49,7 @@ class UserController extends PagesController
    	}
      
    	function logout() {                                 //7
-       		$this->Session->destroy();
+		session_destroy();
        		$this->redirect($this->Auth->logout());
     	}
 	/*
@@ -75,8 +75,7 @@ class UserController extends PagesController
     public function login()
     {
 	$db = ConnectionManager::get($this->datasource);
-  	session_start();
-
+	$session = $this->request->session();
 
 	if($_SERVER["REQUEST_METHOD"] == "POST")
     	{
@@ -118,8 +117,9 @@ class UserController extends PagesController
 			
 				if(count($resultHash) > 0)
 				{
-					$_SESSION['id'] = $id;
-					$this->display("profile");
+					$session->write('id', $id);				
+   	                                $this->display("profile");
+
 				}
 				else
 				{
@@ -151,7 +151,8 @@ class UserController extends PagesController
     public function signup()
     {
 	$db = ConnectionManager::get($this->datasource);
-	
+	$session = $this->request->session();
+
 	if($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 		$firstName = ($_POST['firstName']);
@@ -194,10 +195,12 @@ class UserController extends PagesController
 			{
 				//this happens if firstname, lastname, and email are all
 				//already in the database (should change this)
+				session_destroy();
 				echo "password insert failed";
 			}
 			else if ($resultPass) //means password was inserted correctly
 			{
+				$session->write('id', $id);
 				$this->display("profile");
 			}
 		}		
