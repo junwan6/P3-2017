@@ -4,8 +4,9 @@
     //TODO: Fill in following variables from the NodeJS serverside scripts:
     //  controllers/browse-controller.js
     //  controllers/temp-controller.js
-    $loggedIn = false;
-
+    //$loggedIn = false;
+    $loggedIn = !is_null($this->request->session()->read('id'));
+    $isAdmin = $this->request->session()->read('isAdmin');
     /**
      * Wrapper function for Url->build
      * Parameters: [link] [prepend] [append]
@@ -138,11 +139,11 @@
           </a>
         </div>
         <div id="mainButtons" class="col-md-6">
-          <?php echo baseLink($this, '', '<a href="', '">'); ?>
-            <div id="home" class="navibutton">
-              Home
-            </div>
-          </a>
+        <?php echo baseLink($this, '', '<a href="', '">'); ?>
+          <div id="home" class="navibutton">
+            Home
+          </div>
+        </a>
         <?php echo baseLink($this, 'profile', '<a href="', '">'); ?>
           <div id="myProfile" class="navibutton">
             My Profile
@@ -170,8 +171,19 @@
             Donors
           </a>
         </div>
+        <?php if ($isAdmin){ ?>
+        <div class="adminbutton">
+          <?php echo baseLink($this, 'admin', '<a href="', '">'); ?>
+            Admin
+          </a>
+        </div>
+        <?php } ?>
       </div>
-      <?php if (!$loggedIn) { ?>
+      <?php if ($loggedIn) { ?>
+      <?php echo baseLink($this, 'logout', '<form action="', '" method="post">'); ?>
+        <input id="logout" class="navibutton" type="submit" value="Logout"/>
+      </form>
+      <?php } else { ?>
       <div id="signUpLoginColumn" class="col-md-3">
         <div id="signUp" class="navibutton">
           Sign up
@@ -180,10 +192,6 @@
           Login
         </div>
       </div>
-      <?php } else { ?>
-      <?php echo baseLink($this, 'logout', '<form action="', '" method="post">'); ?>
-        <input id="logout" class="navibutton" type="submit" value="Logout"/>
-      </form>
       <?php } ?>
     </div>
   </div>

@@ -114,11 +114,16 @@ class UserController extends PagesController
 				$queryHashedPwd = 'SELECT ' . implode(',', $HashField) . ' FROM UserPasswords WHERE hash = :hash AND salt = :salt AND id = :id';
 				$resultHash = $db->execute($queryHashedPwd, ['hash' => $hash, 'salt' => $saltDB, 'id' => $id])->fetchAll('assoc');
 
-			
 				if(count($resultHash) > 0)
-				{
+        {
 					$session->write('id', $id);				
-   	                                $this->display("profile");
+          // Check if the user is an admin
+          $adminQuery = 'SELECT * FROM AdminUsers WHERE id = :id';
+          $adminResult = $db->execute($adminQuery, ['id'=>$id])->fetchAll('assoc');
+          $isAdmin = (count($adminResult) == 1);
+          $session->write('isAdmin', $isAdmin);
+          $this->fillFields();
+					$this->display("profile");
 
 				}
 				else
