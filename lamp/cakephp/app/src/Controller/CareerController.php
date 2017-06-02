@@ -245,7 +245,7 @@ class CareerController extends PagesController
   public function search(){
     $connection = ConnectionManager::get($this->datasource);
     $keywords = preg_split('/[,\s]+/', $this->request->getQuery('q'));
-    if (count($this->request->query) == 0 && !is_null($this->request->getQuery('q'))
+    if (count($this->request->query) == 1 && !is_null($this->request->getQuery('q'))
       && $this->request->getQuery('q') == ''){
       $this->set('query', '');
       $this->set('resultsEmpty', true);

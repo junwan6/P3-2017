@@ -1,6 +1,4 @@
-<?php
- echo $this->Facebook->html(); ?>  
-<div id="fader"></div>
+  <div id="fader"></div>
   <?php
 
     //TODO: Fill in following variables from the NodeJS serverside scripts:
@@ -117,13 +115,9 @@
         </div>
         <input id="loginButton" type="submit" class="btn btn-default formButton" value="Log In"/>
         <br>
-        <!--
-	<?php //echo baseLink($this, 'auth/facebook', '<a href="', '" class="btn btn-default">'); ?>
+        <?php echo baseLink($this, 'auth/facebook', '<a href="', '" class="btn btn-default">'); ?>
           <div id="fbTestBox"><div id="fbTest">Log in with Facebook</div></div>
-        -->
-	<?php echo $this->Facebook->login(array('perms' => 'email,publish_stream')); ?> 
-	
-	</a>
+        </a>
         <br>
         <?php echo baseLink($this, 'recover-account', '<a href="', '" class="loginOption">Forgot password?</a>'); ?>
         <br>
@@ -195,4 +189,3 @@
   </div>
   <div id="PASSION"> <a href="javascript:"  id="passionWord">PASSION (n.) </a><span id="passionDef">: the energizing love you have for your work, in which you are thoroughly absorbed and find deeply meaningful</span> </div>
   </div>
-<?php echo $this->Facebook->init(); ?>
