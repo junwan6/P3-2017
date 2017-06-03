@@ -76,7 +76,7 @@ Router::scope('/', function (RouteBuilder $routes) {
      * Includes login, logout, password reset, passports, etc.
      * TODO: Implement UserController
      */
-
+    
     // Login (send hashed attempt, create session)
     $routes->connect('/login', ['controller' => 'user',
       'action' => 'login']);
@@ -84,7 +84,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/signup', ['controller' => 'user', 'action' => 'signup']);
     // Profile page (loads liked/disliked videos)
     $routes->connect('/profile', ['controller' => 'user',
-      'action' => 'profile']);
+      'action' => 'display', 'profile']);
     // TODO: Login via LinkedIn (implement passport, automatic registration)
     //$routes->connect('/auth/linkedin', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
@@ -95,8 +95,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/logout', ['controller' => 'user',
       'action' => 'logout']);
     // TODO: Account recovery (sends email to linked email with reset link)
-    //$routes->connect('/recover-account', ['controller' => 'user',
-    //  'action' => 'display', 'profile']);
+    $routes->connect('/recover-account', ['controller' => 'user',
+      'action' => 'recover']);
     // TODO: Password reset from recovery link (code lookup, password update)
     //$routes->connect('/reset-password', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
@@ -186,8 +186,6 @@ Router::scope('/', function (RouteBuilder $routes) {
     // Takes filter parameters (updated clientside by JS)
 	$routes->connect('/algorithm/checkrating/:rating/:soc', ['controller' => 'algorithm',
 	  'action' => 'checkRating'], ['pass' => ['rating', 'soc'], 'rating' => 'up|mid|down|none']);
-	$routes->connect('/algorithm/addrating/:rating/:soc', ['controller' => 'algorithm', 
-	  'action' => 'addRating'], ['pass' => ['rating', 'soc'], 'rating' => 'up|mid|down']);
     $routes->connect('/algorithm/nextcareer/:rating/:old_soc', ['controller' => 'algorithm',
       'action' => 'nextCareer'], ['pass' => ['rating', 'old_soc'], 'rating' => 'up|mid|down']);
 

@@ -73,6 +73,13 @@ class UserController extends PagesController
 	}*/
     }
 
+    public function recover()
+    {
+	$this->display("recover");
+    }
+
+
+
     public function fillFields()
     {
 	$db = ConnectionManager::get($this->datasource);
@@ -105,7 +112,6 @@ class UserController extends PagesController
 	$i = 0;
  	
 	foreach ($result as $view){
-        	printf($view['rating']);
 		if($view['rating'] == -1) //dislike
         	{
 			$dislikedCareers[$i]['soc'] = $view['soc'];
