@@ -15,23 +15,23 @@
 #inputSOC {
   width: 100%;
 }
-.videosTable {
+.scrollTable {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0px 5px;
 }
 
 // Scrollable table taken from https://stackoverflow.com/questions/11891065/css-only-scrollable-table-with-fixed-headers
-.videosTable {
+.scrollTable {
   border: 0;
   border-collapse: collapse;
 }
 
-.videosTable tr {
+.scrollTable tr {
   display: flex;
 }
 
-.videosTable td {
+.scrollTable td {
   padding: 3px;
   flex: 1 auto;
   border: 1px solid #eee;
@@ -39,28 +39,32 @@
   word-wrap: break;
 }
 
-.videosTable thead tr:after {
+.scrollTable thead tr:after {
   content: '';
   overflow-y: scroll;
   visibility: hidden;
   height: 0;
 }
 
-.videosTable thead th {
+.scrollTable thead th {
   flex: 1 auto;
   display: block;
   border: 1px solid #000;
 }
 
-.videosTable tbody {
+.scrollTable tbody {
   display: block;
   width: 100%;
   overflow-y: auto;
   height: 200px;
 }
-.videosRow {
+.scrollRow {
   font-size: 12px;
 }
-.videosRow:hover {
+.scrollRow:hover {
   background-color: rgb(240, 240, 240);
+}
+
+.clickable{
+  cursor: pointer;
 }

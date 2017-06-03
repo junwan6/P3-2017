@@ -80,6 +80,10 @@ class AdminController extends PagesController
     }
     
     $this->set('videoList', $videoList);
+
+    $query = 'SELECT firstName,lastName,email,Users.id, IF (AdminUsers.id IS NULL, FALSE, TRUE) as isAdmin FROM Users LEFT JOIN AdminUsers ON (Users.id = AdminUsers.id)';
+    $results = $connection->execute($query)->fetchAll('assoc');
+    $this->set('userList', $results);
     $this->display('summary');
   }
   
@@ -428,6 +432,57 @@ class AdminController extends PagesController
     $humanInfo['size'] = $this->human_filesize($stat['size']);
     return $humanInfo;
   }
+
+  /* Displays information on user (very basic)
+   */
+  public function displayUser($uid){
+    $this->requireAdmin();
+    $connection = ConnectionManager::get($this->datasource);
+    $idRep = ['id'=>$uid];
+    $query = 'SELECT * FROM Users WHERE id = :id';
+    $results = $connection->execute($query,$idRep)->fetchall('assoc');
+    foreach($results as $r){
+      $this->set('user', $r);
+    }
+
+    $query = 'SELECT * FROM FBUsers WHERE userId = :id';
+    $results = $connection->execute($query,$idRep)->fetchall('assoc');
+    foreach($results as $r){
+      $this->set('fbuser', $r);
+    }
+
+    $query = 'SELECT * FROM LIUsers WHERE userId = :id';
+    $results = $connection->execute($query,$idRep)->fetchall('assoc');
+    foreach($results as $r){
+      $this->set('liuser', $r);
+    }
+
+    $query = 'SELECT * FROM AdminUsers WHERE id = :id';
+    $results = $connection->execute($query,$idRep)->fetchall('assoc');
+    foreach($results as $r){
+      $this->set('adminuser', $r);
+    }
+
+    $query = 'SELECT * FROM ViewHistory WHERE id = :id';
+    $results = $connection->execute($query,$idRep)->fetchall('assoc');
+    $this->set('viewhistory', $results);
+
+    $this->display('user');
+  }
+
+  public function setAdmin($uid, $to){
+    $this->requireAdmin();
+    $connection = ConnectionManager::get($this->datasource);
+
+    if ($to == 'admin'){
+      $connection->execute('INSERT INTO AdminUsers VALUES (:id)', ['id'=> $uid]);
+    } else if ($to == 'unadmin'){
+      $connection->execute('DELETE FROM AdminUsers WHERE id = :id', ['id'=> $uid]);
+    }
+
+    $this->redirect(['controller' => 'admin',
+      'action' => 'displayUser', $uid]);
+  }
   
   /* Gets list of files from the video folder, and removes all that are used by a row
    * Also detects invalid folders in the base directory, and reused person numbers
@@ -599,7 +654,6 @@ class AdminController extends PagesController
       $this->display('delete');
       return;
     }
-    debug($this->request->data);
     $path = WWW_ROOT . 'vid/';
     $deletes = [];
     $errors = [];

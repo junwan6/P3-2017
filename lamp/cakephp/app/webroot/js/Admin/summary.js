@@ -26,3 +26,7 @@ let addSOC = function(soc){
   input.value = Object.keys(uniqueSOC).join(', ');
   input.onchange();
 }
+
+let toUserPage = function(uid){
+  document.getElementById('user' + uid).click();
+}

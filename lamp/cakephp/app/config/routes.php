@@ -100,7 +100,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     //  'action' => 'display', 'profile']);
     // TODO: Logout (Clear session)
     //$routes->connect('/logout', ['controller' => 'user',
-    //  'action' => 'display', 'profile']);
+    //  'action' => 'logout']);
     // TODO: Account recovery (sends email to linked email with reset link)
     //$routes->connect('/recover-account', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
@@ -114,7 +114,6 @@ Router::scope('/', function (RouteBuilder $routes) {
     /**
      * Connect pages requiring career information to CareerController
      * Includes SOC codes (Search, random)
-     * TODO: Combine pages into single load
      */
     // Combined access to eventual single file return
     // focus=video (Find video linked to SOC, questions, etc.)
@@ -177,9 +176,14 @@ Router::scope('/', function (RouteBuilder $routes) {
       'action' => 'displaySummary']);
     $routes->connect('/admin/summary', ['controller' => 'admin',
       'action' => 'displaySummary']);
-    // TODO: Display user data (list of users, option to download data?)
-    //$routes->connect('/admin/users', ['controller' => 'admin',
-    //  'action' => 'displayUsers']);
+    // Display user data (single user, view history, option to adminize)
+    $routes->connect('/admin/user/:uid', ['controller' => 'admin',
+      'action' => 'displayUser'], ['pass'=>['uid'], 'uid'=>'[0-9]+']);
+    // Adds or removes privileges from a user
+    // TODO: More complex grant/revoke, MySQL model?
+    $routes->connect('/admin/user/:uid/:to', ['controller' => 'admin',
+      'action' => 'setAdmin'], ['pass'=>['uid', 'to'],
+      'uid'=>'[0-9]+', 'to'=>'admin|unadmin']);
 
     /**
      * Connect video rating pages to AlgorithmController
@@ -187,10 +191,10 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     // TODO: AJAX on button press, update ratings, return next video SOC
     // Takes filter parameters (updated clientside by JS)
-	$routes->connect('/algorithm/addrating/:rating', ['controller' => 'algorithm', 
-	  'action' => 'addRating'], ['pass' => ['rating'], 'rating' => 'up|mid|down']);
-    $routes->connect('/algorithm/nextcareer/:rating', ['controller' => 'algorithm',
-      'action' => 'nextCareer'], ['pass' => ['rating'], 'rating' => 'up|mid|down']);
+	$routes->connect('/algorithm/addrating/:rating/:old_soc', ['controller' => 'algorithm', 
+	  'action' => 'addRating'], ['pass' => ['rating', 'old_soc'], 'rating' => 'up|mid|down']);
+    $routes->connect('/algorithm/nextcareer/:rating/:old_soc', ['controller' => 'algorithm',
+      'action' => 'nextCareer'], ['pass' => ['rating', 'old_soc'], 'rating' => 'up|mid|down']);
 
     /**
      * Connect catchall routes for all controllers.

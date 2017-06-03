@@ -23,7 +23,7 @@
                 <div class="col-md-10 col-md-offset-1">
                   <div class="bodyContents">
                     <h4>Videos</h4>
-                      <table class="videosTable">
+                      <table class="scrollTable">
                         <thead>
                         <tr><td colspan="4">
                           <?php
@@ -51,7 +51,7 @@
                             $videoSum = array_sum(array_map(function($p){
                               return count($p['questions']);
                             }, $career['people']));
-                            echo '<tr class="videosRow" onclick="addSOC(\'' . $soc . '\');">';
+                            echo '<tr class="scrollRow" onclick="addSOC(\'' . $soc . '\');">';
                             echo "<td>{$soc}</td><td>{$career['title']}</td>" . 
                               "<td>{$peopleString}</td><td>{$videoSum}</td>";
                             echo '</tr>';
@@ -65,6 +65,28 @@
                       echo "<a href=\"{$orphansLink}\"><h4>Unassigned Files</h4></a>";
                     ?>
                     <h4>Users</h4>
+                      <table class="scrollTable">
+                        <thead><tr><td>ID</td><td>Name</td><td>Email</td><td>Admin</td><tr></thead>
+                        <?php
+                          foreach ($userList as $u){
+                            $name = $u['firstName'] . ' ' . $u['lastName'];
+                            $email = $u['email'];
+                            $uid = $u['id'];
+                            $isAdmin = $u['isAdmin'];
+                            echo '<tr class="scrollRow clickable" onclick="toUserPage(' .
+                              $uid . ')">';
+                            $userLink = $this->Url->build('/admin/user/' . $uid);
+                            echo '<td>' . $uid . '<a href="' . $userLink . '" id="user' .
+                              $uid . '"/> </td>';
+                            echo '<td>' . $name . '</td>';
+                            echo '<td>' . $email . '</td>';
+                            $notAdmin = '<i class="fa fa-times" aria-hidden="true"></i>';
+                            $adminIcon = '<i class="fa fa-check" aria-hidden="true"></i>';
+                            echo '<td>' . ($isAdmin?$adminIcon:$notAdmin) . '</td>';
+                            echo '</tr>';
+                          }
+                        ?>
+                      </table>
                     <h4>View Trends</h4>
                   </div>
                 </div>

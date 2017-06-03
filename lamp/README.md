@@ -18,6 +18,8 @@
       * Skips time-consuming excel conversion scripts
     * UNTESTED: execution from outside local directory
     * UNTESTED: nonstandard arguments (globbing, variables, ~, etc)
+  * SETTING UP ADMIN USER: The first account to be created will be the admin
+    * The admin may access the admin portal and add/remove admin status
 * Set Apache documentroot or alias to app/webroot directory
 * Set PHP options (`/etc/php/7.0/apache2/php.ini` on Ubuntu Server 16.04):
   * `upload_max_filesize`, `post_max_size`, `file_uploads`, `max_file_uploads`
