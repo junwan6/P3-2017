@@ -43,7 +43,7 @@ class AlgorithmController extends PagesController
 		else if ($rating == 'down')
 			$rating_int = -1;
 		
-		// checks if user is logged in
+		// user is logged in
 		if ($userId != null) {
 			$connection = ConnectionManager::get($this->datasource);
 			$query = 'SELECT rating FROM ViewHistory WHERE id= ? AND soc = ?';
@@ -71,6 +71,9 @@ class AlgorithmController extends PagesController
 				$this->addRating($connection, $rating_int, $userId, $soc);
 			}
 		}
+		// user is not logged in but rated the career
+		else if ($rating != 'none') 
+			$result_rating = $rating_int;
 		
 		echo $result_rating;
 		
