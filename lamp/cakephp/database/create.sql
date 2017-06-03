@@ -149,7 +149,7 @@ CREATE TABLE AlgorithmResults(id INT UNSIGNED NOT NULL,
 					nextSoc CHAR(7),
 					rating INT,
 					time DATETIME,
-					PRIMARY KEY (id));
+					PRIMARY KEY (id, prevSoc, nextSoc));
 					
 CREATE TABLE RememberMeTokens(
                     token VARCHAR(64),

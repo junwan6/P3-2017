@@ -30,6 +30,81 @@ use DateTime;
  */
 class AlgorithmController extends PagesController
 {
+	public function checkRating($rating = null, $soc = null) {
+		$userId = $this->request->session()->read('id');
+		// result_rating is echoed back to ajax call in video.ctp 
+		// the value 2 indicates that the user is not signed in, and thus the video has no ratings
+		$result_rating = 2;
+		
+		if ($rating == 'up') 
+			$rating_int = 1;
+		else if ($rating == 'mid')
+			$rating_int = 0; 
+		else if ($rating == 'down')
+			$rating_int = -1;
+		
+		// checks if user is logged in
+		if ($userId != null) {
+			$connection = ConnectionManager::get($this->datasource);
+			$query = 'SELECT rating FROM ViewHistory WHERE id= ? AND soc = ?';
+			$results = $connection->execute($query, [$userId, $soc], ['integer', 'string'])->fetchAll('assoc');
+			
+			// the user has rated the career before
+			if ($results != NULL) {
+				$result_rating = $results[0]['rating'];
+				
+				if ($rating != 'none') {
+				// user selected same rating as before, undoing their rating and deleting from the database
+					if ($result_rating == $rating_int) 
+						$this->deleteRating($connection, $userId, $soc);
+		
+					// user selected different rating, updating the database
+					else {
+						$result_rating = $rating_int;
+						$this->updateRating($connection, $rating_int, $userId, $soc);
+					}
+				}
+			}
+			// the user never rated the career before and must insert into the database
+			else {
+				$result_rating = $rating_int;
+				$this->addRating($connection, $rating_int, $userId, $soc);
+			}
+		}
+		
+		echo $result_rating;
+		
+		die();
+	}
+	
+	private function addRating($connection, $rating_int, $userId, $soc) {
+		$values = array(
+					'id' => $userId,
+					'soc' => $soc,
+					'rating' => $rating_int,
+					'time' => new DateTime('now')
+		);
+				
+		$types = array(
+						'id' => gettype($userId),
+						'soc' => gettype($soc),
+						'rating' => gettype($rating_int),
+						'time' => 'datetime'
+		);
+				
+		$insert = $connection->insert('ViewHistory', $values, $types);
+	}
+	
+	private function updateRating($connection, $rating_int, $userId, $soc) {
+		$update_query = 'UPDATE ViewHistory SET rating = ?, time = ? WHERE id = ? AND soc = ?'; 
+		$connection->execute($update_query, [$rating_int, new DateTime('now'), $userId, $soc], ['integer', 'datetime', 'integer', 'string']);
+	}
+	
+	private function deleteRating($connection, $userId, $soc) {
+		$delete_query = 'DELETE FROM ViewHistory WHERE id = ? AND soc = ?';
+		$connection->execute($delete_query, [$userId, $soc], ['integer', 'string']);
+	}
+	
 	//This function obtains all SOC codes from the database
 	public function nextCareer($rating = null, $old_soc = null) {
 		$userId = $this->request->session()->read('id');
@@ -165,38 +240,4 @@ class AlgorithmController extends PagesController
 
                 return $newSOC;
 	 }
-	 
-	 
-	 // add user's rating of career to ViewHistory table in database
-	public function addRating($rating = null, $soc = null) {
-		$userId = $this->request->session()->read('id');
-		$connection = ConnectionManager::get($this->datasource);
-		if ($rating == 'up') 
-			$rating_int = 1;
-		else if ($rating == 'mid')
-			$rating_int = 0; 
-		else if ($rating == 'down')
-			$rating_int = -1;
-		
-		//$query = "INSERT INTO ViewHistory (id, soc, rating) Values(" . $userId . ",'" . $soc . "'," . $rating_int . ") ON DUPLICATE KEY UPDATE rating=" . $rating_int;
-		
-		$values = array(
-                        'id' => $userId,
-                        'soc' => $soc,
-                        'rating' => $rating_int,
-						'time' => new DateTime('now')
-                );
-		
-		$types = array(
-                        'id' => gettype($userId),
-                        'soc' => gettype($soc),
-                        'rating' => gettype($rating_int),
-						'time' => 'datetime'
-                );
-		
-		if ($userId != null)
-			$insert = $connection->insert('ViewHistory', $values, $types);
-		
-		die();
-	}
 }

@@ -238,35 +238,56 @@ function updateTitle(){
 
 function showNextCareerButton(thumb) {
 	if (thumb == "up") {
-		$('#upthumb').addClass("upthumb-selected");
-		$('#upthumb').removeClass("upthumb");
-		$('#midthumb').addClass("midthumb");
-		$('#midthumb').removeClass("midthumb-selected");
-		$('#downthumb').addClass("downthumb");
-		$('#downthumb').removeClass("downthumb-selected");
-		$('#next-career-up').show();
-		$('#next-career-mid').hide();
-		$('#next-career-down').hide();
+		if ($('#upthumb').hasClass("upthumb-selected")) {
+			$('#upthumb').removeClass("upthumb-selected");
+			$('#upthumb').addClass("upthumb");
+			$('#next-career-up').hide();
+		}
+		else {
+			$('#upthumb').addClass("upthumb-selected");
+			$('#upthumb').removeClass("upthumb");
+			$('#midthumb').addClass("midthumb");
+			$('#midthumb').removeClass("midthumb-selected");
+			$('#downthumb').addClass("downthumb");
+			$('#downthumb').removeClass("downthumb-selected");
+			$('#next-career-up').show();
+			$('#next-career-mid').hide();
+			$('#next-career-down').hide();
+		}
 	} else if (thumb == "mid") {
-		$('#midthumb').addClass("midthumb-selected");
-		$('#midthumb').removeClass("midthumb");
-		$('#upthumb').addClass("upthumb");
-		$('#upthumb').removeClass("upthumb-selected");
-		$('#downthumb').addClass("downthumb");
-		$('#downthumb').removeClass("downthumb-selected");
-		$('#next-career-mid').show();
-		$('#next-career-up').hide();
-		$('#next-career-down').hide();
+		if ($('#midthumb').hasClass("midthumb-selected")) {
+			$('#midthumb').removeClass("midthumb-selected");
+			$('#midthumb').addClass("midthumb");
+			$('#next-career-mid').hide();
+		}
+		else {
+			$('#midthumb').addClass("midthumb-selected");
+			$('#midthumb').removeClass("midthumb");
+			$('#upthumb').addClass("upthumb");
+			$('#upthumb').removeClass("upthumb-selected");
+			$('#downthumb').addClass("downthumb");
+			$('#downthumb').removeClass("downthumb-selected");
+			$('#next-career-mid').show();
+			$('#next-career-up').hide();
+			$('#next-career-down').hide();
+		}
 	} else if (thumb == "down") {
-		$('#downthumb').addClass("downthumb-selected");
-		$('#downthumb').removeClass("downthumb");
-		$('#upthumb').addClass("upthumb");
-		$('#upthumb').removeClass("upthumb-selected");
-		$('#midthumb').addClass("midthumb");
-		$('#midthumb').removeClass("midthumb-selected");
-		$('#next-career-down').show();
-		$('#next-career-up').hide();
-		$('#next-career-mid').hide();
+		if ($('#downthumb').hasClass("downthumb-selected")) {
+			$('#downthumb').removeClass("downthumb-selected");
+			$('#downthumb').addClass("downthumb");
+			$('#next-career-down').hide();
+		}
+		else {
+			$('#downthumb').addClass("downthumb-selected");
+			$('#downthumb').removeClass("downthumb");
+			$('#upthumb').addClass("upthumb");
+			$('#upthumb').removeClass("upthumb-selected");
+			$('#midthumb').addClass("midthumb");
+			$('#midthumb').removeClass("midthumb-selected");
+			$('#next-career-down').show();
+			$('#next-career-up').hide();
+			$('#next-career-mid').hide();
+		}
 	}
 }
 

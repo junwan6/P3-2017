@@ -1,4 +1,23 @@
-              <div id="video">
+			<body onload=checkRating('none')>
+			<script>
+			  var js_url = window.location.href; 
+			  var js_soc = js_url.split('/')[5];
+			  
+			  var checkRating = function(rating){
+				  $.ajax({
+					url: '/cake/algorithm/checkrating/' + rating + '/' + js_soc,
+					success: function(result){
+						if (result == 1) 
+							showNextCareerButton('up');
+						else if (result == 0)
+							showNextCareerButton('mid');
+						else if (result == -1)
+							showNextCareerButton('down');
+					}
+				  });
+			  };
+			</script>
+			  <div id="video">
                 <p id="jobtitle"> </p>
                 <p id="vidtitle"></p>
                 <div onclick="updateTitle()">
@@ -37,20 +56,9 @@
 						$url_parts = explode("/", $path);
 						$soc = $url_parts[3];
 					?>
-					<script>
-					  var js_url = window.location.href; 
-					  var js_soc = js_url.split('/')[5];
-					
-					  var addRating = function(rating){
-						  $.ajax({
-							url: '/cake/algorithm/addrating/' + rating + '/' + js_soc
-						  });
-					  };
-					</script>
-					
-                    <a onclick="showNextCareerButton('up');updateRank('like'); addRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
-                    <a onclick="showNextCareerButton('mid');updateRank('neutral'); addRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
-                    <a onclick="showNextCareerButton('down');updateRank('dislike'); addRating('down')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
+                    <a onclick="updateRank('like'); checkRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
+                    <a onclick="updateRank('neutral'); checkRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
+                    <a onclick="updateRank('dislike'); checkRating('down')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
                     <div id="next-career-up">
 					<?php 
 						$url = '/algorithm/nextcareer/up/' . $soc;
@@ -125,3 +133,4 @@
                   });
                 </script>
               </div>
+			</body>
