@@ -81,8 +81,8 @@ Router::scope('/', function (RouteBuilder $routes) {
       'action' => 'login']);
     $routes->connect('/signup', ['controller' => 'user', 'action' => 'signup']);
     // Profile page (loads liked/disliked videos)
-    //$routes->connect('/profile', ['controller' => 'user',
-    //  'action' => 'display', 'profile']);
+    $routes->connect('/profile', ['controller' => 'user',
+      'action' => 'profile']);
     // TODO: Register (create and insert user)
     //$routes->connect('/register', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
@@ -99,8 +99,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     //$routes->connect('/auth/facebook', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
     // TODO: Logout (Clear session)
-    //$routes->connect('/logout', ['controller' => 'user',
-    //  'action' => 'logout']);
+    $routes->connect('/logout', ['controller' => 'user',
+      'action' => 'logout']);
     // TODO: Account recovery (sends email to linked email with reset link)
     //$routes->connect('/recover-account', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
@@ -191,6 +191,8 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     // TODO: AJAX on button press, update ratings, return next video SOC
     // Takes filter parameters (updated clientside by JS)
+	$routes->connect('/algorithm/checkrating/:soc', ['controller' => 'algorithm',
+	  'action' => 'checkRating'], ['pass' => ['soc']]);
 	$routes->connect('/algorithm/addrating/:rating/:soc', ['controller' => 'algorithm', 
 	  'action' => 'addRating'], ['pass' => ['rating', 'soc'], 'rating' => 'up|mid|down']);
     $routes->connect('/algorithm/nextcareer/:rating/:old_soc', ['controller' => 'algorithm',

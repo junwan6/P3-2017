@@ -30,7 +30,7 @@ class UserController extends PagesController
 {
     public function fbLogin()
     {
-	session_start();
+	$session = $this->request->session();
 	$name = 'Users';
   	$components = array('Facebook.Connect','Auth'); //1
     	$helpers    = array('Facebook.Facebook');       //2
@@ -49,7 +49,8 @@ class UserController extends PagesController
    	}
      
    	function logout() {                                 //7
-		session_destroy();
+		$session = $this->request->session();
+		$session->destroy();
        		$this->redirect($this->Auth->logout());
     	}
 	/*
@@ -72,11 +73,81 @@ class UserController extends PagesController
 	}*/
     }
 
+    public function fillFields()
+    {
+	$db = ConnectionManager::get($this->datasource);
+	$session = $this->request->session();
+	
+	$id = $session->read('id');
+	$query = 'SELECT rating, soc FROM ViewHistory WHERE id = :id';
+ 	$result = $db->execute($query, ['id' => $id])->fetchAll('assoc');
+	
+	$likedCareers = array(array(
+       		'title' => 'value1',
+        	'soc' => 'value2',
+        	'x' => 'value3',
+        	'y' => 'value4'
+    	));
+
+    	$dislikedCareers = [
+       	 	'title' => 'value1',
+        	'soc' => 'value2',
+       	 	'x' => 'value3',
+        	'y' => 'value4'
+    	];
+
+    	$neutralCareers = [
+        	'title' => 'value1',
+        	'soc' => 'value2',
+        	'x' => 'value3',
+        	'y' => 'value4'
+    	];
+	$i = 0;
+ 	foreach ($result as $view){
+        	if($view['rating'] = -1) //dislike
+        	{
+
+        	}
+        	else if($view['rating'] = 0) //neutral
+       		{
+
+        	}
+        	else if($view['rating'] = 1) //like
+        	{
+			$likedCareers[$i]['soc'] = $view['soc'];
+			$titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
+			$titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
+			$likedCareers[$i]['title'] = $titleResult['0']['title'];
+        		$likedCareers[$i]['x'] = 1;
+			$likedCareers[$i]['y'] = 2;
+		}
+		$i = $i +1;
+    	}
+	$session->write('liked', $likedCareers);
+	
+    }
+
+
+    public function profile()
+    {
+    	$session = $this->request->session();
+        $id = $session->read('id');
+	if($id != null){
+		$this->fillFields();
+        	$this->display("profile");
+    	}
+	else{
+		$this->display("index");
+	}
+    }
+
+
 
     public function login()
     {
 	$db = ConnectionManager::get($this->datasource);
 	$session = $this->request->session();  
+	
 	if($_SERVER["REQUEST_METHOD"] == "POST")
     	{
 		$email = ($_POST['email']);
@@ -115,22 +186,24 @@ class UserController extends PagesController
 				$resultHash = $db->execute($queryHashedPwd, ['hash' => $hash, 'salt' => $saltDB, 'id' => $id])->fetchAll('assoc');
 
 				if(count($resultHash) > 0)
-        {
+        			{
 					$session->write('id', $id);				
-          // Check if the user is an admin
-          $adminQuery = 'SELECT * FROM AdminUsers WHERE id = :id';
-          $adminResult = $db->execute($adminQuery, ['id'=>$id])->fetchAll('assoc');
-          $isAdmin = (count($adminResult) == 1);
-          $session->write('isAdmin', $isAdmin);
-          $this->fillFields();
+          				
+					// Check if the user is an admin
+          				$adminQuery = 'SELECT * FROM AdminUsers WHERE id = :id';
+          				$adminResult = $db->execute($adminQuery, ['id'=>$id])->fetchAll('assoc');
+          				$isAdmin = (count($adminResult) == 1);
+          				$session->write('isAdmin', $isAdmin);
+          				
+					$this->fillFields();
 					$this->display("profile");
 
 				}
 				else
 				{
-					session_destroy();
+					$session->destroy();
 					echo "Incorrect Password";
-					$this->display("default");
+					$this->display("index");
 				}
 			}
 			else
@@ -150,6 +223,22 @@ class UserController extends PagesController
 	}
 
     
+    }
+
+    public function logout()
+    {
+	/* $values = array(
+                        ''=> gettype($firstName),
+                        'lastName'=> gettype($lastName),
+                        'email'=> gettype($email)
+                );
+
+                $temp = $db->insert("ViewHistory", ['id' => 90, 'soc' => '1212121', 'rating' => 1, ;time]);
+*/
+
+	$session = $this->request->session();
+	$session->destroy();
+	$this->display("index"); //what to display here?
     }
 
 
@@ -200,7 +289,7 @@ class UserController extends PagesController
 			{
 				//this happens if firstname, lastname, and email are all
 				//already in the database (should change this)
-				session_destroy();
+				$session->destroy();
 				echo "password insert failed";
 			}
 			else if ($resultPass) //means password was inserted correctly
