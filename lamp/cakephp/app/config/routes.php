@@ -77,28 +77,21 @@ Router::scope('/', function (RouteBuilder $routes) {
      * TODO: Implement UserController
      */
 
+    // Login (send hashed attempt, create session)
     $routes->connect('/login', ['controller' => 'user',
       'action' => 'login']);
+    // Register (create and insert user)
     $routes->connect('/signup', ['controller' => 'user', 'action' => 'signup']);
     // Profile page (loads liked/disliked videos)
     $routes->connect('/profile', ['controller' => 'user',
       'action' => 'profile']);
-    // TODO: Register (create and insert user)
-    //$routes->connect('/register', ['controller' => 'user',
-    //  'action' => 'display', 'profile']);
-    // TODO: Login Attempt (AJAX, sends password salt for clientside password hashing)
-    //$routes->connect('/login-attempt', ['controller' => 'user',
-    // 'action' => 'display', 'profile']);
-    // TODO: Login (send hashed attempt, create session)
-    //$routes->connect('/login', ['controller' => 'user',
-    //  'action' => 'display', 'profile']);
     // TODO: Login via LinkedIn (implement passport, automatic registration)
     //$routes->connect('/auth/linkedin', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
     // TODO: Login via Facebook (as above)
     //$routes->connect('/auth/facebook', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
-    // TODO: Logout (Clear session)
+    // Logout (Clear session)
     $routes->connect('/logout', ['controller' => 'user',
       'action' => 'logout']);
     // TODO: Account recovery (sends email to linked email with reset link)
@@ -191,8 +184,8 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     // TODO: AJAX on button press, update ratings, return next video SOC
     // Takes filter parameters (updated clientside by JS)
-	$routes->connect('/algorithm/checkrating/:soc', ['controller' => 'algorithm',
-	  'action' => 'checkRating'], ['pass' => ['soc']]);
+	$routes->connect('/algorithm/checkrating/:rating/:soc', ['controller' => 'algorithm',
+	  'action' => 'checkRating'], ['pass' => ['rating', 'soc'], 'rating' => 'up|mid|down|none']);
 	$routes->connect('/algorithm/addrating/:rating/:soc', ['controller' => 'algorithm', 
 	  'action' => 'addRating'], ['pass' => ['rating', 'soc'], 'rating' => 'up|mid|down']);
     $routes->connect('/algorithm/nextcareer/:rating/:old_soc', ['controller' => 'algorithm',

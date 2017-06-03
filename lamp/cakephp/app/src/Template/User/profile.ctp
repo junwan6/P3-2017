@@ -20,8 +20,8 @@
     $session = $this->request->session();
     $id = $session->read('id');
     $likedCareers = $session->read('liked');
-    $dislikedCareers = null;
-    $neutralCareers = null;
+    $dislikedCareers = $session->read('disliked');
+    $neutralCareers = $session->read('neutral');
   ?>
 </head>
 <body>
@@ -52,9 +52,13 @@
                             echo '<p class="noneText">None</p><br>';
                           } else {
                             foreach ($likedCareers as $lcareer){
-                              echo '<a class="careerLink" href="career/' .
-                                $lcareer['soc'] . '/video">' . $lcareer['title'] . '</a><br>';
-                            }
+                              if($lcareer['title'] == null)
+                                {}
+                              else {
+				echo '<a class="careerLink" href="career/' .
+                                  $lcareer['soc'] . '/video">' . $lcareer['title'] . '</a><br>';
+                              }
+			    }
                           }
                         ?>
                       </div>
@@ -73,9 +77,13 @@
                             echo '<p class="noneText">None</p><br>';
                           } else {
                             foreach ($dislikedCareers as $dlcareer){
-                              echo '<a class="careerLink" href="career/' .
-                                $dlcareer['soc'] . '/video">' . $dlcareer['title'] . '</a><br>';
-                            }
+			      if($dlcareer['title'] == null)
+				{}
+			      else {
+                              	echo '<a class="careerLink" href="career/' .
+                                   $dlcareer['soc'] . '/video">' . $dlcareer['title'] . '</a><br>';
+                              }
+			    }
                           }
                         ?>
                       </div>
@@ -94,9 +102,13 @@
                             echo '<p class="noneText">None</p><br>';
                           } else {
                             foreach ($neutralCareers as $ncareer){
-                              echo '<a class="careerLink" href="career/' .
-                                $ncareer['soc'] . '/video">' . $ncareer['title'] . '</a><br>';
-                            }
+                              if($ncareer['title'] == null)
+                                {}
+                              else {
+				echo '<a class="careerLink" href="career/' .
+                                   $ncareer['soc'] . '/video">' . $ncareer['title'] . '</a><br>';
+                              }
+			    }
                           }
                         ?>
                       </div>

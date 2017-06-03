@@ -83,48 +83,61 @@ class UserController extends PagesController
  	$result = $db->execute($query, ['id' => $id])->fetchAll('assoc');
 	
 	$likedCareers = array(array(
-       		'title' => 'value1',
-        	'soc' => 'value2',
-        	'x' => 'value3',
-        	'y' => 'value4'
+       		'title' => null,
+        	'soc' => null,
+        	'x' => null,
+        	'y' => null
     	));
 
-    	$dislikedCareers = [
-       	 	'title' => 'value1',
-        	'soc' => 'value2',
-       	 	'x' => 'value3',
-        	'y' => 'value4'
-    	];
+    	$dislikedCareers = array(array(
+       	 	'title' => null,
+        	'soc' => null,
+       	 	'x' => null,
+        	'y' => null
+    	));
 
-    	$neutralCareers = [
-        	'title' => 'value1',
-        	'soc' => 'value2',
-        	'x' => 'value3',
-        	'y' => 'value4'
-    	];
+    	$neutralCareers = array( array(
+        	'title' => null,
+        	'soc' => null,
+        	'x' => null,
+        	'y' => null
+    	));
 	$i = 0;
- 	foreach ($result as $view){
-        	if($view['rating'] = -1) //dislike
+ 	
+	foreach ($result as $view){
+        	printf($view['rating']);
+		if($view['rating'] == -1) //dislike
         	{
-
+			$dislikedCareers[$i]['soc'] = $view['soc'];
+                        $titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
+                        $titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
+                        $dislikedCareers[$i]['title'] = $titleResult['0']['title'];
+                        $dislikedCareers[$i]['x'] = 1;
+                        $dislikedCareers[$i]['y'] = -10;
         	}
-        	else if($view['rating'] = 0) //neutral
+        	else if($view['rating'] == 0) //neutral
        		{
-
+			$neutralCareers[$i]['soc'] = $view['soc'];
+                        $titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
+                        $titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
+                        $neutralCareers[$i]['title'] = $titleResult['0']['title'];
+                        $neutralCareers[$i]['x'] = -1;
+                        $neutralCareers[$i]['y'] = -2;
         	}
-        	else if($view['rating'] = 1) //like
+        	else if($view['rating'] == 1) //like
         	{
 			$likedCareers[$i]['soc'] = $view['soc'];
 			$titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
 			$titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
 			$likedCareers[$i]['title'] = $titleResult['0']['title'];
-        		$likedCareers[$i]['x'] = 1;
-			$likedCareers[$i]['y'] = 2;
+        		$likedCareers[$i]['x'] = 5;
+			$likedCareers[$i]['y'] = -7;
 		}
 		$i = $i +1;
     	}
 	$session->write('liked', $likedCareers);
-	
+	$session->write('disliked', $dislikedCareers);
+	$session->write('neutral', $neutralCareers);
     }
 
 
@@ -227,18 +240,9 @@ class UserController extends PagesController
 
     public function logout()
     {
-	/* $values = array(
-                        ''=> gettype($firstName),
-                        'lastName'=> gettype($lastName),
-                        'email'=> gettype($email)
-                );
-
-                $temp = $db->insert("ViewHistory", ['id' => 90, 'soc' => '1212121', 'rating' => 1, ;time]);
-*/
-
 	$session = $this->request->session();
 	$session->destroy();
-	$this->display("index"); //what to display here?
+	$this->display("index");
     }
 
 
