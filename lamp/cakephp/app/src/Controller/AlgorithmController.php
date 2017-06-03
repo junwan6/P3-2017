@@ -19,6 +19,7 @@ use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
 use Cake\Datasource\ConnectionManager;
+use DateTime;
 
 /**
  * Static content controller
@@ -30,43 +31,172 @@ use Cake\Datasource\ConnectionManager;
 class AlgorithmController extends PagesController
 {
 	//This function obtains all SOC codes from the database
-	public function nextCareer($rating = null) {
-		
+	public function nextCareer($rating = null, $old_soc = null) {
+		$userId = $this->request->session()->read('id');
 		$connection = ConnectionManager::get($this->datasource);
 		$query = 'SELECT soc FROM Occupation';
 		$results = $connection->execute($query)->fetchAll('assoc');
 
-		//echo 'Total results: ' . $results->num_rows;
-		/*
-		$found = FALSE;
-		foreach ($results as $r) {
-			if ($r['soc'] == "25-2022") {
-				$found = TRUE;
-				break;
-			}
-		}
-		
-		if ($found) {
-			$soc = '29-1066';
-		}
-		else {
-			$soc = '11-3111';
-		}
-		*/
-		
+		// store all soc codes into an array that is sorted in ascending order
+		$socList = []; 
+		foreach($results as &$r) {
+			 $soc = $r['soc'];
+		 	 //$socList[] = ['soc' => $soc];
+			 $socList[] = $soc;
+		 } 
+
+		//$temp = $socList['foo'];
+		 // debug($results);
+
+		// if user hits the thumbs up button		
 		if ($rating == 'up') {
-			$soc = '25-4012';
+		   do {
+			$soc = $this->handleThumbsUp($old_soc);
+
+		      	// check to see if generated SOC code exists
+		      	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
+		      	$results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
+		   } while ($results == NULL); 
 		}
+
+		// if user hits the thumbs sideways button
 		else if ($rating == 'mid') {
-			$soc = '19-2012';
+		     do {
+				$soc = $this->handleThumbsMid($socList[0]);
+                      		// check to see if generated SOC code exists
+		        	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
+		        	$results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
+                   } while ($results == NULL);
 		}
+
+		// if user hits the thumbs down button
 		else if ($rating == 'down') {
-			$soc = '15-1111';
+		     do {
+				$soc = $this->handleThumbsDown($socList[0]);
+                        	// check to see if generated SOC code exists
+			        $validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
+		                $results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
+			} while ($results == NULL);
 		}
+		
 		else {
-			$soc = '17-2031';
+			// should not ever happen, set SOC to 00-0000 for error.
+			$soc = $rating;
 		}
+		
+		// add algorithm's results to AlgorithmResults table
+		if ($rating == 'up') 
+			$rating_int = 1;
+		else if ($rating == 'mid')
+			$rating_int = 0; 
+		else if ($rating == 'down')
+			$rating_int = -1;
+		
+		$values = array(
+                        'id' => $userId,
+                        'prevSoc' => $old_soc,
+						'nextSoc' => $soc,
+                        'rating' => $rating_int,
+						'time' => new DateTime('now')
+                );
+		
+		$types = array(
+                        'id' => gettype($userId),
+                        'prevSoc' => gettype($old_soc),
+						'nextSoc' => gettype($soc),
+                        'rating' => gettype($rating_int),
+						'time' => 'datetime'
+                );
+			
+		if ($userId != null) 
+			$insert = $connection->insert('AlgorithmResults', $values, $types);
 	
 		$this->redirect(['controller' => 'career', 'action' => 'displayCareerSingle', $soc, 'video']);
+	}
+
+	// implementation of 'Thumbs Up' logic
+	private function handleThumbsUp($socCode) {
+		$oldSOC = $socCode;
+		$newSOC = substr($oldSOC, 0, -2);
+
+		//change the least significant digit of the SOC code 
+		$lastDigit1 = rand(0, 9);
+		$lastDigit2 = rand(0, 9);
+		$newSOC = $newSOC . $lastDigit1 . $lastDigit2;
+
+		// if the generated SOC happens to be the same as the old SOC code,
+		// this can indicate that changing the least significant digit does not produce a
+		// valid SOC code, no matter the digit. Move on to 3 least sig digs.
+		if ($newSOC == $oldSOC) {
+		   $newSOC = substr($oldSOC, 0, -3);
+		   $lastDigit1 = rand(0, 9);
+		   $lastDigit2 = rand(0,9);
+		   $lastDigit3 = rand(0,9);
+		   $newSOC = $newSOC . $lastDigit1 . $lastDigit2 . $lastDigit3;
+		}
+		
+		return $newSOC;
+	}
+
+	// implementation of 'Thumbs Middle' logic
+	private function handleThumbsMid($socCode) {
+		$oldSOC = $socCode;
+		$newSOC = substr($oldSOC, 0, -4);
+
+                //change the 3 least significant digit of the SOC code
+		$lastDigit = rand(0, 9);
+		$lastDigit2 = rand(0,9);
+		$lastDigit3 = rand(0,9);
+		$lastDigit4 = rand(0, 9);
+		$newSOC = $newSOC . $lastDigit . $lastDigit2 . $lastDigit3 .$lastDigit4;
+
+                return $newSOC;
+	 }
+	 
+        // implementation of 'Thumbs Down' logic
+	private function handleThumbsDown($socCode) {
+		$oldSOC = $socCode;
+		$newSOC = substr($oldSOC, -5);
+
+                //change the 2 most significant digit of the SOC code
+		$firstDigit = rand(0, 9);
+		$secondDigit = rand(0, 9);
+		$newSOC = $firstDigit . $secondDigit . $newSOC;
+
+                return $newSOC;
+	 }
+	 
+	 
+	 // add user's rating of career to ViewHistory table in database
+	public function addRating($rating = null, $soc = null) {
+		$userId = $this->request->session()->read('id');
+		$connection = ConnectionManager::get($this->datasource);
+		if ($rating == 'up') 
+			$rating_int = 1;
+		else if ($rating == 'mid')
+			$rating_int = 0; 
+		else if ($rating == 'down')
+			$rating_int = -1;
+		
+		//$query = "INSERT INTO ViewHistory (id, soc, rating) Values(" . $userId . ",'" . $soc . "'," . $rating_int . ") ON DUPLICATE KEY UPDATE rating=" . $rating_int;
+		
+		$values = array(
+                        'id' => $userId,
+                        'soc' => $soc,
+                        'rating' => $rating_int,
+						'time' => new DateTime('now')
+                );
+		
+		$types = array(
+                        'id' => gettype($userId),
+                        'soc' => gettype($soc),
+                        'rating' => gettype($rating_int),
+						'time' => 'datetime'
+                );
+		
+		if ($userId != null)
+			$insert = $connection->insert('ViewHistory', $values, $types);
+		
+		die();
 	}
 }

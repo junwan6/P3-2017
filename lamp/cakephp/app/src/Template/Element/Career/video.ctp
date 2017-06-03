@@ -31,37 +31,41 @@
                     } 
                   ?>
                   <div style="margin-left:720px; margin-top: 10px">
-						<script>
-						  var addRating = function(rating){
-							  $.ajax({
-								url: 'algorithm/addrating/' + rating
-							  });
-						  };
-						</script>
 					<?php 
 						$current_url = $this->Url->build(null, true);
 						$path = parse_url($current_url, PHP_URL_PATH);
 						$url_parts = explode("/", $path);
 						$soc = $url_parts[3];
 					?>
+					<script>
+					  var js_url = window.location.href; 
+					  var js_soc = js_url.split('/')[5];
+					
+					  var addRating = function(rating){
+						  $.ajax({
+							url: '/cake/algorithm/addrating/' + rating + '/' + js_soc
+						  });
+					  };
+					</script>
+					
                     <a onclick="showNextCareerButton('up');updateRank('like'); addRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
                     <a onclick="showNextCareerButton('mid');updateRank('neutral'); addRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
                     <a onclick="showNextCareerButton('down');updateRank('dislike'); addRating('down')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
                     <div id="next-career-up">
 					<?php 
-						$url = '/algorithm/nextcareer/up';
+						$url = '/algorithm/nextcareer/up/' . $soc;
 						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-up']);
 						?>
 					</div>
 					<div id="next-career-mid">
 					<?php 
-						$url = '/algorithm/nextcareer/mid';
+						$url = '/algorithm/nextcareer/mid/' . $soc;
 						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-mid']);
 						?>
 					</div>
 					<div id="next-career-down">
 					<?php 
-						$url = '/algorithm/nextcareer/down';
+						$url = '/algorithm/nextcareer/down/' . $soc;
 						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-down']);
 						?>
 					</div>
