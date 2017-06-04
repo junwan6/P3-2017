@@ -211,6 +211,10 @@ class AlgorithmController extends PagesController
 		   $lastDigit2 = rand(0,9);
 		   $lastDigit3 = rand(0,9);
 		   $newSOC = $newSOC . $lastDigit1 . $lastDigit2 . $lastDigit3;
+
+		   if ($newSOC == $oldSOC) {
+		      $newSOC = handleThumbsMid($newSOC);
+		   }
 		}
 		
 		return $newSOC;
@@ -228,18 +232,33 @@ class AlgorithmController extends PagesController
 		$lastDigit4 = rand(0, 9);
 		$newSOC = $newSOC . $lastDigit . $lastDigit2 . $lastDigit3 .$lastDigit4;
 
+		if ($newSOC == $oldSOC) {
+		   $lastDigit = rand(0, 9);
+		   $lastDigit2 = rand(0,9);
+                   $lastDigit3 = rand(0,9);
+		   $lastDigit4 = rand(0, 9);
+		   $lastDigit5 = rand(0, 0);
+
+		   $newSOC = substr($oldSOC, 0, -6);
+		   $newSOC = $newSOC . $lastDigit . '-' .
+		   $lastDigit2 . $lastDigit3. $lastDigit4. $lastDigit5;
+		   }
+
                 return $newSOC;
 	 }
 	 
         // implementation of 'Thumbs Down' logic
 	private function handleThumbsDown($socCode) {
 		$oldSOC = $socCode;
-		$newSOC = substr($oldSOC, -5);
-
-                //change the 2 most significant digit of the SOC code
-		$firstDigit = rand(0, 9);
-		$secondDigit = rand(0, 9);
-		$newSOC = $firstDigit . $secondDigit . $newSOC;
+	
+                //change all digits of the SOC code
+		$digit1 = rand(0, 9);
+		$digit2 = rand(0, 9);
+		$digit3 = rand(0, 9);
+		$digit4 = rand(0, 9);
+		$digit5 = rand(0, 9);
+		$digit6 = rand(0, 9);
+		$newSOC = $digit1 . $digit2 .'-'. $digit3 . $digit4 . $digit5 . $digit6;
 
                 return $newSOC;
 	 }
