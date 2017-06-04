@@ -1,28 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<?php
+         echo $this->Html->script('profile.js');
+         echo $this->Html->css('profile.css');
+	 function baseLink2(...$args){
+      	   $view = $args[0];
+      	   $str = $view->Url->build('/');
+      	   if (count($args) >= 2){
+             $str .= $args[1];
+           }
+           if (count($args) == 4){
+             $str = $args[2] . $str . $args[3];
+           }
+           return $str;
+         }
 
-<form name="frmForgot" id="frmForgot" method="post" onSubmit="return validate_forgot();">
-<h1>Forgot Password?</h1>
-	/*<?php if(!empty($success_message)) { ?>
-	<div class="success_message"><?php echo $success_message; ?></div>
-	<?php } ?>
+	?>
+</head>
+<style>
+<label>
+	color: black;
+</label>
+</style>
 
-	<div id="validation-message">
-		<?php if(!empty($error_message)) { ?>
-	<?php echo $error_message; ?>
-	<?php } ?>
-	*/
-	</div>
+<body>
+	<div class="container-fluid">
+          <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+              <div class="box">
+                <div id="pageTitle">
+                  Recover Account
+		</div>
 
-	<div class="field-group">
-		<div><label for="username">Username</label></div>
-		<div><input type="text" name="user-login-name" id="user-login-name" class="input-field"> Or</div>
+		<div class="container-fluid">
+                  <div class="row">
+
+		    <div class="col-md-6">
+
+		      <?php echo baseLink2($this, 'recover', '<form action="', '" method="post">'); ?>
+		        <div class="recover form-group">
+			  <font color ="black"> <label for="email">Email</label></font>
+          		  <input type="text" class="formTextField form-control" name="email"/>
+			</div>
+			</a>
+			<br>
+			<input id="recoverButton" class="btn btn-default formButton" type="submit" value="Send Password"/>
+		      </form>
+		    </div>
+		  </div>
+                </div>
+	      </div>
+	    </div>
+	  </div>
 	</div>
-	
-	<div class="field-group">
-		<div><label for="email">Email</label></div>
-		<div><input type="text" name="user-email" id="user-email" class="input-field"></div>
-	</div>
-	
-	<div class="field-group">
-		<div><input type="submit" name="forgot-password" id="forgot-password" value="Submit" class="form-submit-button"></div>
-	</div>	
-</form>
+</body>
+</html>

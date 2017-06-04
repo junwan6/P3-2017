@@ -166,17 +166,17 @@
           </div>
         </form>
 
-        <div class="navibutton">
-          <?php echo baseLink($this, 'donors', '<a href="', '">'); ?>
+        <?php echo baseLink($this, 'donors', '<a href="', '">'); ?>
+          <div id="donors" class="navibutton">
             Donors
-          </a>
-        </div>
+          </div>
+        </a>
         <?php if ($isAdmin){ ?>
-        <div class="adminbutton">
-          <?php echo baseLink($this, 'admin', '<a href="', '">'); ?>
+        <?php echo baseLink($this, 'admin', '<a href="', '">'); ?>
+          <div id="admin" class="navibutton">
             Admin
-          </a>
-        </div>
+          </div>
+        </a>
         <?php } ?>
       </div>
       <?php if ($loggedIn) { ?>

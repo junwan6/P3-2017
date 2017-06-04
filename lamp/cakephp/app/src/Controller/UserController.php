@@ -75,7 +75,27 @@ class UserController extends PagesController
 
     public function recover()
     {
-	$this->display("recover");
+	if($_SERVER["REQUEST_METHOD"] == "POST")
+        {	
+		$email = ($_POST['email']);
+    		/*$Email = new CakeEmail();
+		$Email->from(array('me@example.com' => 'My Site'));
+		$Email->to('jstorch33@gmail.com');
+		$Email->subject('About');
+		$Email->send('My message');
+		*/
+
+		$msg = "First line of text\nSecond line of text";
+
+		// use wordwrap() if lines are longer than 70 characters
+		$msg = wordwrap($msg,70);
+
+		// send email
+		mail($email,"My subject",$msg);
+
+		printf("Password Sent to %s", $email);
+    		$this->display("index");
+	}
     }
 
 
@@ -188,7 +208,6 @@ class UserController extends PagesController
       'x' => array_sum($wowX)/count($wowX),
       'y' => array_sum($wowY)/count($wowY)
     ];
-    debug($interests);
 		if($view['rating'] == -1) //dislike
     {
       $dislikedCareers[] = $careerArr;
@@ -291,19 +310,20 @@ class UserController extends PagesController
 			else
 			{
 				echo "User ID not present in password table"; //this should never happen
+				$this->display("index");
 			}
 
-			//TODO: Display correct profile
-//			$this->display("profile");
 		}		
 		else
 		{
 			echo 'Email NOT found: ';
 			printf("%s is not in the Database. \n", $email);
+			$this->display("index");
 		}
 
 	}
 
+	//$this->display("index");
     
     }
 
@@ -326,53 +346,79 @@ class UserController extends PagesController
 		$lastName = ($_POST['lastName']);
 		$email = ($_POST['email']);
 		$password = ($_POST['password']);
+		$verifyPassword = ($_POST['verifypassword']);
 		$length = 10;
 
-		$salt = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
-		$hash = md5($password . $salt);
+		if($password == $verifyPassword)
+		{
+			$salt = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+			$hash = md5($password . $salt);
 
-		//insert the record into the database upon signup
-		$values = array(
-                        'firstName'=> gettype($firstName),
-                        'lastName'=> gettype($lastName),
-                        'email'=> gettype($email)
-                );
-		
-		$resultInsert = $db->insert("Users", ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email], $values);
-		
-		
-		//grab the id
-		$idField = ['id'];
-		$queryID = 'SELECT id FROM Users WHERE firstName = :firstName AND lastName= :lastName AND email = :email';
-                $resultID = $db->execute($queryID, ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email])->fetchAll('assoc');
+			//insert the record into the database upon signup
+			$values = array(
+                        	'firstName'=> gettype($firstName),
+                        	'lastName'=> gettype($lastName),
+                        	'email'=> gettype($email)
+                		);
 
-		if($resultID){
-			$id = $resultID['0']['id'];
-			$intID = (int)$id;
+			//query database to see if email is already in there
+			$duplicateEmail = 'SELECT email FROM Users WHERE email = :email';
+			$resultDuplicateEmail = $db->execute($duplicateEmail, ['email' => $email])->fetchAll('assoc');
+
 			
-			$values2 = array(
-				'hash'=> gettype($hash),
-				'salt'=> gettype($salt),
-				'id'=> gettype($id)
-			);
-			
-			$resultPass = $db->insert("UserPasswords", ['hash' => $hash, 'salt' => $salt, 'id' => $id], $values2);
-			
-			if(!($resultPass))
+			if(count($resultDuplicateEmail) > 0)
 			{
-				//this happens if firstname, lastname, and email are all
-				//already in the database (should change this)
-				$session->destroy();
-				echo "password insert failed";
+				//if it gets in here that means email is already in DB
+				echo 'Email already in use!';
+				$this->display("index");
 			}
-			else if ($resultPass) //means password was inserted correctly
+			else   //if the email is not already in use
 			{
-				$session->write('id', $id);
-				$this->display("profile");
+
+				$resultInsert = $db->insert("Users", ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email], $values);
+			
+		
+		
+				//grab the id
+				$idField = ['id'];
+				$queryID = 'SELECT id FROM Users WHERE firstName = :firstName AND lastName= :lastName AND email = :email';
+                		$resultID = $db->execute($queryID, ['firstName' => $firstName, 'lastName' => $lastName, 'email' => $email])->fetchAll('assoc');
+
+				if($resultID)
+				{
+					$id = $resultID['0']['id'];
+					$intID = (int)$id;
+			
+					$values2 = array(
+					 'hash'=> gettype($hash),
+					 'salt'=> gettype($salt),
+					 'id'=> gettype($id)
+					  );
+			
+					$resultPass = $db->insert("UserPasswords", ['hash' => $hash, 'salt' => $salt, 'id' => $id], $values2);
+			
+					if(!($resultPass))
+					{
+						//this happens if firstname, lastname, and email are all
+						//already in the database (should change this)
+						$session->destroy();
+						$this->display("index");
+						echo "password insert failed";
+					
+					}
+					else if ($resultPass) //means password was inserted correctly
+					{
+						$session->write('id', $id);
+						$this->display("profile");
+					}
+				}
 			}
 		}
-		
-		
+		else   //if verifypassword didnt match password
+		{
+			echo 'Make sure you have correctly verified your password!';
+			$this->display("index");
+		}
 	}
     }
 }
