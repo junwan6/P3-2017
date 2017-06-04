@@ -87,8 +87,12 @@ class UserController extends PagesController
 	
 	$id = $session->read('id');
 	$query = 'SELECT rating, soc FROM ViewHistory WHERE id = :id';
- 	$result = $db->execute($query, ['id' => $id])->fetchAll('assoc');
-	
+  $result = $db->execute($query, ['id' => $id])->fetchAll('assoc');
+
+  $likedCareers = [];
+  $dislikedCareers = [];
+  $neutralCareers = [];
+	/*
 	$likedCareers = array(array(
        		'title' => null,
         	'soc' => null,
@@ -108,43 +112,100 @@ class UserController extends PagesController
         	'soc' => null,
         	'x' => null,
         	'y' => null
-    	));
-	$i = 0;
+        ));
+  */
  	
 	foreach ($result as $view){
+    $titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
+    $titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
+
+    // Get WoW position(converted from clientside JS in career.js
+    $interestsFields = ['realistic', 'investigative', 'artistic', 'social', 'enterprising',
+      'conventional'];
+    $query = 'SELECT ' . implode(',', $interestsFields) . ' FROM OccupationInterests WHERE soc = :soc';
+    $wowWeight = $db->execute($query, ['soc' => $view['soc']])->fetchAll('assoc');
+    if (count($wowWeight) == 0){
+      continue;
+    }
+    $interests = $wowWeight[0];
+    /*
+	    	if (interestArray[i] > 0.5) {
+	    		if (i == 0) {	// realistic
+	    			var x = realistic*215*Math.cos(Math.radians(-90));
+    				var y = realistic*215*Math.sin(Math.radians(90));
+    				coordArray.push([x,y]);
+	    		}
+	    		if (i == 1) {	// investigative
+	    			var x = investigative*215*Math.cos(Math.radians(-60));
+    				var y = investigative*215*Math.sin(Math.radians(60));
+    				coordArray.push([x,y]);
+	    		}
+	    		if (i == 2) {	// artistic
+	    			var x = artistic*215*Math.cos(Math.radians(240));
+    				var y = artistic*215*Math.sin(Math.radians(-240));
+    				coordArray.push([x,y]);    		
+	    		}
+	    		if (i == 3) {	// social
+	    			var x = social*215*Math.cos(Math.radians(180));
+    				var y = social*215*Math.sin(Math.radians(-180));
+    				coordArray.push([x,y]);			
+	    		}
+	    		if (i == 4) {	// enterprising 
+	    			var x = enterprising*215*Math.cos(Math.radians(120));
+    				var y = enterprising*215*Math.sin(Math.radians(-120));
+    				coordArray.push([x,y]);				
+	    		}
+	    		if (i == 5) {	// conventional 
+	    			var x = conventional*215*Math.cos(Math.radians(60));
+    				var y = conventional*215*Math.sin(Math.radians(-60));
+    				coordArray.push([x,y]);	
+	    		}
+        }
+        average all together
+        if no weight above 0.5, only go by max
+          if multiple max, go with arbitrary
+    */
+    $angles = [
+      'realistic' => deg2rad(270), 'investigative' => deg2rad(300),
+      'artistic' => deg2rad(240), 'social' => deg2rad(180),
+      'enterprising' => deg2rad(120), 'conventional' => deg2rad(60)];
+    $maxInterest = array_keys($interests, max($interests))[0];
+    $xyWeights = [[
+      ($interests[$maxInterest] * 1 * cos($angles[$maxInterest])),
+      ($interests[$maxInterest] * 1 * sin($angles[$maxInterest]))
+    ]];
+    foreach ($interests as $intType => $intVal){
+      if ($intType != $maxInterest && $intVal > 0.5){
+        $xyWeights[] = [
+          ($intVal * 1 * cos($angles[$intType])),
+          ($intVal * 1 * sin($angles[$intType]))
+        ];
+      }
+    }
+    $wowX = array_column($xyWeights, 0);
+    $wowY = array_column($xyWeights, 1);
+    $careerArr = ['soc' => $view['soc'], 'title'=>$titleResult['0']['title'],
+      'x' => array_sum($wowX)/count($wowX),
+      'y' => array_sum($wowY)/count($wowY)
+    ];
+    debug($interests);
 		if($view['rating'] == -1) //dislike
-        	{
-			$dislikedCareers[$i]['soc'] = $view['soc'];
-                        $titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
-                        $titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
-                        $dislikedCareers[$i]['title'] = $titleResult['0']['title'];
-                        $dislikedCareers[$i]['x'] = 1;
-                        $dislikedCareers[$i]['y'] = -10;
-        	}
-        	else if($view['rating'] == 0) //neutral
-       		{
-			$neutralCareers[$i]['soc'] = $view['soc'];
-                        $titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
-                        $titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
-                        $neutralCareers[$i]['title'] = $titleResult['0']['title'];
-                        $neutralCareers[$i]['x'] = -1;
-                        $neutralCareers[$i]['y'] = -2;
-        	}
-        	else if($view['rating'] == 1) //like
-        	{
-			$likedCareers[$i]['soc'] = $view['soc'];
-			$titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
-			$titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
-			$likedCareers[$i]['title'] = $titleResult['0']['title'];
-        		$likedCareers[$i]['x'] = 5;
-			$likedCareers[$i]['y'] = -7;
+    {
+      $dislikedCareers[] = $careerArr;
+    }
+    else if($view['rating'] == 0) //neutral
+    {
+      $neutralCareers[] = $careerArr;
+    }
+    else if($view['rating'] == 1) //like
+    {
+      $likedCareers[] = $careerArr;
 		}
-		$i = $i +1;
-    	}
+  }
 	$session->write('liked', $likedCareers);
 	$session->write('disliked', $dislikedCareers);
 	$session->write('neutral', $neutralCareers);
-    }
+  }
 
 
     public function profile()
@@ -172,7 +233,7 @@ class UserController extends PagesController
 		$email = ($_POST['email']);
 		$password = ($_POST['password']);
 
-		$userFields = ['email', 'id'];
+		$userFields = ['email', 'id', 'firstName'];
 		
 		$sql = 'SELECT ' . implode(',', $userFields) . ' FROM Users WHERE email = :email';
 		$result = $db->execute($sql, ['email' => $email])->fetchAll('assoc');
@@ -181,7 +242,8 @@ class UserController extends PagesController
 		if (count($result) > 0) //if you found a match of emails
     		{
 			$email = $result['0']['email']; //email of user
-			$id = $result['0']['id']; 	//id of user
+      $id = $result['0']['id']; 	//id of user
+      $firstName = $result[0]['firstName']; // First name, for homepage greeting
 			$SaltField = ['salt'];
 			$HashField = ['hash'];
 			
@@ -207,12 +269,13 @@ class UserController extends PagesController
 				if(count($resultHash) > 0)
         			{
 					$session->write('id', $id);				
+					$session->write('firstName', $firstName);				
           				
 					// Check if the user is an admin
-          				$adminQuery = 'SELECT * FROM AdminUsers WHERE id = :id';
-          				$adminResult = $db->execute($adminQuery, ['id'=>$id])->fetchAll('assoc');
-          				$isAdmin = (count($adminResult) == 1);
-          				$session->write('isAdmin', $isAdmin);
+          $adminQuery = 'SELECT * FROM AdminUsers WHERE id = :id';
+          $adminResult = $db->execute($adminQuery, ['id'=>$id])->fetchAll('assoc');
+          $isAdmin = (count($adminResult) == 1);
+          $session->write('isAdmin', $isAdmin);
           				
 					$this->fillFields();
 					$this->display("profile");

@@ -130,6 +130,7 @@ var createCanvas = function() {
 	    ctx.translate(250,250);		// to move origin to (0,0)
 	    
 	    // based on http://www.choixdecarriere.com/pdf/5873/3.pdf
+      // 2017 note: above link does not exist
 	    // NOTE: the axes on there are 90 degrees off than the WoW graphic we are using
 	    var interestArray = [realistic, investigative, artistic, social, enterprising, conventional]; 
 	    var coordArray = [];

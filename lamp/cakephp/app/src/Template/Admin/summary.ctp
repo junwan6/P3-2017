@@ -22,7 +22,14 @@
               <div class="row">
                 <div class="col-md-10 col-md-offset-1">
                   <div class="bodyContents">
-                    <h4>Videos</h4>
+                    <?php
+                      
+                      $orphansLink = $this->Url->build(['controller'=>'Admin',
+                        'action'=>'displayOrphans']);
+                      echo '<h4>Videos (';
+                      echo "<a href=\"{$orphansLink}\">Unassigned Files</a>";
+                      echo ')</h4>';
+                    ?>
                       <table class="scrollTable">
                         <thead>
                         <tr><td colspan="4">
@@ -58,12 +65,6 @@
                           }
                         ?>
                       </table>
-                    <?php
-                      
-                      $orphansLink = $this->Url->build(['controller'=>'Admin',
-                        'action'=>'displayOrphans']);
-                      echo "<a href=\"{$orphansLink}\"><h4>Unassigned Files</h4></a>";
-                    ?>
                     <h4>Users</h4>
                       <table class="scrollTable">
                         <thead><tr><td>ID</td><td>Name</td><td>Email</td><td>Admin</td><tr></thead>
@@ -87,7 +88,7 @@
                           }
                         ?>
                       </table>
-                    <h4>View Trends</h4>
+                    <!-- <h4>View Trends</h4> -->
                   </div>
                 </div>
               </div>

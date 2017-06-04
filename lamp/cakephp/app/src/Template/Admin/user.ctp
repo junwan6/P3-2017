@@ -5,6 +5,9 @@
     <title>
       PPP
     </title>
+    <?php
+      echo $this->Html->css('Admin/user.css');
+    ?>
   </head>
   <body>
 
@@ -44,9 +47,25 @@
                   }
 
                   if (isset($viewhistory)){
+                    echo '<table class="ratingsTable">';
+                    echo '<thead><tr><th>Time</th><th>SOC</th><th>Rating</th></tr></thead>';
                     foreach($viewhistory as $v){
-                      echo "{$v['time']}: Rated {$v['soc']} {$v['rating']}";
+                      echo '<tr>';
+                      echo "<td>{$v['time']}</td>";
+                      $careerLink = $this->Url->build(['controller'=>'Career',
+                        'action'=>'', $v['soc'], 'video']);
+                      echo '<td><a href="' . $careerLink . '">';
+                      echo "{$v['soc']}";
+                      echo '</a></td>';
+                      //echo "<td>{$v['rating']}</td>";
+                      $thumbIcon = [
+                        1=>'<span class="upthumb" id="upthumb"></span>',
+                        0=>'<span class="midthumb" id="midthumb"></span>',
+                        -1=>'<span class="downthumb" id="downthumb"></span>'];
+                      echo "<td>{$thumbIcon[$v['rating']]}</td>";
+                      echo '</tr>';
                     }
+                    echo '</table>';
                   }
                   ?>
                   <!--

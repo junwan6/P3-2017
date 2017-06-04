@@ -150,26 +150,25 @@
           {{/each}}
           -->
           <?php
-            if ($likedCareers === NULL){
+            if ($likedCareers === NULL || count($likedCareers) == 0){
             } else {
               foreach ($likedCareers as $lcareer){
                 echo '<career type="like" title="' . $lcareer['title'] . '" soc="' .
                   $lcareer['soc'] . '" x="' . $lcareer['x'] . '" y="' . $lcareer['y'] . '"></career>';
               }
             }
-
-            if ($dislikedCareers === NULL){
+            if ($dislikedCareers === NULL || count($dislikedCareers) == 0){
             } else {
               foreach ($dislikedCareers as $dlcareer){
-                echo '<career type="like" title="' . $dlcareer['title'] . '" soc="' .
+                echo '<career type="dislike" title="' . $dlcareer['title'] . '" soc="' .
                   $dlcareer['soc'] . '" x="' . $dlcareer['x'] . '" y="' . $dlcareer['y'] . '"></career>';
               }
             }
 
-            if ($neutralCareers === NULL){
+            if ($neutralCareers === NULL || count($neutralCareers) == 0){
             } else {
               foreach ($neutralCareers as $ncareer){
-                echo '<career type="like" title="' . $ncareer['title'] . '" soc="' .
+                echo '<career type="neutral" title="' . $ncareer['title'] . '" soc="' .
                   $ncareer['soc'] . '" x="' . $ncareer['x'] . '" y="' . $ncareer['y'] . '"></career>';
               }
             }

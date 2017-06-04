@@ -14,8 +14,11 @@
       //   controller/temp-controller.js
       //   models/interfaceRatings.js    
       //TODO: Needed variables
-      $firstName = "Not Implemented"; //TODO: query database for firstname
-      $loggedIn = false;
+//      $firstName = "Not Implemented"; //TODO: query database for firstname
+//      $loggedIn = false;
+      $loggedIn = !is_null($this->request->session()->read('id'));
+      // Only referred to if logged in, no need for null-check
+      $firstName = $this->request->session()->read('firstName');
 
       //TODO: Login attempts
       $success = false;
