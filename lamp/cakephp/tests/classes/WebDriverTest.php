@@ -154,6 +154,14 @@ class WebDriverTest {
     return $this->wd;
   }
 
+  public static error($str="Unspcified Error", $level = 'error'){
+    if ($level == 'warn'){
+      echo $str;
+    } else if ($level == 'error'){
+      throw new Exception($str);
+    }
+  }
+
   function __destruct(){
     if (!$this->driverDetached){
       $this->wd->quit();

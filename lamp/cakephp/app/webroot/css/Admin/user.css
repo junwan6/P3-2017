@@ -1,0 +1,46 @@
+.ratingsTable {
+  width: 100%;
+}
+.heading {
+  text-align: center;
+}
+#occupationPlotter {
+    position: absolute;
+}
+
+.careerRowHover {
+  background-color:hsl(210, 60%, 60%);
+}
+
+#hoverOccupationTitle {
+    padding: 0.5em;
+    border-radius: 2px;
+    border-color: hsl(210, 60%, 30%);
+    background-color: hsl(210, 60%, 60%);
+    position: absolute;
+}
+
+span.upthumb {
+	background-image: url('../../img/upthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+	background-position: 0 -31px;
+}
+span.midthumb {
+	background-image: url('../../img/midthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+	background-position: 0 -31px;
+}
+span.downthumb {
+	background-image: url('../../img/downthumbs.png');
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	background-size: cover;
+	background-position: 0 -31px;
+}

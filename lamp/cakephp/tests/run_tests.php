@@ -1,9 +1,11 @@
 <?php
 require_once('classes/PagesTest.php');
 require_once('classes/CareerTest.php');
+require_once('classes/AdminTest.php');
 
-$testPages = true;
-$testCareer = true;
+$testPages = false;
+$testCareer = false;
+$testAdmin = true;
 
 $pagesTest = new PagesTest(['warnLinks' => true]);
 
@@ -49,6 +51,26 @@ if ($testCareer){
   echo 'Testing career with video, no skills, with world of work (25-1011):' . PHP_EOL;
   $careerTest->testCareerPage(['video'=>true,
     'skills'=>false], "25-1011");
+}
+
+$adminTest = new AdminTest([
+  'warnLinks' => true,
+  'reuseDriver' => $careerTest->detachDriver()
+]);
+if ($testAdmin){
+  // Attempt to access admin pages without logging in
+  echo 'Testing Admin Page access restrictions (logged out)' . PHP_EOL;
+  $adminTest->testDeniedAccess();
+
+  // Attempt to access admin pages with an unprivileged account
+  echo 'Testing Admin Page access restrictions (unprivileged user)' . PHP_EOL;
+  $adminTest->login('oooo','oooo');
+  $adminTest->testDeniedAccess();
+
+  // Login to admin account
+  echo 'Testing Admin summary page' . PHP_EOL;
+  $adminTest->login('pppp','pppp', true);
+  $adminTest->testSummary();
 }
 
 ?>

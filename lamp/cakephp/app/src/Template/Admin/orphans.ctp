@@ -24,7 +24,7 @@
                   <?php
                     if (count($orphans) > 0){
                       $uploadForm = $this->Url->build(['controller'=>'Admin',
-                        'action'=>'cleanFilesystem']);
+                        'action'=>'delete']);
                       echo '<form action="' . $uploadForm . '" method="post" ' .
                         'enctype="multipart/form-data" autocomplete="off">';
                       if (array_key_exists('root', $orphans)){

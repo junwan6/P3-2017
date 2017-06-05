@@ -462,10 +462,59 @@ class AdminController extends PagesController
     foreach($results as $r){
       $this->set('adminuser', $r);
     }
-
-    $query = 'SELECT * FROM ViewHistory WHERE id = :id';
+    
+    $fields = implode(', ',
+      ['ViewHistory.soc', 'realistic', 'investigative', 'artistic', 'social',
+      'enterprising', 'conventional', 'rating', 'time', 'title']
+    );
+    $query = 'SELECT ' . $fields . ' FROM ViewHistory ViewHistory INNER JOIN Occupation ON ' .
+      'ViewHistory.soc = Occupation.soc INNER JOIN OccupationInterests ' .
+      'ON ViewHistory.soc = OccupationInterests.soc WHERE ViewHistory.id = :id';
     $results = $connection->execute($query,$idRep)->fetchall('assoc');
     $this->set('viewhistory', $results);
+
+    $likedCareers = [];
+    $neutralCareers = [];
+    $dislikedCareers = [];
+
+    foreach($results as $r){
+      $soc = $r['soc'];
+      $interests = array_slice($r, 1, 6, true);
+      $careerTitle = $r['title'];
+      $angles = [
+        'realistic' => deg2rad(270), 'investigative' => deg2rad(300),
+        'artistic' => deg2rad(240), 'social' => deg2rad(180),
+        'enterprising' => deg2rad(120), 'conventional' => deg2rad(60)];
+      $maxInterest = array_keys($interests, max($interests))[0];
+      $xyWeights = [[
+        ($interests[$maxInterest] * 1 * cos($angles[$maxInterest])),
+        ($interests[$maxInterest] * 1 * sin($angles[$maxInterest]))
+      ]];
+      foreach ($interests as $intType => $intVal){
+        if ($intType != $maxInterest && $intVal > 0.5){
+          $xyWeights[] = [
+            ($intVal * 1 * cos($angles[$intType])),
+            ($intVal * 1 * sin($angles[$intType]))
+          ];
+        }
+      }
+      $wowX = array_column($xyWeights, 0);
+      $wowY = array_column($xyWeights, 1);
+      $careerArr = ['soc' => $soc, 'title'=>$careerTitle,
+        'x' => array_sum($wowX)/count($wowX),
+        'y' => array_sum($wowY)/count($wowY)
+      ];
+      if($r['rating'] == -1){
+        $dislikedCareers[] = $careerArr;
+      } else if($r['rating'] == 0){
+        $neutralCareers[] = $careerArr;
+      } else if($r['rating'] == 1){
+        $likedCareers[] = $careerArr;
+      }
+    }
+    $this->set('likedCareers', $likedCareers);
+    $this->set('neutralCareers', $neutralCareers);
+    $this->set('dislikedCareers', $dislikedCareers);
 
     $this->display('user');
   }

@@ -7,8 +7,35 @@
     </title>
     <?php
       echo $this->Html->css('Admin/user.css');
+      echo $this->Html->script('Admin/user.js');
     ?>
   </head>
+    <div style="display:none">
+    <?php
+      if ($likedCareers === NULL || count($likedCareers) == 0){
+      } else {
+        foreach ($likedCareers as $lcareer){
+          echo '<career type="like" title="' . $lcareer['title'] . '" soc="' .
+            $lcareer['soc'] . '" x="' . $lcareer['x'] . '" y="' . $lcareer['y'] . '"></career>';
+        }
+      }
+      if ($dislikedCareers === NULL || count($dislikedCareers) == 0){
+      } else {
+        foreach ($dislikedCareers as $dlcareer){
+          echo '<career type="dislike" title="' . $dlcareer['title'] . '" soc="' .
+            $dlcareer['soc'] .'" x="'. $dlcareer['x'] .'" y="'. $dlcareer['y'] . '"></career>';
+        }
+      }
+
+      if ($neutralCareers === NULL || count($neutralCareers) == 0){
+      } else {
+        foreach ($neutralCareers as $ncareer){
+          echo '<career type="neutral" title="' . $ncareer['title'] . '" soc="' .
+            $ncareer['soc'] . '" x="' . $ncareer['x'] . '" y="' . $ncareer['y'] . '"></career>';
+        }
+      }
+    ?>
+    </div>
   <body>
 
     <div class="container-fluid">
@@ -46,16 +73,30 @@
                     echo "<h4>Linked to LinkedIn</h4>";
                   }
 
+                  ?>
+	              <h4 class="heading">My World of Work Map</h4>
+                  <div>
+                    <canvas id="occupationPlotter"></canvas>
+                    <?php
+                      echo $this->Html->image('wow.jpg', array(
+                        'id'=>'wowImage', 'alt'=>'World of Work', 'align'=>'center',
+                        'width'=>'100%', 'height'=>'auto'));
+                    ?>
+                  </div>
+              <p id="hoverOccupationTitle"></p>
+
+                  <?php
+
                   if (isset($viewhistory)){
                     echo '<table class="ratingsTable">';
-                    echo '<thead><tr><th>Time</th><th>SOC</th><th>Rating</th></tr></thead>';
+                    echo '<thead><tr><th>Time</th><th>Career</th><th>Rating</th></tr></thead>';
                     foreach($viewhistory as $v){
-                      echo '<tr>';
+                      echo '<tr id="' . $v['soc'] . '" class="careerRow">';
                       echo "<td>{$v['time']}</td>";
                       $careerLink = $this->Url->build(['controller'=>'Career',
                         'action'=>'', $v['soc'], 'video']);
                       echo '<td><a href="' . $careerLink . '">';
-                      echo "{$v['soc']}";
+                      echo "{$v['soc']} : {$v['title']}";
                       echo '</a></td>';
                       //echo "<td>{$v['rating']}</td>";
                       $thumbIcon = [
