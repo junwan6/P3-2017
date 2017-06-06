@@ -51,7 +51,7 @@ class PagesTest extends WebDriverTest{
     preg_match('/^url\("(.*)"\)$/', $bgCssURL, $matches);
     $httpsReturn = $this->getStatus($matches[1]);
     if (substr($httpsReturn, 0, 1) !== '2'){
-      throw new Exception('Background image does not exist');
+      $this->error('Background image does not exist');
     }
 
     if (!is_null($this->screenshotDir)){
@@ -75,7 +75,7 @@ class PagesTest extends WebDriverTest{
 
     $title = $this->wd->findElement(WebDriverBy::cssSelector('.box > .titleText'));
     if ($title->getText() !== 'Thanks to our donors!'){
-      throw new Exception('Donor title not found');
+      $this->error('Donor title not found');
     }
     
     if (!is_null($this->screenshotDir)){
@@ -105,7 +105,7 @@ class PagesTest extends WebDriverTest{
     $categories = $this->wd->findElement(WebDriverBy::partialLinktext('By Category'));
     $groupOptions = $this->wd->findElement(WebDriverBy::id('broadCategoryOptions'));
     if ($groupOptions->isDisplayed()){
-      throw new Exception('Categories visible before button press');
+      $this->error('Categories visible before button press');
     }
     $this->wd->getMouse()->mouseMove($categories->getCoordinates());
     $categories->click();
@@ -114,7 +114,7 @@ class PagesTest extends WebDriverTest{
         WebDriverBy::id('broadCategoryOptions')
     ));
     if (!$groupOptions->isDisplayed()){
-      throw new Exception('Categories not visible after button press');
+      $this->error('Categories not visible after button press');
     }
 
     $fullSearchBar = $this->wd->findElement(WebDriverBy::id('fullSearchBar'));

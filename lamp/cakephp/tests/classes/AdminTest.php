@@ -41,7 +41,7 @@ class AdminTest extends WebDriverTest{
     } catch (Exception $e){
       $adminButtonExists = false;
     }
-    if ($adminButtonExists && $denied){
+    if (!($adminButtonExists xor $denied)){
       $this->error('Admin button visible to non-admin/logged-out user');
     }
 
@@ -63,8 +63,8 @@ class AdminTest extends WebDriverTest{
       // getstatus CURL does not use webdriver session, cannot test login
       $this->wd->get($this->url . $link['href']);
       $errorMsg = $this->wd->findElement(WebDriverBy::cssSelector('div.box > p.titleText'));
-      if ($errorMsg->getText() !== 'Uh-oh!'){
-        throw new Exception($link['desc']);
+      if (!($errorMsg->getText() !== 'Uh-oh!' xor $denied)){
+        $this->error($link['desc']);
       }
     }
   }
@@ -112,24 +112,24 @@ class AdminTest extends WebDriverTest{
     }
     $summaryTitle = $this->wd->findElement(WebDriverBy::cssSelector('div.box > p.titleText'));
     if ($summaryTitle->getText() !== 'Summary'){
-      throw new Exception('Summary page lacks title');
+      $this->error('Summary page lacks title');
     }
 
     $videoSOCs = $this->wd->findElements(
       WebDriverBy::cssSelector('.scrollRow:not(.clickable) > td:first-child'));
     $testedSOC = $videoSOCs[array_rand($videoSOCs, 1)];
     if ($testedSOC === NULL){
-      throw new Exception('No SOCs have videos');
+      $this->error('No SOCs have videos');
     } else {
       $this->wd->getMouse()->mouseMove($testedSOC->getCoordinates());
       $testedSOC->click();
       $inputBar = $this->wd->findElement(WebDriverBy::id('inputSOC'));
       if ($inputBar->getAttribute('value') != $testedSOC->getText()){
-        throw new Exception('Clicked SOC not added to input bar');
+        $this->error('Clicked SOC not added to input bar');
       }
       $testedSOC->click();
       if ($inputBar->getAttribute('value') != ''){
-        throw new Exception('Clicked SOC not removed from input bar');
+        $this->error('Clicked SOC not removed from input bar');
       }
     }
   }

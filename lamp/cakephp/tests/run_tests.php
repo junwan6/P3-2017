@@ -3,8 +3,8 @@ require_once('classes/PagesTest.php');
 require_once('classes/CareerTest.php');
 require_once('classes/AdminTest.php');
 
-$testPages = false;
-$testCareer = false;
+$testPages = true;
+$testCareer = true;
 $testAdmin = true;
 
 $pagesTest = new PagesTest(['warnLinks' => true]);
@@ -60,16 +60,17 @@ $adminTest = new AdminTest([
 if ($testAdmin){
   // Attempt to access admin pages without logging in
   echo 'Testing Admin Page access restrictions (logged out)' . PHP_EOL;
-  $adminTest->testDeniedAccess();
+  $adminTest->testAccess(true);
 
   // Attempt to access admin pages with an unprivileged account
   echo 'Testing Admin Page access restrictions (unprivileged user)' . PHP_EOL;
   $adminTest->login('oooo','oooo');
-  $adminTest->testDeniedAccess();
+  $adminTest->testAccess(true);
 
   // Login to admin account
   echo 'Testing Admin summary page' . PHP_EOL;
   $adminTest->login('pppp','pppp', true);
+  $adminTest->testAccess(false);
   $adminTest->testSummary();
 }
 

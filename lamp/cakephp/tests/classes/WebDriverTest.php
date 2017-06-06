@@ -154,7 +154,7 @@ class WebDriverTest {
     return $this->wd;
   }
 
-  public static error($str="Unspcified Error", $level = 'error'){
+  public static function error($str="Unspcified Error", $level='error'){
     if ($level == 'warn'){
       echo $str;
     } else if ($level == 'error'){

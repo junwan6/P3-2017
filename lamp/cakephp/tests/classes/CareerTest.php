@@ -77,7 +77,7 @@ class CareerTest extends WebDriverTest{
       $srText = strToLower($sr->getText());
       if (strpos($srText, 'teacher') === false
         || strpos($srText, 'special') === false){
-        throw new Exception("Search result {$srText} does not contain " .
+        $this->error("Search result {$srText} does not contain " .
           '"teacher" and "special"');
       }
     }
@@ -108,7 +108,7 @@ class CareerTest extends WebDriverTest{
       for ($i = 0; $i < 3; $i++){
         // q omitted, no careers contain q
         $allowedChars = 'abcdefghijklmnoprstuvwxyz ';
-        $searchStr .= $allowedChars[rand(0,strlen($allowedChars))];
+        $searchStr .= $allowedChars[rand(0,strlen($allowedChars)-1)];
       }
       // strpos returns notfound error on searching for '' created by lead/trail ' '
       $searchStr = trim($searchStr);
@@ -127,7 +127,7 @@ class CareerTest extends WebDriverTest{
         $srText = strToLower($sr->getText());
         foreach(explode(' ', $searchStr) as $kw){
           if (strpos($srText, $kw) === false){
-            throw new Exception("Search result \"{$srText}\" does not match " .
+            $this->error("Search result \"{$srText}\" does not match " .
               "entered query \"{$searchStr}\"");
           }
         }
@@ -156,7 +156,7 @@ class CareerTest extends WebDriverTest{
     $urlResult = preg_match('/\/career\/([0-9]{2}-[0-9]{4})\/video/',
       $this->wd->getCurrentURL(), $matches);
     if ($urlResult == 0 || $urlResult === FALSE){
-      throw new Exception('Page not at career video page');
+      $this->error('Page not at career video page');
     }
     $soc = $matches[1];
 
@@ -179,7 +179,7 @@ class CareerTest extends WebDriverTest{
       $videoPageSuccess = $this->wd->findElement(WebDriverBy::id('video-wrapper'));
     } catch (Exception $e){
       if (array_key_exists('video', $requiredPages) && $requiredPages['video']){
-        throw new Exception($soc . ': No videos, specified to have videos.');
+        $this->error($soc . ': No videos, specified to have videos.');
       }
     }
     try {
@@ -187,15 +187,15 @@ class CareerTest extends WebDriverTest{
         '#video .errorMsg'));
     } catch (Exception $e){
       if (array_key_exists('video', $requiredPages) && !$requiredPages['video']){
-        throw new Exception($soc . ': Videos found, specified to have no videos.');
+        $this->error($soc . ': Videos found, specified to have no videos.');
       }
     }
     // Should never both be null (ungraceful fail) or both non-null (both success, fail)
     if (is_null($videoPageSuccess) == is_null($videoPageFailure)){
       if (is_null($videoPageSuccess)){
-        throw new Exception($soc . ': Video player failed to load or gracefully fail');
+        $this->error($soc . ': Video player failed to load or gracefully fail');
       } else {
-        throw new Exception($soc . ': Both video player and error message present');
+        $this->error($soc . ': Both video player and error message present');
       }
     }
 
@@ -205,11 +205,11 @@ class CareerTest extends WebDriverTest{
     // TODO: Find way to reset mouse position so no possibility of starting on salary
     $salaryDialog = $this->wd->findElement(WebDriverBy::id('salaryDialog'));
     if ($salaryDialog->isDisplayed()){
-      throw new Exception($soc . ': Salary popup visible without mouse hover');
+      $this->error($soc . ': Salary popup visible without mouse hover');
     }
     $this->wd->getMouse()->mouseMove($salaryIcon->getCoordinates());
     if (!$salaryDialog->isDisplayed()){
-      throw new Exception($soc . ': Salary popup not visible on mouse hover');
+      $this->error($soc . ': Salary popup not visible on mouse hover');
     }
     $salaryIcon->click();
     // Now at salary display page
@@ -239,7 +239,7 @@ class CareerTest extends WebDriverTest{
     $chartBars = $salaryContainer->findElements(WebDriverBy::cssSelector(
       'g.highcharts-series'));
     if (count($chartBars) == 0){
-      throw new Exception($soc . ': Empty salary chart for '
+      $this->error($soc . ': Empty salary chart for '
         . $stateToCheck->getAttribute('value'));
     }
 
@@ -252,7 +252,7 @@ class CareerTest extends WebDriverTest{
       $chartPoints = $salaryContainer->findElements(WebDriverBy::cssSelector(
         'rect.highcharts-point'));
       if (count($chartPoints) == 0){
-        throw new Exception($soc . ': Empty salary chart for '
+        $this->error($soc . ': Empty salary chart for '
           . $st->getAttribute('value'));
       }
     }
@@ -263,11 +263,11 @@ class CareerTest extends WebDriverTest{
     // Basic check for chart existence, too many options
     $educationDialog = $this->wd->findElement(WebDriverBy::id('educationDialog'));
     if ($educationDialog->isDisplayed()){
-      throw new Exception($soc . ': Education popup visible without mouse hover');
+      $this->error($soc . ': Education popup visible without mouse hover');
     }
     $this->wd->getMouse()->mouseMove($educationIcon->getCoordinates());
     if (!$educationDialog->isDisplayed()){
-      throw new Exception($soc . ': Education popup not visible on mouse hover');
+      $this->error($soc . ': Education popup not visible on mouse hover');
     }
     $educationIcon->click();
     // Now at education display page
@@ -286,11 +286,11 @@ class CareerTest extends WebDriverTest{
     // Basic check for chart existence, too many options
     $skillsDialog = $this->wd->findElement(WebDriverBy::id('skillsDialog'));
     if ($skillsDialog->isDisplayed()){
-      throw new Exception($soc . ': Skills popup visible without mouse hover');
+      $this->error($soc . ': Skills popup visible without mouse hover');
     }
     $this->wd->getMouse()->mouseMove($skillsIcon->getCoordinates());
     if (!$skillsDialog->isDisplayed()){
-      throw new Exception($soc . ': Skills popup not visible on mouse hover');
+      $this->error($soc . ': Skills popup not visible on mouse hover');
     }
     $skillsIcon->click();
 
@@ -306,7 +306,7 @@ class CareerTest extends WebDriverTest{
       );
     } catch (Exception $e){
       if (array_key_exists('skills', $requiredPages) && $requiredPages['skills']){
-        throw new Exception($soc . ': No skills, specified to have skills.');
+        $this->error($soc . ': No skills, specified to have skills.');
       }
     }
     try {
@@ -314,15 +314,15 @@ class CareerTest extends WebDriverTest{
         '#skills-contentContainer .errorMsg'));
     } catch (Exception $e){
       if (array_key_exists('skills', $requiredPages) && !$requiredPages['skills']){
-        throw new Exception($soc . ': Skills found, specified to have no skills.');
+        $this->error($soc . ': Skills found, specified to have no skills.');
       }
     }
     // Should never both be null (ungraceful fail) or both non-null (both success, fail)
     if (is_null($skillsPageSuccess) == is_null($skillsPageFailure)){
       if (is_null($skillsPageSuccess)){
-        throw new Exception($soc . ': Skills chart failed to load or gracefully fail');
+        $this->error($soc . ': Skills chart failed to load or gracefully fail');
       } else {
-        throw new Exception($soc . ': Both skills chart and error message present');
+        $this->error($soc . ': Both skills chart and error message present');
       }
     }
     
@@ -331,11 +331,11 @@ class CareerTest extends WebDriverTest{
     // Basic check for chart existence, too many options
     $careerOutlookDialog = $this->wd->findElement(WebDriverBy::id('careerOutlookDialog'));
     if ($careerOutlookDialog->isDisplayed()){
-      throw new Exception($soc . ': Outlook popup visible without mouse hover');
+      $this->error($soc . ': Outlook popup visible without mouse hover');
     }
     $this->wd->getMouse()->mouseMove($careerOutlookIcon->getCoordinates());
     if (!$careerOutlookDialog->isDisplayed()){
-      throw new Exception($soc . ': Outlook popup not visible on mouse hover');
+      $this->error($soc . ': Outlook popup not visible on mouse hover');
     }
     $careerOutlookIcon->click();
     // Now at careerOutlook display page
@@ -345,18 +345,18 @@ class CareerTest extends WebDriverTest{
     $growthPercent = $this->wd->findElement(WebDriverBy::id('growthPercentText'));
     // TODO: Find better page test, may be "null" or non "" gibberish
     if ($growthPercent->getText() == ''){
-      throw new Exception($soc . ': Blank growth percent text');
+      $this->error($soc . ': Blank growth percent text');
     }
 
     // World-of-Work Page
     echo $soc . ': Testing World-of-Work Page' . PHP_EOL;
     $worldOfWorkDialog = $this->wd->findElement(WebDriverBy::id('worldOfWorkDialog'));
     if ($worldOfWorkDialog->isDisplayed()){
-      throw new Exception($soc . ': World-of-Work popup visible without mouse hover');
+      $this->error($soc . ': World-of-Work popup visible without mouse hover');
     }
     $this->wd->getMouse()->mouseMove($worldOfWorkIcon->getCoordinates());
     if (!$worldOfWorkDialog->isDisplayed()){
-      throw new Exception($soc . ': World-of-Work popup not visible on mouse hover');
+      $this->error($soc . ': World-of-Work popup not visible on mouse hover');
     }
     $worldOfWorkIcon->click();
     if (!is_null($this->screenshotDir)){
@@ -368,7 +368,7 @@ class CareerTest extends WebDriverTest{
       $worldOfWorkPageSuccess = $this->wd->findElement(WebDriverBy::id('d'));
     } catch (Exception $e){
       if (array_key_exists('world-of-work', $requiredPages) && $requiredPages['world-of-work']){
-        throw new Exception($soc . ': No World-of-Work, specified to have World-of-Work.');
+        $this->error($soc . ': No World-of-Work, specified to have World-of-Work.');
       }
     }
     try {
@@ -376,15 +376,15 @@ class CareerTest extends WebDriverTest{
         '#world-of-work-body .errorMsg'));
     } catch (Exception $e){
       if (array_key_exists('world-of-work', $requiredPages) && !$requiredPages['world-of-work']){
-        throw new Exception($soc . ': World-of-Work found, specified to have no World-of-Work.');
+        $this->error($soc . ': World-of-Work found, specified to have no World-of-Work.');
       }
     }
     // Should never both be null (ungraceful fail) or both non-null (both success, fail)
     if (is_null($worldOfWorkPageSuccess) == is_null($worldOfWorkPageFailure)){
       if (is_null($worldOfWorkPageSuccess)){
-        throw new Exception($soc . ': World-of-Work chart failed to load or gracefully fail');
+        $this->error($soc . ': World-of-Work chart failed to load or gracefully fail');
       } else {
-        throw new Exception($soc . ': Both World-of-Work chart and error message present');
+        $this->error($soc . ': Both World-of-Work chart and error message present');
       }
     }
   }

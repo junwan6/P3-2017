@@ -2,7 +2,7 @@
 * Python (Database loading) `apt-get install python python-pip`
   * OpenPyXl `pip install openpyxl`
 * PHP Modules `intl` and `mb_string` for CakePHP
-  * `sudo apt-get install php-intl php-mb_string`
+  * `sudo apt-get install php-intl php-mbstring`
   
 # Deploying website:
 * Create empty database (Arbitrary name)
@@ -11,6 +11,8 @@
 * Set database (MySQL) information in `app/config/db_config.json`
 * Place excel spreadsheets in configurable data folder (default: data/)
   * `all_data_M_2015.xlsx`  `Interests.xlsx`  `occupation.xlsx`  `skills.xlsx`
+* Set owner of CakePHP files to webserver user
+  * `sudo chown -R www-data:www-data app/`
 * Populate database by executing `database/init_db`
   *  `./init_db [data_dir] [db_config] [preconverted_dir]`
     * All arguments optional
@@ -24,7 +26,8 @@
     * The admin may access the admin portal and add/remove admin status
 * Set Apache documentroot or alias to app/webroot directory
   * Enable modules `ssl` and `rewrite`
-    * `sudo a2enmod ssl` `sudo a2enmod rewrite`
+    * `sudo a2enmod ssl rewrite`
+    * If setting up from scratch: `sudo make-ssl-cert generate-default-snakeoil --force-overwrite`
   * If setting up from scratch, `sudo a2ensite default-ssl.conf`
     * Set `DocumentRoot <path>` or `Alias "<alias>" "<path>"` 
     * Set up `<Directory "<path>">` tag
