@@ -178,13 +178,13 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'className' => 'Mail',
+            'className' => 'Smtp',
             // The following keys are used in SMTP transports
-            'host' => 'localhost',
-            'port' => 25,
-            'timeout' => 30,
-            'username' => 'user',
-            'password' => 'secret',
+            'host' => 'ssl://smtp.gmail.com',
+            'port' => '465',
+            'timeout' => '30',
+            'username' => 'jstorch33@gmail.com',
+            'password' => 'november22',
             'client' => null,
             'tls' => null,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
@@ -203,7 +203,7 @@ return [
     'Email' => [
         'default' => [
             'transport' => 'default',
-            'from' => 'you@localhost',
+            'from' => 'jstorch33@localhost',
             //'charset' => 'utf-8',
             //'headerCharset' => 'utf-8',
         ],
@@ -377,4 +377,6 @@ return [
     'Session' => [
         'defaults' => 'php',
     ],
+
+
 ];

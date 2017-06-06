@@ -38,14 +38,14 @@
 
 		    <div class="col-md-6">
 
-		      <?php echo baseLink2($this, 'recover', '<form action="', '" method="post">'); ?>
+		      <?php echo baseLink2($this, 'tempURL', '<form action="', '" method="post">'); ?>
 		        <div class="recover form-group">
 			  <font color ="black"> <label for="email">Email</label></font>
           		  <input type="text" class="formTextField form-control" name="email"/>
 			</div>
 			</a>
 			<br>
-			<input id="recoverButton" class="btn btn-default formButton" type="submit" value="Send Password"/>
+			<input id="recoverButton" class="btn btn-default formButton" type="submit" value="Send Reset Email"/>
 		      </form>
 		    </div>
 		  </div>

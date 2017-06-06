@@ -44,6 +44,7 @@ use Cake\Routing\Route\DashedRoute;
 Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
+   
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
@@ -84,7 +85,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/signup', ['controller' => 'user', 'action' => 'signup']);
     // Profile page (loads liked/disliked videos)
     $routes->connect('/profile', ['controller' => 'user',
-      'action' => 'display', 'profile']);
+      'action' => 'profile']);
     // TODO: Login via LinkedIn (implement passport, automatic registration)
     //$routes->connect('/auth/linkedin', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
@@ -96,14 +97,23 @@ Router::scope('/', function (RouteBuilder $routes) {
       'action' => 'logout']);
     // TODO: Account recovery (sends email to linked email with reset link)
     $routes->connect('/recover-account', ['controller' => 'user',
-      'action' => 'recover']);
+      'action' => 'display', 'recover']);
+    $routes->connect('/tempURL', ['controller' => 'user',
+      'action' => 'tempURL']);
+    $routes->connect('/checkToken/**', ['controller' => 'user',
+      'action' => 'checkToken']);
+    $routes->connect('/reset-password', ['controller' => 'user',
+      'action' => 'display','reset']);
+    $routes->connect('/insert-new-password', ['controller' => 'user',
+      'action' => 'insertNewPassword']);
     // TODO: Password reset from recovery link (code lookup, password update)
     //$routes->connect('/reset-password', ['controller' => 'user',
     //  'action' => 'display', 'profile']);
-    // TODO: Set new password while already logged in (password update)
-    //$routes->connect('/new-password', ['controller' => 'user',
-    //  'action' => 'display', 'profile']);
-
+    // Set new password while already logged in (password update)
+    $routes->connect('changePassword', ['controller' => 'user',
+      'action' => 'display','change']);
+    $routes->connect('change', ['controller' => 'user',
+      'action' => 'changePassword']);
     /**
      * Connect pages requiring career information to CareerController
      * Includes SOC codes (Search, random)
@@ -164,7 +174,10 @@ Router::scope('/', function (RouteBuilder $routes) {
     // Filesystem maintenance page, listing orphaned videos and folders
     $routes->connect('/admin/orphans', ['controller' => 'admin',
       'action' => 'displayOrphans']);
-    // TODO: Summary page of traffic, etc. Entry point for admin portal
+    // Filesystem maintenance action, deletes POST specified files
+    $routes->connect('/admin/delete', ['controller' => 'admin',
+      'action' => 'cleanFilesystem']);
+    // Summary page of traffic, etc. Entry point for admin portal
     $routes->connect('/admin/', ['controller' => 'admin',
       'action' => 'displaySummary']);
     $routes->connect('/admin/summary', ['controller' => 'admin',

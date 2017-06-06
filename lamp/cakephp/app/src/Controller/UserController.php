@@ -19,6 +19,8 @@ use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
 use Cake\Datasource\ConnectionManager;
+use Cake\Mailer\Email;
+
 /**
  * Static content controller
  *
@@ -73,28 +75,63 @@ class UserController extends PagesController
 	}*/
     }
 
+    public function changePassword(){
+	$db = ConnectionManager::get($this->datasource);
+	$session = $this->request->session();
+        $id = $session->read('id');
+
+        if($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+		$password = ($_POST['password']);
+                $vpassword = ($_POST['vpassword']);
+		if($password == $vpassword)
+		{
+			$querySalt = 'SELECT salt FROM UserPasswords WHERE id = :id';
+                        $resultSalt = $db->execute($querySalt, ['id' => $id])->fetchAll('assoc');
+
+			$saltDB = $resultSalt['0']['salt']; //salt from database
+                        $passwordAndSalt = $password . $saltDB;
+                        $hash = md5($passwordAndSalt);
+		
+			$db->update('UserPasswords', ['hash' => $hash], ['id' => $id]);	
+			$session->write('changed',' 1');	
+			$this->display('change');
+		}
+		else
+		{
+			  $session->write('changed', '2');
+			$this->display('change');
+		}
+	}
+    }
+
+
+
     public function recover()
     {
+	$db = ConnectionManager::get($this->datasource);
+	$session = $this->request->session();
 	if($_SERVER["REQUEST_METHOD"] == "POST")
-        {	
-		$email = ($_POST['email']);
-    		/*$Email = new CakeEmail();
-		$Email->from(array('me@example.com' => 'My Site'));
-		$Email->to('jstorch33@gmail.com');
-		$Email->subject('About');
-		$Email->send('My message');
-		*/
-
-		$msg = "First line of text\nSecond line of text";
-
-		// use wordwrap() if lines are longer than 70 characters
-		$msg = wordwrap($msg,70);
-
-		// send email
-		mail($email,"My subject",$msg);
-
-		printf("Password Sent to %s", $email);
-    		$this->display("index");
+        {  	
+		$dest = ($_POST['email']);
+		$idQuery = 'SELECT id FROM Users WHERE email =:email';
+		$idResult = $db->execute($idQuery, ['email' => $dest])->fetchAll('assoc');
+		
+		printf("ok");
+		if($idResult){
+			$email = new Email('default');
+			$email->from(['jstorch33@gmail.com' => 'My Site'])
+			    ->to($dest)
+			    ->subject('Your Password')
+			    ->send('password');    		
+		
+			printf("Password Sent to ");
+			printf($email);
+			$this->redirect(['controller' =>'pages', 'action' => 'display','index']);
+		}
+		else{
+			printf("No Account with that email");
+		}
 	}
     }
 
@@ -107,124 +144,66 @@ class UserController extends PagesController
 	
 	$id = $session->read('id');
 	$query = 'SELECT rating, soc FROM ViewHistory WHERE id = :id';
-  $result = $db->execute($query, ['id' => $id])->fetchAll('assoc');
+  	$result = $db->execute($query, ['id' => $id])->fetchAll('assoc');
 
-  $likedCareers = [];
-  $dislikedCareers = [];
-  $neutralCareers = [];
-	/*
-	$likedCareers = array(array(
-       		'title' => null,
-        	'soc' => null,
-        	'x' => null,
-        	'y' => null
-    	));
-
-    	$dislikedCareers = array(array(
-       	 	'title' => null,
-        	'soc' => null,
-       	 	'x' => null,
-        	'y' => null
-    	));
-
-    	$neutralCareers = array( array(
-        	'title' => null,
-        	'soc' => null,
-        	'x' => null,
-        	'y' => null
-        ));
-  */
+  	$likedCareers = [];
+  	$dislikedCareers = [];
+  	$neutralCareers = [];
  	
 	foreach ($result as $view){
-    $titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
-    $titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
+    		$titleQuery = 'SELECT title FROM Occupation WHERE soc = :soc';
+    		$titleResult = $db->execute($titleQuery, ['soc' => $view['soc']])->fetchAll('assoc');
 
-    // Get WoW position(converted from clientside JS in career.js
-    $interestsFields = ['realistic', 'investigative', 'artistic', 'social', 'enterprising',
-      'conventional'];
-    $query = 'SELECT ' . implode(',', $interestsFields) . ' FROM OccupationInterests WHERE soc = :soc';
-    $wowWeight = $db->execute($query, ['soc' => $view['soc']])->fetchAll('assoc');
-    if (count($wowWeight) == 0){
-      continue;
-    }
-    $interests = $wowWeight[0];
-    /*
-	    	if (interestArray[i] > 0.5) {
-	    		if (i == 0) {	// realistic
-	    			var x = realistic*215*Math.cos(Math.radians(-90));
-    				var y = realistic*215*Math.sin(Math.radians(90));
-    				coordArray.push([x,y]);
-	    		}
-	    		if (i == 1) {	// investigative
-	    			var x = investigative*215*Math.cos(Math.radians(-60));
-    				var y = investigative*215*Math.sin(Math.radians(60));
-    				coordArray.push([x,y]);
-	    		}
-	    		if (i == 2) {	// artistic
-	    			var x = artistic*215*Math.cos(Math.radians(240));
-    				var y = artistic*215*Math.sin(Math.radians(-240));
-    				coordArray.push([x,y]);    		
-	    		}
-	    		if (i == 3) {	// social
-	    			var x = social*215*Math.cos(Math.radians(180));
-    				var y = social*215*Math.sin(Math.radians(-180));
-    				coordArray.push([x,y]);			
-	    		}
-	    		if (i == 4) {	// enterprising 
-	    			var x = enterprising*215*Math.cos(Math.radians(120));
-    				var y = enterprising*215*Math.sin(Math.radians(-120));
-    				coordArray.push([x,y]);				
-	    		}
-	    		if (i == 5) {	// conventional 
-	    			var x = conventional*215*Math.cos(Math.radians(60));
-    				var y = conventional*215*Math.sin(Math.radians(-60));
-    				coordArray.push([x,y]);	
-	    		}
-        }
-        average all together
-        if no weight above 0.5, only go by max
-          if multiple max, go with arbitrary
-    */
-    $angles = [
-      'realistic' => deg2rad(270), 'investigative' => deg2rad(300),
-      'artistic' => deg2rad(240), 'social' => deg2rad(180),
-      'enterprising' => deg2rad(120), 'conventional' => deg2rad(60)];
-    $maxInterest = array_keys($interests, max($interests))[0];
-    $xyWeights = [[
-      ($interests[$maxInterest] * 1 * cos($angles[$maxInterest])),
-      ($interests[$maxInterest] * 1 * sin($angles[$maxInterest]))
-    ]];
-    foreach ($interests as $intType => $intVal){
-      if ($intType != $maxInterest && $intVal > 0.5){
-        $xyWeights[] = [
-          ($intVal * 1 * cos($angles[$intType])),
-          ($intVal * 1 * sin($angles[$intType]))
-        ];
-      }
-    }
-    $wowX = array_column($xyWeights, 0);
-    $wowY = array_column($xyWeights, 1);
-    $careerArr = ['soc' => $view['soc'], 'title'=>$titleResult['0']['title'],
-      'x' => array_sum($wowX)/count($wowX),
-      'y' => array_sum($wowY)/count($wowY)
-    ];
+    		// Get WoW position(converted from clientside JS in career.js
+    		$interestsFields = ['realistic', 'investigative', 'artistic', 'social', 'enterprising',
+    		  'conventional'];
+    		$query = 'SELECT ' . implode(',', $interestsFields) . ' FROM OccupationInterests WHERE soc = :soc';
+    		$wowWeight = $db->execute($query, ['soc' => $view['soc']])->fetchAll('assoc');
+    		if (count($wowWeight) == 0){
+    		  continue;
+    		}
+    		$interests = $wowWeight[0];
+
+    		$angles = [
+    		  'realistic' => deg2rad(270), 'investigative' => deg2rad(300),
+    		  'artistic' => deg2rad(240), 'social' => deg2rad(180),
+    		  'enterprising' => deg2rad(120), 'conventional' => deg2rad(60)];
+    		$maxInterest = array_keys($interests, max($interests))[0];
+    		$xyWeights = [[
+    		  ($interests[$maxInterest] * 1 * cos($angles[$maxInterest])),
+    		  ($interests[$maxInterest] * 1 * sin($angles[$maxInterest]))
+    		]];
+    		foreach ($interests as $intType => $intVal){
+    		  if ($intType != $maxInterest && $intVal > 0.5){
+    		    $xyWeights[] = [
+        		  ($intVal * 1 * cos($angles[$intType])),
+        		  ($intVal * 1 * sin($angles[$intType]))
+      		    ];
+      		  }
+    		}
+    		$wowX = array_column($xyWeights, 0);
+    		$wowY = array_column($xyWeights, 1);
+    		$careerArr = ['soc' => $view['soc'], 'title'=>$titleResult['0']['title'],
+    		  'x' => array_sum($wowX)/count($wowX),
+    		  'y' => array_sum($wowY)/count($wowY)
+    		];
 		if($view['rating'] == -1) //dislike
-    {
-      $dislikedCareers[] = $careerArr;
-    }
-    else if($view['rating'] == 0) //neutral
-    {
-      $neutralCareers[] = $careerArr;
-    }
-    else if($view['rating'] == 1) //like
-    {
-      $likedCareers[] = $careerArr;
+    		{
+    		  $dislikedCareers[] = $careerArr;
+    		}
+    		else if($view['rating'] == 0) //neutral
+    		{
+    		  $neutralCareers[] = $careerArr;
+    		}
+    		else if($view['rating'] == 1) //like
+    		{
+    		  $likedCareers[] = $careerArr;
 		}
-  }
+  	}
 	$session->write('liked', $likedCareers);
 	$session->write('disliked', $dislikedCareers);
 	$session->write('neutral', $neutralCareers);
-  }
+    }
 
 
     public function profile()
@@ -236,7 +215,7 @@ class UserController extends PagesController
         	$this->display("profile");
     	}
 	else{
-		$this->display("index");
+		$this->redirect(['controller' => 'pages', 'action' => 'display','index']);
 	}
     }
 
@@ -261,8 +240,8 @@ class UserController extends PagesController
 		if (count($result) > 0) //if you found a match of emails
     		{
 			$email = $result['0']['email']; //email of user
-      $id = $result['0']['id']; 	//id of user
-      $firstName = $result[0]['firstName']; // First name, for homepage greeting
+      			$id = $result['0']['id']; 	//id of user
+      			$firstName = $result[0]['firstName']; // First name, for homepage greeting
 			$SaltField = ['salt'];
 			$HashField = ['hash'];
 			
@@ -289,12 +268,11 @@ class UserController extends PagesController
         			{
 					$session->write('id', $id);				
 					$session->write('firstName', $firstName);				
-          				
 					// Check if the user is an admin
-          $adminQuery = 'SELECT * FROM AdminUsers WHERE id = :id';
-          $adminResult = $db->execute($adminQuery, ['id'=>$id])->fetchAll('assoc');
-          $isAdmin = (count($adminResult) == 1);
-          $session->write('isAdmin', $isAdmin);
+          				$adminQuery = 'SELECT * FROM AdminUsers WHERE id = :id';
+          				$adminResult = $db->execute($adminQuery, ['id'=>$id])->fetchAll('assoc');
+          				$isAdmin = (count($adminResult) == 1);
+          				$session->write('isAdmin', $isAdmin);
           				
 					$this->fillFields();
 					$this->display("profile");
@@ -304,13 +282,13 @@ class UserController extends PagesController
 				{
 					$session->destroy();
 					echo "Incorrect Password";
-					$this->display("index");
+		                        $this->redirect(['controller' =>'pages', 'action' => 'display','index']);
 				}
 			}
 			else
 			{
-				echo "User ID not present in password table"; //this should never happen
-				$this->display("index");
+				echo "User ID not present in password table"; //this should never happen	
+		                $this->redirect(['controller' =>'pages', 'action' => 'display','index']);
 			}
 
 		}		
@@ -318,7 +296,7 @@ class UserController extends PagesController
 		{
 			echo 'Email NOT found: ';
 			printf("%s is not in the Database. \n", $email);
-			$this->display("index");
+		        $this->redirect(['controller' =>'pages', 'action' => 'display','index']);
 		}
 
 	}
@@ -331,7 +309,7 @@ class UserController extends PagesController
     {
 	$session = $this->request->session();
 	$session->destroy();
-	$this->display("index");
+        $this->redirect(['controller' =>'pages', 'action' => 'display','index']);
     }
 
 
@@ -370,7 +348,7 @@ class UserController extends PagesController
 			{
 				//if it gets in here that means email is already in DB
 				echo 'Email already in use!';
-				$this->display("index");
+			        $this->redirect(['controller' =>'pages', 'action' => 'display','index']);
 			}
 			else   //if the email is not already in use
 			{
@@ -402,7 +380,7 @@ class UserController extends PagesController
 						//this happens if firstname, lastname, and email are all
 						//already in the database (should change this)
 						$session->destroy();
-						$this->display("index");
+					  	$this->redirect(['controller' =>'pages', 'action' => 'display','index']);
 						echo "password insert failed";
 					
 					}
@@ -417,9 +395,109 @@ class UserController extends PagesController
 		else   //if verifypassword didnt match password
 		{
 			echo 'Make sure you have correctly verified your password!';
-			$this->display("index");
+		        $this->redirect(['controller' =>'pages', 'action' => 'display','index']);
 		}
 	}
     }
+
+    public function tempURL()
+    {
+	$db = ConnectionManager::get($this->datasource);
+	$email = ($_POST['email']);
+	$tokentmp = sha1(uniqid($email, true));
+	$token = substr($tokentmp, 0, 24);
+	//$time = $_SERVER["REQUEST_TIME"];
+	$sql = 'SELECT id FROM Users WHERE email = :email';
+        $result = $db->execute($sql, ['email' => $email])->fetchAll('assoc');
+	$time = date('Y-m-d H:i:s');
+	$id = $result['0']['id'];
+	
+	$url = "https://23.243.209.238:9080/cake/checkToken/activate.php?token=$token";
+	$emailSend = new Email('default');
+                        $emailSend->from(['PassionatePeople@gmail.com' => 'My Site'])
+                            ->to($email)
+                            ->subject('Your Password Reset Link')
+                            ->send($url);
+
+	$session = $this->request->session();
+	$session->write('token', $token);
+	
+	$values2 = array('id'=> gettype($id),
+			 'code'=> gettype($token),
+                         'expires'=> gettype($time));	
+	
+	$checkQuery = 'SELECT id FROM PendingPasswordReset WHERE id = :id';
+	$check = $db->execute($checkQuery, ['id' => $id])->fetchAll('assoc');
+
+	if($check){
+		$db->update("PendingPasswordReset", ['code' => $token, 'expires' => $time], ['id' => $id]);
+    	}
+	else{
+		$db->insert("PendingPasswordReset", ['id' => $id, 'code' => $token,'expires' => $time], $values2);
+	}
+	//email the user the link	
+        $this->redirect(['controller' =>'pages', 'action' => 'display','index']);
+
+    }
+
+    public function checkToken()
+    {
+	if (isset($_GET["token"]) && preg_match('/^[0-9A-F]{24}$/i', $_GET["token"]))
+	{
+	    $token = $_GET["token"];
+	}
+	else
+	{
+	   // throw new Exception("Valid token not provided.");
+	}
+	$db = ConnectionManager::get($this->datasource);
+	$queryToken = 'SELECT id FROM PendingPasswordReset WHERE code = :code';	
+    	$queryResult = $db->execute($queryToken, ['code' => $token])->fetchAll('assoc');
+	$session = $this->request->session();
+        $session->write('id', $queryResult['0']['id']);
+	
+	if(count($queryResult) > 0)
+        {
+		$db->delete('PendingPasswordReset', ['code' => $token]);
+		$this->display('reset');
+	}	
+	else
+	{
+		echo 'Valid Token Not Provided ';
+	}
+    }
+
+    public function insertNewPassword()
+    {   
+	$db = ConnectionManager::get($this->datasource);
+        $session = $this->request->session();
+        $id = $session->read('id');
+
+        if($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+                $password = ($_POST['password']);
+                $vpassword = ($_POST['vpassword']);
+                if($password == $vpassword)
+                {
+                        $querySalt = 'SELECT salt FROM UserPasswords WHERE id = :id';
+                        $resultSalt = $db->execute($querySalt, ['id' => $id])->fetchAll('assoc');
+
+                        $saltDB = $resultSalt['0']['salt']; //salt from database
+                        $passwordAndSalt = $password . $saltDB;
+                        $hash = md5($passwordAndSalt);
+
+                        $db->update('UserPasswords', ['hash' => $hash], ['id' => $id]);
+                        $session->write('reset',' 1');
+                        $this->display('reset');
+                }
+                else
+                {
+                          $session->write('reset', '2');
+                        $this->display('reset');
+                }
+        }
+
+    }
 }
+
 

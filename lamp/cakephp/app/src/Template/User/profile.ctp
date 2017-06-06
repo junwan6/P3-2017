@@ -26,10 +26,10 @@
 </head>
 <body>
 
-        <div class="container-fluid">
+        <div class="container-fluid" id="container" >
 	  <div class="row">
 	    <div class="col-md-10 col-md-offset-1">
-              <div class="box">
+              <div class="box" id="whiteBox">
                 <div id="pageTitle">
                   My Profile
                 </div>

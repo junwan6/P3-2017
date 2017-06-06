@@ -180,8 +180,16 @@
         <?php } ?>
       </div>
       <?php if ($loggedIn) { ?>
-      <?php echo baseLink($this, 'logout', '<form action="', '" method="post">'); ?>
-        <input id="logout" class="navibutton" type="submit" value="Logout"/>
+       	<?php echo baseLink($this, 'changePassword', '<a href="', '">'); ?>
+          <div id="changePassword" class="navibutton">
+            Change Password
+          </div>
+        </a>
+	
+	<div>
+	  <?php echo baseLink($this, 'logout', '<form action="', '" method="post">'); ?>
+          <input id="logout" class="navibutton" type="submit" value="Logout"/>
+      	</div>
       </form>
       <?php } else { ?>
       <div id="signUpLoginColumn" class="col-md-3">
