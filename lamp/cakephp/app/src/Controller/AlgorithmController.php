@@ -30,6 +30,7 @@ use DateTime;
  */
 class AlgorithmController extends PagesController
 {
+	// checkRating handles rating history for the user if he/she is logged in
 	public function checkRating($rating = null, $soc = null) {
 		$userId = $this->request->session()->read('id');
 		// result_rating is echoed back to ajax call in video.ctp 
@@ -79,7 +80,8 @@ class AlgorithmController extends PagesController
 		
 		die();
 	}
-	
+
+	// addRating records the user's rating of the current job into the database
 	private function addRating($connection, $rating_int, $userId, $soc) {
 		$values = array(
 					'id' => $userId,
@@ -97,12 +99,15 @@ class AlgorithmController extends PagesController
 				
 		$insert = $connection->insert('ViewHistory', $values, $types);
 	}
-	
+
+	// updateRating changes the user's rating of the current job in the db if he or she rates the same job differently 
 	private function updateRating($connection, $rating_int, $userId, $soc) {
 		$update_query = 'UPDATE ViewHistory SET rating = ?, time = ? WHERE id = ? AND soc = ?'; 
 		$connection->execute($update_query, [$rating_int, new DateTime('now'), $userId, $soc], ['integer', 'datetime', 'integer', 'string']);
 	}
-	
+
+	// deleteRating deletes the user's rating of the current job from the db if they 'unpress' a rating button.
+	// (When a button is pressed, the button is highlighted)
 	private function deleteRating($connection, $userId, $soc) {
 		$delete_query = 'DELETE FROM ViewHistory WHERE id = ? AND soc = ?';
 		$connection->execute($delete_query, [$userId, $soc], ['integer', 'string']);
@@ -123,25 +128,26 @@ class AlgorithmController extends PagesController
 			 $socList[] = $soc;
 		 } 
 
-		//$temp = $socList['foo'];
-		 // debug($results);
+		 $numLoops = 0;
 
 		// if user hits the thumbs up button		
 		if ($rating == 'up') {
 		   do {
-			$soc = $this->handleThumbsUp($old_soc);
+			$soc = $this->handleThumbsUp($old_soc, $numLoops);
 
-		      	// check to see if generated SOC code exists
+		      	// keep polling until the generated SOC code exists in database
 		      	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
 		      	$results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
+			++$numLoops;
 		   } while ($results == NULL); 
 		}
 
 		// if user hits the thumbs sideways button
 		else if ($rating == 'mid') {
 		     do {
-				$soc = $this->handleThumbsMid($socList[0]);
-                      		// check to see if generated SOC code exists
+				$soc = $this->handleThumbsMid($old_soc);
+
+				// keep polling until the generated SOC code exists in database
 		        	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
 		        	$results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
                    } while ($results == NULL);
@@ -150,8 +156,9 @@ class AlgorithmController extends PagesController
 		// if user hits the thumbs down button
 		else if ($rating == 'down') {
 		     do {
-				$soc = $this->handleThumbsDown($socList[0]);
-                        	// check to see if generated SOC code exists
+				$soc = $this->handleThumbsDown($old_soc);
+
+				// keep polling until the generated SOC code exists in database
 			        $validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
 		                $results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
 			} while ($results == NULL);
@@ -193,11 +200,13 @@ class AlgorithmController extends PagesController
 	}
 
 	// implementation of 'Thumbs Up' logic
-	private function handleThumbsUp($socCode) {
+	private function handleThumbsUp($socCode, $numLoops) {
+
+		// retain the same SOC code except the 2 least significant digits 
 		$oldSOC = $socCode;
 		$newSOC = substr($oldSOC, 0, -2);
 
-		//change the least significant digit of the SOC code 
+		// change the 2 least significant digits of the SOC code 
 		$lastDigit1 = rand(0, 9);
 		$lastDigit2 = rand(0, 9);
 		$newSOC = $newSOC . $lastDigit1 . $lastDigit2;
@@ -212,8 +221,9 @@ class AlgorithmController extends PagesController
 		   $lastDigit3 = rand(0,9);
 		   $newSOC = $newSOC . $lastDigit1 . $lastDigit2 . $lastDigit3;
 
-		   if ($newSOC == $oldSOC) {
-		      $newSOC = handleThumbsMid($newSOC);
+		   //if the new SOC is still the same as the old one, act as if the user pressed Thumbs Middle.
+		   if ($numLoops == 1000) {
+		      $newSOC = $this->handleThumbsMid($newSOC);
 		   }
 		}
 		
@@ -222,16 +232,18 @@ class AlgorithmController extends PagesController
 
 	// implementation of 'Thumbs Middle' logic
 	private function handleThumbsMid($socCode) {
+		// retain the same SOC code except the 4 least significant digits
 		$oldSOC = $socCode;
 		$newSOC = substr($oldSOC, 0, -4);
 
-                //change the 3 least significant digit of the SOC code
+                // change the 3 least significant digit of the SOC code
 		$lastDigit = rand(0, 9);
 		$lastDigit2 = rand(0,9);
 		$lastDigit3 = rand(0,9);
 		$lastDigit4 = rand(0, 9);
 		$newSOC = $newSOC . $lastDigit . $lastDigit2 . $lastDigit3 .$lastDigit4;
 
+		// if the newly generated SOC code is the same as the old one, replace the 5 least significant digits with random digits  
 		if ($newSOC == $oldSOC) {
 		   $lastDigit = rand(0, 9);
 		   $lastDigit2 = rand(0,9);
@@ -242,7 +254,7 @@ class AlgorithmController extends PagesController
 		   $newSOC = substr($oldSOC, 0, -6);
 		   $newSOC = $newSOC . $lastDigit . '-' .
 		   $lastDigit2 . $lastDigit3. $lastDigit4. $lastDigit5;
-		   }
+		}
 
                 return $newSOC;
 	 }
@@ -251,9 +263,19 @@ class AlgorithmController extends PagesController
 	private function handleThumbsDown($socCode) {
 		$oldSOC = $socCode;
 	
-                //change all digits of the SOC code
-		$digit1 = rand(0, 9);
+                // change first two digits of the SOC code
+		$digit1 = rand(1, 5);
 		$digit2 = rand(0, 9);
+
+		// check if new first two digits are the same as the old SOC's. If so, change them randomly.
+		if ($digit1 == $this->castToNumber(substr($oldSOC, 0, -6))) {
+		   $digit1 = $digit1 + rand(0,4);
+		}
+		if ($digit2 == $this->castToNumber(substr($oldSOC, 1, -5))) {
+                   $digit2 = $digit2 + 1;
+		}
+
+		// change the rest of the digits of the SOC code
 		$digit3 = rand(0, 9);
 		$digit4 = rand(0, 9);
 		$digit5 = rand(0, 9);
@@ -261,5 +283,16 @@ class AlgorithmController extends PagesController
 		$newSOC = $digit1 . $digit2 .'-'. $digit3 . $digit4 . $digit5 . $digit6;
 
                 return $newSOC;
-	 }
+	}
+
+	// helper function for handleThumbsDown. This function captures the first two digits of the SOC code argument
+	// and casts them to an integer.
+	private function castToNumber($SOCdigit) {
+		if ($SOCdigit) {
+		   return ord(strtolower($SOCdigit)) - 96;
+		}
+		else {
+		     return 0;
+		}
+	}
 }
