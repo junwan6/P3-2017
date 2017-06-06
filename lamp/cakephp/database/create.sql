@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS LIUsers;
 DROP TABLE IF EXISTS Videos;
 DROP TABLE IF EXISTS ViewHistory;
 DROP TABLE IF EXISTS RememberMeTokens;
+DROP TABLE IF EXISTS pending_users;
 DROP TABLE IF EXISTS PendingPasswordReset;
 DROP TABLE IF EXISTS UserFilters;
 DROP TABLE IF EXISTS AdminUsers;
@@ -149,7 +150,7 @@ CREATE TABLE AlgorithmResults(id INT UNSIGNED NOT NULL,
 					nextSoc CHAR(7),
 					rating INT,
 					time DATETIME,
-					PRIMARY KEY (id, prevSoc, nextSoc));
+					PRIMARY KEY (id, prevSoc, nextSoc, time));
 					
 CREATE TABLE RememberMeTokens(
                     token VARCHAR(64),
@@ -168,3 +169,8 @@ CREATE TABLE UserFilters(id INT UNSIGNED,
 /* CHANGE MADE: Added AdminUsers table */
 /* TODO: foreign keys while allowing delete */
 CREATE TABLE AdminUsers(id INT UNSIGNED NOT NULL);
+
+CREATE TABLE PendingUsers (token CHAR(40) NOT NULL,
+             		    email VARCHAR(45) NOT NULL,
+	        	    tstamp TIMESTAMP NOT NULL,
+	        	    PRIMARY KEY(token));

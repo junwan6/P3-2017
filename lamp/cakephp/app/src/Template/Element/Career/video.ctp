@@ -1,11 +1,11 @@
 			<body onload=checkRating('none')>
+			<div id="soc" style="display:none"><?php echo $soc; ?></div>
 			<script>
-			  var js_url = window.location.href; 
-			  var js_soc = js_url.split('/')[5];
+			  var soc = document.getElementById("soc").innerHTML;
 			  
 			  var checkRating = function(rating){
 				  $.ajax({
-					url: '/cake/algorithm/checkrating/' + rating + '/' + js_soc,
+					url: '/cake/algorithm/checkrating/' + rating + '/' + soc,
 					success: function(result){
 						if (result == 1) 
 							showNextCareerButton('up');
@@ -50,12 +50,6 @@
                     } 
                   ?>
                   <div style="margin-left:720px; margin-top: 10px">
-					<?php 
-						$current_url = $this->Url->build(null, true);
-						$path = parse_url($current_url, PHP_URL_PATH);
-						$url_parts = explode("/", $path);
-						$soc = $url_parts[3];
-					?>
                     <a onclick="updateRank('like'); checkRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
                     <a onclick="updateRank('neutral'); checkRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
                     <a onclick="updateRank('dislike'); checkRating('down')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
