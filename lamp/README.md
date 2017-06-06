@@ -1,11 +1,13 @@
-# Configuring CakePHP 3.x:
-* Install via Composer or zip file
-* Install PHP intl and mbstring modules
-* Enable mod\_rewrite in Apache server
-* Set config/bootstrap.php database login information
+# Installing dependencies:
+* Python (Database loading) `apt-get install python python-pip`
+  * OpenPyXl `pip install openpyxl`
+* PHP Modules `intl` and `mb_string` for CakePHP
+  * `sudo apt-get install php-intl php-mb_string`
   
 # Deploying website:
 * Create empty database (Arbitrary name)
+  * `mysql --user=<user> --password=<pass>`
+  * `CREATE DATABASE <database>;`
 * Set database (MySQL) information in `app/config/db_config.json`
 * Place excel spreadsheets in configurable data folder (default: data/)
   * `all_data_M_2015.xlsx`  `Interests.xlsx`  `occupation.xlsx`  `skills.xlsx`
@@ -21,6 +23,13 @@
   * SETTING UP ADMIN USER: The first account to be created will be the admin
     * The admin may access the admin portal and add/remove admin status
 * Set Apache documentroot or alias to app/webroot directory
+  * Enable modules `ssl` and `rewrite`
+    * `sudo a2enmod ssl` `sudo a2enmod rewrite`
+  * If setting up from scratch, `sudo a2ensite default-ssl.conf`
+    * Set `DocumentRoot <path>` or `Alias "<alias>" "<path>"` 
+    * Set up `<Directory "<path>">` tag
+    * `Options Indexes FollowSymLinks` `AllowOverride All` `Require all granted` 
+  * Restart apache server for changes to take effect
 * Set PHP options (`/etc/php/7.0/apache2/php.ini` on Ubuntu Server 16.04):
   * `upload_max_filesize`, `post_max_size`, `file_uploads`, `max_file_uploads`
   * Ensure `www-data` or webserver user has access to `upload_tmp_dir`
