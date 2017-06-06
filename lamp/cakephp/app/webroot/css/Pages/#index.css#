@@ -25,6 +25,7 @@ html, body {
 	display: inline-block;
 	color: white;
 	font-size: 30px;
+		opacity: 0.9;
 	border-style: solid;
         border-color: white;
 	border-width: 2px;
@@ -81,7 +82,7 @@ html, body {
 }
 
 #navibar {
-        width: 100%;
+	width: 100%;
 	flex: 1 1 auto;
 	z-index: 2;
 	position: fixed;
@@ -137,5 +138,4 @@ html, body {
         font-size: 48px;
         font-weight: bold;
 	color: white;
-	opacity: 0.9;
 }

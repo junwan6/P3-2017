@@ -1,8 +1,38 @@
 #browseContainer {
+    //position: fixed;
+    //background-image: url("../../img/ucla/STUDENT_EVENT_086_hi.JPG");
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: center center;
+    background-size: cover;
+    flex: 1 1 auto;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+}
+
+#backgroundBox {
+    position:absolute;
+    background-image: url("../../img/ucla/STUDENT_EVENT_086_hi.JPG");
+    //background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+    flex: 1 1 auto;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+}
+
+#browseBox {
+    opacity: 0.9;
+    border-radius:15px;
+    position:relative;
 }
 
 a.accordionHeading {
-	color: black;
+    color: black;
 }
 
 #pageTitle {
@@ -16,6 +46,7 @@ a.accordionHeading {
 	font-size: 20px;
 	padding-left: 2em;
 	background-color: #FCFCFC;
+	border-radius:15px;
 }
 
 .minorSection {
@@ -23,6 +54,7 @@ a.accordionHeading {
 	font-size: 18px;
 	padding-left: 2em;
 	background-color: #F8F8F8;
+	border-radius:15px;
 }
 
 .broadSection {
@@ -30,12 +62,14 @@ a.accordionHeading {
 	font-size: 16px;
 	padding-left: 2em;
 	background-color: #F4F4F4;
+	border-radius:15px;
 }
 
 .detailedSection {
 	text-align: left;
 	padding-left: 2em;
 	background-color: #F0F0F0;
+	border-radius:15px;
 }
 
 a.detailedOccupationLink {
@@ -48,12 +82,13 @@ a.detailedOccupationLink:visited {
 }
 
 .heading {
-	background-color: transparent;
+    background-color: transparent;
 }
 
 #browse-search {
-  width: 100%;
+    width: 100%;
 }
+
 #search-filters{
   color: black;
 }
