@@ -109,16 +109,16 @@
           <label for="password">Password</label>
           <input type="password" class="formTextField form-control" name="password"/>
         </div>
-        <div class="checkbox">
+        <!--<div class="checkbox">
           <label>
           <input name="remember_me" type="checkbox">Remember me
           </label>
-        </div>
+        </div>-->
         <input id="loginButton" type="submit" class="btn btn-default formButton" value="Log In"/>
-        <br>
-        <?php echo baseLink($this, 'auth/facebook', '<a href="', '" class="btn btn-default">'); ?>
+       <!-- <br>
+        <?php //echo baseLink($this, 'auth/facebook', '<a href="', '" class="btn btn-default">'); ?>
           <div id="fbTestBox"><div id="fbTest">Log in with Facebook</div></div>
-        </a>
+        </a>-->
         <br>
         <?php echo baseLink($this, 'recover-account', '<a href="', '" class="loginOption">Forgot password?</a>'); ?>
         <br>
