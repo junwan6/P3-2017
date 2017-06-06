@@ -389,9 +389,6 @@ class CareerTest extends WebDriverTest{
     }
   }
 
-  /* TODO: Implement career page checking
-   * 
-   */
   public function testFilteredSearch(){
     $this->enterBrowsePage();
     

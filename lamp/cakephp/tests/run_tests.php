@@ -72,6 +72,13 @@ if ($testAdmin){
   $adminTest->login('pppp','pppp', true);
   $adminTest->testAccess(false);
   $adminTest->testSummary();
+
+  echo 'Testing Admin Filesystem Cleaning page' . PHP_EOL;
+  $adminTest->testOrphans();
+  echo 'Testing Admin User page' . PHP_EOL;
+  $adminTest->testUser();
+  echo 'Testing Admin Videos page' . PHP_EOL;
+  $adminTest->testVideos();
 }
 
 ?>

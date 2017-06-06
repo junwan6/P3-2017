@@ -155,6 +155,9 @@ class WebDriverTest {
   }
 
   public static function error($str="Unspcified Error", $level='error'){
+    if (!is_null($this->screenshotDir)){
+      $this->wd->takeScreenShot($this->screenshotDir . 'error.png');
+    }
     if ($level == 'warn'){
       echo $str;
     } else if ($level == 'error'){

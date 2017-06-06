@@ -27,8 +27,9 @@
 * Set Apache documentroot or alias to app/webroot directory
   * Enable modules `ssl` and `rewrite`
     * `sudo a2enmod ssl rewrite`
-    * If setting up from scratch: `sudo make-ssl-cert generate-default-snakeoil --force-overwrite`
-  * If setting up from scratch, `sudo a2ensite default-ssl.conf`
+  * If setting up from scratch, (Fresh instal):
+    * Enable ssl site `sudo a2ensite default-ssl.conf`
+    * If no legit SSL cert: `sudo make-ssl-cert generate-default-snakeoil --force-overwrite`
     * Set `DocumentRoot <path>` or `Alias "<alias>" "<path>"` 
     * Set up `<Directory "<path>">` tag
     * `Options Indexes FollowSymLinks` `AllowOverride All` `Require all granted` 
@@ -37,6 +38,8 @@
   * `upload_max_filesize`, `post_max_size`, `file_uploads`, `max_file_uploads`
   * Ensure `www-data` or webserver user has access to `upload_tmp_dir`
   * Restart apache server for changes to take effect
+* To set up tests, see README.md of lamp/cakephp/tests
+  * Kept separate from main installation due to additional dependencies
 
 # Directory:
 * `cakephp`: Current working directory, contains the implementation of the website in CakePHP 3.x
