@@ -11,7 +11,8 @@
 				PPP
 			</title>
 		</head>
-    <style>
+
+   <style>
     .ui-autocomplete {
       height: 200px;
       overflow-y: scroll;
@@ -38,11 +39,11 @@
       };
     </script>
     <body>
-
+      <div class="container-fluid" id="backgroundBox">
       <div id="browseContainer" class="container-fluid">
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
-            <div class="box">
+            <div class="box" id="browseBox">
               <div id="pageTitle">
                 Browse
               </div>
@@ -97,7 +98,8 @@
               </div>
             </div>
           </div>
-        </div>
+	</div>
+      </div>
       </div>
 		</body>
 </html>

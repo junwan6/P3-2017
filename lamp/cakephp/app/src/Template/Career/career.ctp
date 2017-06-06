@@ -56,7 +56,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-9 col-md-offset-1">
-          <div class="box">
+          <div class="box" id="whiteBox">
             <?php
               $pages = ['video' => ['videos'],
                 'salary' => ['states', 'statename', 'sts'],

@@ -92,7 +92,7 @@
         <div class="row row-with-margins">
           <div class="col-md-6">
 	    <div id="freeAccountContent" class="landingPageButton">
-	      Create your free account and get started
+	      Create your free account
 	    </div>
           </div>
           <div class="col-md-6">
