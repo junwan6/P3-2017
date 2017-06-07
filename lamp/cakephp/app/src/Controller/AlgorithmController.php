@@ -161,7 +161,7 @@ class AlgorithmController extends PagesController
 			$filter_query = ' AND ' . $salary_query . ' AND ' . $education_query;
 		else if ($salary_query != '' && $education_query == '')
 			$filter_query = ' AND ' . $salary_query;
-		else if ($education_query != '' && salary_query == '')
+		else if ($education_query != '' && $salary_query == '')
 			$filter_query = ' AND ' . $education_query;
 		else {
 			$filter_query = '';
