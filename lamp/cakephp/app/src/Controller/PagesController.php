@@ -33,4 +33,8 @@ class PagesController extends AppController
     AppController::display(...$args);
   }
 
+  public function algorithmEnd(){
+    $this->set('message', 'Sorry, no careers match that filter.');
+    $this->display('browse');
+  }
 }

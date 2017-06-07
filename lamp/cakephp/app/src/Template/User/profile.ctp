@@ -38,7 +38,7 @@
                   <div class="row">
 
                     <div class="col-md-6">
-	              <p class="heading"> Careers I Like</p>
+	              <p class="heading"> Careers I Like:</p>
                       <div class="scrollable">
                         <!--
                         {{#each likedCareers}}

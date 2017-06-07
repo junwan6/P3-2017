@@ -193,14 +193,13 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     /**
      * Connect video rating pages to AlgorithmController
-     * TODO: Implement AlgorithmController
-     */
+     */     
     // TODO: AJAX on button press, update ratings, return next video SOC
     // Takes filter parameters (updated clientside by JS)
 	$routes->connect('/algorithm/checkrating/:rating/:soc', ['controller' => 'algorithm',
 	  'action' => 'checkRating'], ['pass' => ['rating', 'soc'], 'rating' => 'up|mid|down|none']);
-    $routes->connect('/algorithm/nextcareer/:rating/:old_soc', ['controller' => 'algorithm',
-      'action' => 'nextCareer'], ['pass' => ['rating', 'old_soc'], 'rating' => 'up|mid|down']);
+    $routes->connect('/algorithm/nextcareer/:rating/:old_soc/:salary/:education', ['controller' => 'algorithm',
+      'action' => 'nextCareer'], ['pass' => ['rating', 'old_soc', 'salary', 'education'], 'rating' => 'up|mid|down']);
 
     /**
      * Connect catchall routes for all controllers.

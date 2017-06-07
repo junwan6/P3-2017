@@ -50,63 +50,43 @@
                     } 
                   ?>
                   <div style="margin-left:720px; margin-top: 10px">
-                    <a onclick="updateRank('like'); checkRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
-                    <a onclick="updateRank('neutral'); checkRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
-                    <a onclick="updateRank('dislike'); checkRating('down')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
-                    <div id="next-career-up">
-					<?php 
-						$url = '/algorithm/nextcareer/up/' . $soc;
-						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-up']);
-						?>
-					</div>
-					<div id="next-career-mid">
-					<?php 
-						$url = '/algorithm/nextcareer/mid/' . $soc;
-						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-mid']);
-						?>
-					</div>
-					<div id="next-career-down">
-					<?php 
-						$url = '/algorithm/nextcareer/down/' . $soc;
-						echo $this->Html->link('Next Career  >>', $url, ['class' => 'next-career-down']);
-						?>
-					</div>
+                    <a onclick="checkRating('up')" value="Call2Functions" href="#vidup"><span class="upthumb" id="upthumb"></span></a>
+                    <a onclick="checkRating('mid')" value="Call2Functions" href="#vidmid"><span class="midthumb" id="midthumb"></span></a>
+                    <a onclick="checkRating('down')" value="Call2Functions" href="#viddown"><span class="downthumb" id="downthumb"></span></a><br>		      
+                    <div id="next-career-up" onclick="nextCareer('up')"><span class="next-career-up">Next Career  >></span></div>
+					<div id="next-career-mid" onclick="nextCareer('mid')"><span class="next-career-up">Next Career  >></span></div>
+					<div id="next-career-down" onclick="nextCareer('down')"><span class="next-career-up">Next Career  >></span></div>
                   </div>
                   <div style=" padding-bottom: 0px">
                     <p><font size="3" color = "blue">Filters</font></p>
                   </div>
-                  <select name = "salary" id = "salary" form = "filters">
-                    <option value="">Any Salary</option>
-                    <option value="1">&lt;$40,000</option>
-                    <option value="2">$40,000-$60,000</option>
-                    <option value="3">$60,000-$80,000</option>
-                    <option value="4">&gt;$100,000</option>
+				  <form>
+                  <select id="salary">
+                    <option value="0">Any Salary</option>
+                    <option value="1">&lt;$60,000</option>
+                    <option value="2">$60,000-$80,000</option>
+                    <option value="3">$80,000-$100,000</option>
+					<option value="4">$100,000-$120,000</option>
+					<option value="5">&gt;$120,000</option>
                   </select>
-                  <select name = "education" id = "education" form = "filters">
-                    <option value="">Any Education Level</option>
-                    <option value="6">Bachelor's Degree</option>
-                    <option value="7">Master's Degree</option>
-                    <option value="8">Doctorate</option>
+                  <select id="education">
+                    <option value="0">Any Education Level</option>
+                    <option value="1">Bachelor's Degree</option>
+                    <option value="2">Master's Degree</option>
+                    <option value="3">Doctorate</option>
                   </select>
-                  <div style=" padding-top: 20px">
-                    <form id = "filters">
-                    </form>
-                  </div>
-                  <button class="filter_button" onclick = "collectFilters()">Update Filters</button>
+				  </form>
                 </div>
+				<script>
+					var soc = document.getElementById("soc").innerHTML;
+					
+					var nextCareer = function(rating) {
+						var salary = Number(document.getElementById("salary").value);
+						var education = Number(document.getElementById("education").value);
+						window.location.href = '/cake/algorithm/nextcareer/' + rating + '/' + soc + '/' + salary + '/' + education;
+					};
+				</script>
                 <script type="text/javascript">
-                  function collectFilters(){
-                  	var form = document.getElementById('filters');
-                  	var salary = Number(form.elements['salary'].value);
-                  	var edu = Number(form.elements['education'].value);
-                  
-                  	var pname = window.location.pathname;
-                  	var socPos = pname.search(/[0-9][0-9]-[0-9][0-9][0-9][0-9]/);
-                  
-                  	var soc = pname.substring(socPos, socPos+7);
-                  
-                  	$.get('career/filters?salary=' + salary + '&education=' + edu + '&soc=' + soc);
-                  }
                   var player = new MediaElementPlayer('video',
                   {
                     "features": ['playlistfeature', 'prevtrack', 'playpause',

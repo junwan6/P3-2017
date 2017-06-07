@@ -45,6 +45,7 @@
           <div class="col-md-8 col-md-offset-2">
             <div class="box" id="browseBox">
               <div id="pageTitle">
+                <?php if (isset($message)){ echo '<p style="color:red">' . $message . '</p>'; }?>
                 Browse
               </div>
               <div class="panel-group" id="browseAccordion" role="tablist" aria-multiselectable="true">

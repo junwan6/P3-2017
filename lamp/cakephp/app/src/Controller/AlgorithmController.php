@@ -114,7 +114,60 @@ class AlgorithmController extends PagesController
 	}
 	
 	//This function obtains all SOC codes from the database
-	public function nextCareer($rating = null, $old_soc = null) {
+	public function nextCareer($rating = null, $old_soc = null, $salary = null, $education = null) {
+		
+		switch ($salary) {
+			case '0': 
+				$salary_query = '';
+				break;
+			case '1':
+				$salary_query = 'averageWage < 60000';
+				break;
+			case '2':
+				$salary_query = 'averageWage >= 60000 AND averageWage <= 80000';
+				break;
+			case '3':
+				$salary_query = 'averageWage >= 80000 AND averageWage <= 100000';
+				break;
+			case '4':
+				$salary_query = 'averageWage >= 100000 AND averageWage <= 120000';
+				break;
+			case '5':
+				$salary_query = 'averageWage > 120000';
+				break;
+			default: 
+				$salary_query = '';
+		}
+		
+		switch ($education) {
+			case '0': 
+				$education_query = '';
+				break;
+			case '1':
+				$education_query = "educationRequired = 'bachelor'";
+				break;
+			case '2':
+				$education_query = "educationRequired = 'master'";
+				break;
+			case '3':
+				$education_query = "educationRequired = 'doctoral or professional'";
+				break;
+			default: 
+				$education_query = '';
+		}
+		
+		$hadFilter = 1;
+		if ($salary_query != '' && $education_query != '')
+			$filter_query = ' AND ' . $salary_query . ' AND ' . $education_query;
+		else if ($salary_query != '' && $education_query == '')
+			$filter_query = ' AND ' . $salary_query;
+		else if ($education_query != '' && salary_query == '')
+			$filter_query = ' AND ' . $education_query;
+		else {
+			$filter_query = '';
+			$hadFilter = 0;
+		}
+		
 		$userId = $this->request->session()->read('id');
 		$connection = ConnectionManager::get($this->datasource);
 		$query = 'SELECT soc FROM Occupation';
@@ -133,23 +186,26 @@ class AlgorithmController extends PagesController
 		// if user hits the thumbs up button		
 		if ($rating == 'up') {
 		   do {
-			$soc = $this->handleThumbsUp($old_soc, $numLoops);
+			$soc = $this->handleThumbsUp($old_soc, $numLoops, $hadFilter);
 
 		      	// keep polling until the generated SOC code exists in database
-		      	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
+		      	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc' . $filter_query;
 		      	$results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
-			++$numLoops;
+				++$numLoops;
+				if ($soc == '00-0000') break;
 		   } while ($results == NULL); 
 		}
 
 		// if user hits the thumbs sideways button
 		else if ($rating == 'mid') {
 		     do {
-				$soc = $this->handleThumbsMid($old_soc);
+				$soc = $this->handleThumbsMid($old_soc, $numLoops, $hadFilter);
 
 				// keep polling until the generated SOC code exists in database
-		        	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
+		        	$validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc' . $filter_query;
 		        	$results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
+					++$numLoops;
+					if ($soc == '00-0000') break;
                    } while ($results == NULL);
 		}
 
@@ -159,7 +215,7 @@ class AlgorithmController extends PagesController
 				$soc = $this->handleThumbsDown($old_soc);
 
 				// keep polling until the generated SOC code exists in database
-			        $validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc';
+			        $validityQuery = 'SELECT soc FROM Occupation WHERE soc = :soc' . $filter_query;
 		                $results = $connection->execute($validityQuery, ['soc'=>$soc])->fetchAll('assoc');
 			} while ($results == NULL);
 		}
@@ -196,11 +252,14 @@ class AlgorithmController extends PagesController
 		if ($userId != null) 
 			$insert = $connection->insert('AlgorithmResults', $values, $types);
 	
-		$this->redirect(['controller' => 'career', 'action' => 'displayCareerSingle', $soc, 'video']);
+		if ($soc == '00-0000')
+			$this->redirect(['controller' => 'pages', 'action' => 'algorithmEnd']);
+		else
+			$this->redirect(['controller' => 'career', 'action' => 'displayCareerSingle', $soc, 'video']);
 	}
 
 	// implementation of 'Thumbs Up' logic
-	private function handleThumbsUp($socCode, $numLoops) {
+	private function handleThumbsUp($socCode, $numLoops, $hadFilter) {
 
 		// retain the same SOC code except the 2 least significant digits 
 		$oldSOC = $socCode;
@@ -222,16 +281,21 @@ class AlgorithmController extends PagesController
 		   $newSOC = $newSOC . $lastDigit1 . $lastDigit2 . $lastDigit3;
 
 		   //if the new SOC is still the same as the old one, act as if the user pressed Thumbs Middle.
-		   if ($numLoops == 1000) {
-		      $newSOC = $this->handleThumbsMid($newSOC);
+		   if ($numLoops >= 1000 && $hadFilter == 0) {
+		      $newSOC = $this->handleThumbsMid($newSOC, $numLoops, $hadFilter);
 		   }
+		}
+		
+		if ($numLoops >= 100000 && $hadFilter == 1) {
+			$newSOC = '00-0000';
 		}
 		
 		return $newSOC;
 	}
 
 	// implementation of 'Thumbs Middle' logic
-	private function handleThumbsMid($socCode) {
+	private function handleThumbsMid($socCode, $numLoops, $hadFilter) {
+		
 		// retain the same SOC code except the 4 least significant digits
 		$oldSOC = $socCode;
 		$newSOC = substr($oldSOC, 0, -4);
@@ -247,7 +311,7 @@ class AlgorithmController extends PagesController
 		if ($newSOC == $oldSOC) {
 		   $lastDigit = rand(0, 9);
 		   $lastDigit2 = rand(0,9);
-                   $lastDigit3 = rand(0,9);
+           $lastDigit3 = rand(0,9);
 		   $lastDigit4 = rand(0, 9);
 		   $lastDigit5 = rand(0, 0);
 
@@ -256,7 +320,10 @@ class AlgorithmController extends PagesController
 		   $lastDigit2 . $lastDigit3. $lastDigit4. $lastDigit5;
 		}
 
-                return $newSOC;
+		if ($numLoops >= 100000 && $hadFilter == 1)
+			$newSOC = '00-0000';
+		
+        return $newSOC;
 	 }
 	 
         // implementation of 'Thumbs Down' logic
