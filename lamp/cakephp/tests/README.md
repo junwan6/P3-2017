@@ -4,7 +4,9 @@
   * Requires `php-curl` and `php-zip`
 * Chromium: `wget https://download-chromium.appspot.com/dl/Linux_x64?type=snapshots --content-disposition`
   * ChromeDriver: `wget https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip`
-  * `sudo apt-get install libxi6 libgconf-2-4 libxss1 libgtk-3-0`
+  * `sudo apt-get install libxi6 libgconf-2-4 libxss1 libgtk-3-0 libasound2 libnss3`
+    * Many issues with running the chrome binary, if CURL error try running chrome directly to see returned error
+    * If lib file not found, apt-file to find library containing
   * Firefox considered but unused due to inability to set binary path
 * Following http://www.alittlemadness.com/2008/03/05/running-selenium-headless/:
   * Running selenium/browser in headless (no GUI) mode
