@@ -44,7 +44,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
 
-        $this->datasource = 'test';
+        $this->datasource = 'json';
 
         /*
          * Enable the following components for recommended CakePHP security settings.
